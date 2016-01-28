@@ -1,4 +1,4 @@
-Req.load([\params], { |params, cleanup|
+Req.load([\params, \synth], { |params, synth, cleanup|
 
 	var
 	vals, //tmp
@@ -59,7 +59,7 @@ Req.load([\params], { |params, cleanup|
 	};
 
 	//Last knob on last group is connected to preamp
-	params.eq24[24].connectMKtlElement(bcr.elementAt(\knUp, \4, \8))
+	params.eq24[24].connectMKtlElement(bcr.elementAt(\knUp, \4, \8));
 
 	//----Top encoders-----------
 
@@ -131,27 +131,26 @@ Req.load([\params], { |params, cleanup|
 	mfunc.makeExclusiveModes(\pageswitch, [\pr_1_1, \pr_1_2]);
 	*/
 
-	{
-		pageSwitchButtons = bcr.elementAt(\pr, \1).flat;
-		bcr.elementAt(\pr, \1).action = { |elem, grp|
-			var index = pageSwitchButtons.indexOf(elem);
-			//mfunc.mode_(elem.name);
-			if (index == 0) {
-				cvsync[\kn1].do(_.enable);
-				cvsync[\kn2].do(_.disable);
-			} {
-				cvsync[\kn1].do(_.disable);
-				cvsync[\kn2].do(_.enable);
-			};
-			grp.at(1 - index).deviceValue = 0;
-			elem.deviceValue = 127;
-			//bcr.elementAt(\kn).disable;
-			bottomEnc.do({ |x, i|
-				x.value = vals[elem.name][i].input;
-			});
-			//bcr.elementAt(\kn).enable;
-		}.inEnvir;
-	}.value;
+	pageSwitchButtons = bcr.elementAt(\pr, \1).flat;
+	bcr.elementAt(\pr, \1).action = { |elem, grp|
+		var index = pageSwitchButtons.indexOf(elem);
+		"action".debug;
+		//mfunc.mode_(elem.name);
+		if (index == 0) {
+			cvsync[\kn1].do(_.enable);
+			cvsync[\kn2].do(_.disable);
+		} {
+			cvsync[\kn1].do(_.disable);
+			cvsync[\kn2].do(_.enable);
+		};
+		grp.at(1 - index).deviceValue = 0;
+		elem.deviceValue = 127;
+		//bcr.elementAt(\kn).disable;
+		bottomEnc.do({ |x, i|
+			x.value = vals[elem.name][i].input;
+		});
+		//bcr.elementAt(\kn).enable;
+	}.inEnvir;
 
 	//Sync with presets etc
 	//bcr.elementAt(\kn).action = mfunc;
@@ -164,6 +163,14 @@ Req.load([\params], { |params, cleanup|
 
 	8.do { |x| bcr.elementAt(\bt, \2, x).valueAction = 0 };
 
+	//Tuning fork
+	bcr.elementAt(\pr, \2, \1).action = { |elem|
+		//Crashes without fork. Why?
+		fork {
+			synth.tuningFork(elem.value);
+		}
+	};
+
     //Reload everything button
 	bcr.elementAt(\pr, \2, \2).action = { |elem|
 		if (elem.value == 1) {
@@ -171,7 +178,6 @@ Req.load([\params], { |params, cleanup|
             reloadPath.load;
 		}
 	};
-
     bcr
 
 });
