@@ -29,10 +29,11 @@ Proto({
     //Args: shortPress action, longPress action, waitTime for longPress
     ~buttonActionFactory = {  |key|
 		var lpr, dpr, longPress = false, doublePress = false;
+        //@param val bool -- isOn?
         { |val|
 			//KEY DOWN
 			var output;
-			if (val == 1 && ~isDeviceSendingKeyUp) {
+			if (val && ~isDeviceSendingKeyUp) {
 				//Check if other keys in group are pressed
 				~ignoreKeyUps = false;
 				if (~onRangePress.notNil and: { ~rangePressKey.notNil  }) {
@@ -126,23 +127,25 @@ Proto({
         ~indexes = keys;
 		keys.do(~model[_] = 0);
 		//Map MKtlElement indexes to zero-based numeric indexes
-        tmp = ktl.elementAt(~elementGroup).flat;
-        ~indexMapper = keys.collectAs({ |k, i| tmp[k].index -> i }, IdentityDictionary);
 
-        //TODO: probably better to do it with a single action for all keys,
-        //but i'm unsure if it will break something. Leave it for now, since not broken (anymore)
-		keys.do { |x, i|
-            ktl.elementAt(~elementGroup, x).action_(~ktlAction.inEnvir);
-			~actions.add(~buttonActionFactory.(i));
-        };
+        ~indexMapper = keys.collectAs({ |k, i|
+            //TODO: probably better to do it with a single action for all keys,
+            //but i'm unsure if it will break something. Leave it for now, since not broken (anymore)
+            ktl.elementAt(~elementGroup, k).action_(~ktlAction.inEnvir);
+            ~actions.add(~buttonActionFactory.(i));
+
+            //Since we're working in one single element group, we can use names to map actions
+            ktl.elAt(~elementGroup).elements[k].name -> i
+        }, IdentityDictionary);
+
+
         currentEnvironment;
     };
 
-    ~ktlAction = { |e|
-       ~indexMapper[e.index] !? { |index|
-		~actions[index].value(e.value);
+    ~ktlAction = { |onoff, e|
+        ~indexMapper[e.name] !? { |name|
+            ~actions[name].value(e.isOn);
         }
-
     };
 
 	~setState = { |k, v|
