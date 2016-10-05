@@ -1,7 +1,11 @@
 //buttonController
 //base proto for snapshots & macros
 Proto({
+
+    //FIXME
+    //This is a bit weird: model is only used internally, and then CV is set through onStateChange.
     ~model = ();
+
     ~states = [\off, \inactive, \active];
 	~elementGroup = \pad;
     ~actions = List();
@@ -33,7 +37,7 @@ Proto({
         { |val|
 			//KEY DOWN
 			var output;
-			if (val && ~isDeviceSendingKeyUp) {
+    		if (val && ~isDeviceSendingKeyUp) {
 				//Check if other keys in group are pressed
 				~ignoreKeyUps = false;
 				if (~onRangePress.notNil and: { ~rangePressKey.notNil  }) {
