@@ -1,7 +1,9 @@
 //Create launchpad mktl
-~lp = MKtl('lp', "*launchpad*")
-~lpOut = LaunchpadOut(~lp);
+MIDIClient.init
+~lp = MKtl('lp', "*launchpad-mini*");
 
+~art = MKtl('art', "*beatstep-rel-16");
+~lpOut = LaunchpadOut(~lp);
 (
 //Create 8 groups of sliders
 ~lp.rebuild;
@@ -33,14 +35,17 @@ MKtlElementGroup.addGroupsAsParent = false;
 ~ctl.isKeyInited = true;
 ~ctl.connectCV(~cvs = 8.collect { CV() })
 )
+~lp.device
+
 
 (
-~cvs[1].value = 0;
+~cvs[0].value = 1/8;
 ~ctl.model[1].value
 )
 
-~cvs[0].value = 0.52
+~cvs[0].connect(Slider().front)
 
+~ctl.tmpVal
 (
 ~view.free;
 ~view = "../lib/protos/sliderView".import;
