@@ -1,5 +1,7 @@
+MPU.calibrateAccelGyro
 (
-~belaMPU.stop;
+~belaMPU.free;
+
 ~belaMPU = Proto({
 
     var bounds = [[999, 999, 999],[-999, -999, -999]];
@@ -19,6 +21,9 @@
     ~orientation = nil;
     ~orientationBounds = [ [ -88.512725830078, -179.69926452637, 0.10358381271362 ], [ 63.236881256104, 177.6607208252, 359.60214233398 ] ];
 
+    ~grtAddr = NetAddr("localhost", 5000);
+    ~grtSend = (accel: false, gyro: false, mag: false, orientation: false);
+
     //Currently unused
     ~specs = (
         default: ControlSpec(-1, 1);
@@ -33,7 +38,7 @@
             var out = ([\accelKr, \gyroKr, \magKr,
                 \orientationKr].collect { |sym|
 
-                MPU.perform(sym);
+                LPF.kr(MPU.perform(sym), 5);
             }).flatten;
 
             SendReply.kr(Impulse.kr(33), '/mpu', out);
@@ -43,6 +48,9 @@
 
         ~func = OSCFunc({ |args|
             // args.postln;
+
+            var send;
+
             args = args[3..].clump(3);
 
 
@@ -56,6 +64,16 @@
             ~orientation = args[3];
             ~orientationBounds = [~orientation.min(~orientationBounds[0]), ~orientation.max(~orientationBounds[1])];
 
+            #[accel, gyro, mag, orientation].do { |key|
+                if (~grtSend[key]) {
+                    send = send.addAll(currentEnvironment[key]);
+                };
+            };
+
+            send !? {
+                ~grtAddr.sendMsg("/Data", *send);
+            }
+
         }.inEnvir, '/mpu', Server.named[serverName].notify_(true).addr)
 
     };
@@ -68,6 +86,11 @@
         ~task.stop;
     };
 
+    ~free = {
+        ~stop.value;
+        ~win !? { ~win.onClose = nil; ~win.close };
+        ~grtAddr.free;
+    };
 
     //Make gui
     //Start task which updates gui
@@ -114,6 +137,19 @@
 
                 view
             },
+
+            sendToGRT: { |self, key|
+                View().layout_(HLayout(
+                    StaticText().string_("Send to GRT"),
+                    CheckBox().action_ { |box|
+
+                        env.grtSend[key] = box.value;
+
+
+                    }
+                ));
+            },
+
             //Create slider2d + slider
             //Also show raw values, min and max
             sensor3d: { |self, label, key, specArray|
@@ -128,6 +164,7 @@
                     self.numbersXYZ(key, \min),
                     self.header("Max"),
                     self.numbersXYZ(key, \max),
+                    self.sendToGRT(key),
                     nil
                 ));
 
@@ -182,5 +219,6 @@
 ~belaMPU.makeGui;
 )
 
-~belaMPU.stop
+~belaMPU.free
 ~belaMPU.accel
+
