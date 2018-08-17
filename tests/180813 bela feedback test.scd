@@ -30,3 +30,15 @@ Ndef(\zero, {
 )
 
 
+Quarks.update("Modality-toolkit")
+
+MKtlDesc.postLoadable
+
+"https://modalityteam.github.io/controllers/".openOS;
+
+MKtl.find
+
+m = MKtl('midi_0_arturi', "arturia-beatstep-rel-16");
+m.trace(false)
+
+m.elAt(\1, \kn, \10).action = { |x| x.value.postln }

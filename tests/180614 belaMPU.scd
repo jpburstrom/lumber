@@ -1,4 +1,3 @@
-MPU.calibrateAccelGyro
 (
 ~belaMPU.free;
 

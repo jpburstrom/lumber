@@ -1,9 +1,9 @@
-~grt = NetAddr("localhost", 5000);
-~touchOsc = NetAddr("myfone.local", 9000);
 ~grt.sendMsg("/TrainingClassLabel", 2.5)
 
 //GUI
 (
+~grt = NetAddr("localhost", 5000);
+~touchOsc = NetAddr("myfone.local", 9000);
 ~win = Window.new("Bela ♥ MPU9250 ♥ GRT").front.layout_(VLayout(
    nil,
     //

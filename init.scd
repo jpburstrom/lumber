@@ -1,21 +1,26 @@
-s.options.sampleRate=96000;
-s.options.hardwareBufferSize = 128;
-s.options.memSize = 65536*8;
-s.waitForBoot {
+q = ();
 
-	Req.load(['lib/storage', 'lib/params', 'lib/presets', 'lib/devices', 'lib/gui', 'lib/synth'],
-		{ arg storage, params, presets, devices, gui, synth;
-			q.devices = devices;
-			q.params = params;
-			q.storage = storage;
-			q.presets = presets;
-			q.syn = synth;
+q.bela = false; //TODO set this programmatically
 
-			params.current.do(_.changed(\synch));
+//Macro parameters - mapping controllers to parameters
+q.macros = Require("lib/macros");
+//Storage - handle save/load to disk
+q.storage = Require("lib/storage");
+//Synth graph (including server-side controllers)
+q.synths
 
+//OSC setup (touchosc)
+q.osc = ();
+q.osc.touchosc;
 
-	}, reload:true);
+if (!q.bela) {
 
-};
+    q.osc.grt
+
+    q.gui
+    //GUI
+
+}
+
 
 
