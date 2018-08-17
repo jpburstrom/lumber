@@ -1,156 +1,51 @@
-var macros = Require("macros");
-var params = ();
-macros.set(\softpot_s, \eq, \amount, 0.5);
-Proto({
+x = Proto({
 
-    var storageVersion = "0.1.1"; //Avoid float rounding errors
-    var path = "../data/storage.zarchive".resolveRelative;
+    ~storagePath = "../data/storage.zarchive".resolveRelative;
+    ~objects = ();
 
-    //Things get constantly updated from params
-    ~things = ();
-    //These only get updated when loading from disk
-    ~revertThings = ();
-
-    //Sets of indexes to store
-    ~toStore = (
-        presets: Set(),
-        snapshots: Set()
-    );
-
-    //Store preset k in group grp
-    ~storeToGroup = { |grp, k|
-        "Storing % in grp %".format(k, grp).postln;
-        ~things[grp][k] = params.getParams(grp).collect(_.value);
-        ~toStore[grp].add(k);
-        currentEnvironment.changed(\activeKeys, grp);
-        ~save.value;
+    //Register object at key
+    //Objects should implement getParams and setParams
+    //getParams is called with \storage as argument
+    //so objects can exclude certain non-storable things
+    ~register = { |key, object|
+        if (~objects[key].notNil) {
+            "Re-registering storage at key %".format(key).warn
+        };
+        ~objects[key] = object;
     };
 
-    ~storePreset = (~storeToGroup.(\presets, _));
-    ~storeSnapshot = (~storeToGroup.(\snapshots, _));
-
-    //Remove a stored preset
-    ~removeFromGroup = { |grp, k|
-        ~toStore[grp].remove(k);
-        ~things[grp][k] = params.randomize(grp);
-        currentEnvironment.changed(\activeKeys, grp);
-        ~save.value;
+    ~unregister = { |key|
+        ~objects[key] = nil;
     };
 
 
-    ~removeSnapshot = (~removeFromGroup.(\snapshots,_));
-    ~removePreset = (~removeFromGroup.(\presets,_));
-
-    ~loadToGroup = { |grp, k|
-        params.setParams(grp, ~revertThings[grp][k]);
+    ~save = { |path|
+        var obj=();
+        path ?? { path = ~storagePath };
+        ~objects.keysValuesDo { |k, v|
+            obj[k] = v.getParams(\storage);
+        };
+        ~prWrite.(obj, path);
     };
 
-    ~loadSnapshot = (~loadToGroup.(\snapshots,_));
-    ~loadPreset = (~loadToGroup.(\presets,_));
 
-
-    ~getPresets = {
-        ~things[\presets];
-    };
-
-    ~getSnapshots = {
-        ~things[\snapshots];
-    };
-
-    ~getActiveKeys = { |k|
-        ~toStore[k];
-    };
-
-    //Save current state in group
-    ~saveSingle = { |group, path|
-        var x, saver;
-        saver = {
-            x = params.getParams(group).collect(_.value);
-            ~prWrite.(x, path);
-        }.inEnvir;
-        if (path.isNil) {
-            Dialog.savePanel({ |p|
-                path = p.splitext;
-                if (path[1].isNil) { path[1] = "zarchive" };
-                path = "%.%".format(*path);
-                saver.value;
-            });
-        } {
-            saver.value;
-        }
-    };
-
-    //Save current state in group
-    ~loadSingle = { |group, path, storeToKey|
-        var x, loader;
-        loader = {
-            params.setParams(group, ~prRead.(path));
-            if (storeToKey.notNil) {
-                ~storeToGroup.(group, storeToKey);
+    ~load = { |path|
+        var obj;
+        path ?? { path = ~storagePath };
+        if (File.exists(path)) {
+            obj = ~prRead.(path);
+            obj.keysValuesDo { |k, v|
+                if (~objects[k].notNil) {
+                    ~objects[k].setParams(v);
+                }
             }
-        }.inEnvir;
-        if (path.isNil) {
-            Dialog.openPanel({ |p|
-                path = p;
-                loader.value
-            });
         } {
-            loader.value
-        }
+            "Storage file doesn't exist at %".format(path).error;
+        };
 
     };
 
-    ~save = { |p|
-        var z;
-        var x = ~things.deepCopy;
-        [\presets, \snapshots].do { |grp|
-            ~things[grp].keysValuesDo { |k,v|
-                if (~toStore[grp].includes(k).not) {
-                    x[grp][k] = nil;
-                };
-            }
-        };
-        p ?? { p = path };
-        ~prWrite.(x, p);
-
-    };
-
-    ~backup = {
-        var dir = path.resolveRelative.dirname +/+ "backup";
-        var file = path.basename.splitext;
-        File.mkdir(dir);
-        File.copy(path, dir +/+ file[0] ++ Date.getDate.stamp ++ "." ++ file[1]);
-    };
-
-    ~load = { |p|
-        var z;
-        p ?? { p = path };
-        if (File.exists(p)) {
-            ~things = ~prRead.(p);
-            if (~things.version != storageVersion) {
-                "creating new storage".inform;
-                ~createStorage.value;
-                //TODO: copy old storage into new?
-            };
-            ~toStore[\presets] = ~things.presets.keys;
-            ~toStore[\snapshots] = ~things.snapshots.keys;
-        } {
-            ~createStorage.value;
-        };
-        params.presetCount.do { |x|
-            ~maybeRandomize.(\presets, x);
-        };
-        params.snapshotCount.do { |x|
-            ~maybeRandomize.(\snapshots, x);
-        };
-        ~revertThings = ~things.deepCopy;
-        //A bit of a hack
-        //Set eq from preset 0
-        //Since we're not doing it anywhere else
-        ~loadToGroup.(\eq, 0);
-
-    };
-
+    /* Move these to a gui place
     ~loadDialog = {
         Dialog.openPanel({ |p|
             ~load.value(p);
@@ -164,34 +59,24 @@ Proto({
     ~saveDialog = {
         Dialog.savePanel(~save.inEnvir);
     };
+    */
 
-    ~maybeRandomize = { |container, num|
-        var c = ~things[container];
-        if (c[num].isNil) {
-            c[num] = params.randomize(container);
-        }
+    ~backup = {
+        var dir = ~storagePath.resolveRelative.dirname +/+ "backup";
+        var file = ~storagePath.basename.splitext;
+        File.mkdir(dir);
+        File.copy(~storagePath, dir +/+ file[0] ++ Date.getDate.stamp ++ "." ++ file[1]);
     };
 
-    ~createStorage = {
-        ~things = (
-            version: storageVersion,
-            eq: (),
-            presets: (),
-            snapshots: ()
-
-        );
-        ~save.value;
-    };
-
-    ~prWrite = { |x, p|
-        z = ZArchive.write(p);
-        z.writeItem(x);
+    ~prWrite = { |obj, path|
+        z = ZArchive.write(path);
+        z.writeItem(obj);
         z.writeClose;
     };
 
-    ~prRead = { |p|
+    ~prRead = { |path|
         var things;
-        z = ZArchive.read(p);
+        z = ZArchive.read(path);
         things = z.readItem;
         z.close;
         things;
@@ -200,3 +85,11 @@ Proto({
 
 
 });
+
+/*
+x.register(\macros, q.macros)
+x.objects
+x.save("/tmp/asdasd")
+x.load
+x.backup
+*/
