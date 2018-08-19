@@ -2,17 +2,26 @@
 //and maps it to one or several synth parameters
 Proto({
 
+    //Macro sources
+    //That is, physical or virtual controllers
+    //This also defines gui order
+    //Should it?
+    ~sources = #[
+        activity, intensity, orientation,
+        softpot_l, softpot_s,
+        expression
+    ];
 
     //Parameter labels
     //This defines macro->parameter mapping
     //Arrays also define parameter order
     ~paramLabels = (
-        'softpot_s': ['EQ', 'Delay'],
-        'orientation': [ 'Delay' ],
-        'intensity': ['Freeze', 'Volume', 'Saturation'],
-        'softpot_l': ['Pitch', 'Phase', 'Delay'],
-        'activity': ['LFO'],
-        'expression': ['Weirdness']
+        'softpot_s': ["EQ", "Delay"],
+        'orientation': [ "Delay" ],
+        'intensity': ["Freeze", "Volume", "Saturation"],
+        'softpot_l': ["Pitch", "Phase", "Delay"],
+        'activity': ["LFO"],
+        'expression': ["Weirdness"]
     );
 
     //Parameter dictionary
@@ -20,7 +29,7 @@ Proto({
     ~paramLabels.keysValuesDo { |k, v|
         ~params[k] = v.collectAs({ |p|
             //XXX maybe cv
-            p.asString.toLower.asSymbol -> (
+            p.toLower.asSymbol -> (
                 active: OnOffControlValue(\off),
                 amount: NumericControlValue()
             )
@@ -28,6 +37,7 @@ Proto({
     };
 
     //-- Methods below -------
+
 
     //Load param dictionary
     //Useful for preset loading
@@ -54,7 +64,7 @@ Proto({
 
     //Get dictionary of param values
     //Useful for preset saving
-    ~getParams = {
+    ~getParams = { |usage|
         var obj = ();
         ~params.keysValuesDo { |macro, params|
             obj[macro] = ();
@@ -68,6 +78,10 @@ Proto({
         obj
     };
 
+
+    ~getParamsFor = { |source, label|
+        ~params[source][label.asString.toLower.asSymbol];
+    };
 
     //Set single parameter
     //Usage: .set(\macro, \param, \setting, value)

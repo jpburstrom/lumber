@@ -6,8 +6,16 @@ q.bela = false; //TODO set this programmatically
 q.macros = Require("lib/macros");
 //Storage - handle save/load to disk
 q.storage = Require("lib/storage");
+
+//Connect macros with storage
+q.storage.register(\macros, q.macros);
+
+//Load state from disk
+q.storage.save
+
+
 //Synth graph (including server-side controllers)
-q.synths
+
 
 //OSC setup (touchosc)
 q.osc = ();

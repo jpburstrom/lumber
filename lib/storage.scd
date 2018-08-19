@@ -1,4 +1,4 @@
-x = Proto({
+Proto({
 
     ~storagePath = "../data/storage.zarchive".resolveRelative;
     ~objects = ();
@@ -62,7 +62,7 @@ x = Proto({
     */
 
     ~backup = {
-        var dir = ~storagePath.resolveRelative.dirname +/+ "backup";
+        var dir = ~storagePath.dirname +/+ "backup";
         var file = ~storagePath.basename.splitext;
         File.mkdir(dir);
         File.copy(~storagePath, dir +/+ file[0] ++ Date.getDate.stamp ++ "." ++ file[1]);
