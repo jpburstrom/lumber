@@ -1,6 +1,6 @@
 Proto({
 
-    ~storagePath = "../data/storage.zarchive".resolveRelative;
+	~storagePath = "../data/".resolveRelative;
     ~objects = ();
 
     //Register object at key
@@ -19,29 +19,38 @@ Proto({
     };
 
 
-    ~save = { |path|
-        var obj=();
-        path ?? { path = ~storagePath };
-        ~objects.keysValuesDo { |k, v|
-            obj[k] = v.getParams(\storage);
-        };
-        ~prWrite.(obj, path);
-    };
+	//Save object(s). Both key and path is optional.
+	//If key is not provided, save all keys
+	//If path is not provided, use default path
+    ~save = { |keys, path|
+		var obj;
+		keys = ~prCheckKeyArg.(keys);
+		keys.do { |k|
+			path ?? { path = ~prMakeStoragePath.value(k) };
+			obj = ~objects[k].getParams(\storage);
+			~prWrite.(obj, path);
+		}
+	};
 
 
-    ~load = { |path|
+	//Load object(s). Both key and path is optional (see ~save)
+    ~load = { |keys, path|
         var obj;
-        path ?? { path = ~storagePath };
-        if (File.exists(path)) {
-            obj = ~prRead.(path);
-            obj.keysValuesDo { |k, v|
-                if (~objects[k].notNil) {
-                    ~objects[k].setParams(v);
-                }
-            }
-        } {
-            "Storage file doesn't exist at %".format(path).error;
-        };
+		keys = ~prCheckKeyArg.(keys);
+
+		keys.do { |k|
+			path ?? { path = ~prMakeStoragePath.value(k) };
+			if (File.exists(path)) {
+				obj = ~prRead.(path);
+				if (~objects[k].notNil) {
+					~objects[k].setParams(obj);
+				}
+			} {
+				"Storage file doesn't exist at %".format(path).error;
+			}
+		};
+
+		~objects;
 
     };
 
@@ -61,12 +70,29 @@ Proto({
     };
     */
 
-    ~backup = {
-        var dir = ~storagePath.dirname +/+ "backup";
-        var file = ~storagePath.basename.splitext;
+    ~backup = { |keys|
+        var dir = ~storagePath +/+ "backup";
+		keys = ~prCheckKeyArg.(keys);
         File.mkdir(dir);
-        File.copy(~storagePath, dir +/+ file[0] ++ Date.getDate.stamp ++ "." ++ file[1]);
+		keys.do { |key|
+			var storagePath = ~prMakeStoragePath.(key);
+			var file = storagePath.basename.splitext;
+			File.copy(storagePath, dir +/+ file[0] ++ Date.getDate.stamp ++ "." ++ file[1]);
+		}
     };
+
+	//Check argument, return array of keys
+	~prCheckKeyArg = { |key|
+		if (key.isNil) {
+			key = ~objects.keys
+		} {
+			key.asArray
+		}
+	};
+
+	~prMakeStoragePath = { |key|
+		~storagePath +/+ "storage-%.zarchive".format(key);
+	};
 
     ~prWrite = { |obj, path|
         z = ZArchive.write(path);
