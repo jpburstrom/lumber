@@ -1,3 +1,21 @@
+//synth definitions could be set here
+//If we make it a proto we could use its putAction to send a changed message whenever
+//definition is changed
+/*
+(
+p = Proto {
+
+
+};
+p.putAction = { |k, v|
+	p.changed(\put, k, v);
+}
+)
+*/
+
+//then use the changed message (or maybe the putAction directly)
+//to update nodeproxies or synths
+
 ~macroParms = (
     'orientation': (
         delay: { |snd, delay, amount|
@@ -31,7 +49,7 @@
     'pedal': (
 
     ),
-)
+);
 
 
 

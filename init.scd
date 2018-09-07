@@ -10,12 +10,12 @@ q.storage = Require("lib/storage");
 //Connect macros with storage
 q.storage.register(\macros, q.macros);
 
-//Load state from disk
-q.storage.save
-
-
 //Synth graph (including server-side controllers)
+q.storage.register(\foo, (getParams: 22, setParams: {|this, x| x.postln }))
 
+q.storage.save(\foo)
+
+q.storage.load(\foo)
 
 //OSC setup (touchosc)
 q.osc = ();
@@ -29,6 +29,6 @@ if (!q.bela) {
     //GUI
 
 }
-
+AnalogIn
 
 
