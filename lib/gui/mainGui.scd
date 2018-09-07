@@ -11,6 +11,8 @@ var header = { |string|
 window.view.layout.add(VLayout(
     header.("Macros"),
     Require("macroGui")
+	header.("EQ"),
+    Require("eqGui")
 ));
 
 window.front;
