@@ -1,5 +1,4 @@
-(
-p = Proto {
+Proto {
 
 	~target = nil;
 	~isPlaying = false;
@@ -66,6 +65,5 @@ p = Proto {
 
 
 };
-)
 
 		
