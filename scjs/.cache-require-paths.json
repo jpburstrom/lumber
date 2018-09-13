@@ -1,0 +1,733 @@
+{
+  "/Users/johannes/projects/lumber/kod/scjs/index.js": {
+    "supercolliderjs": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/index.js",
+    "supercolliderjs/lib/dryads": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/index.js": {
+    "./server": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/index.js",
+    "./lang": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/index.js",
+    "./map": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/map.js",
+    "./server/osc/msg": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js",
+    "./utils/resolveOptions": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/resolveOptions.js",
+    "./utils/checkInstall": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/checkInstall.js",
+    "./Errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Errors.js",
+    "./scapi": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/scapi.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/index.js": {
+    "./server": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/server.js",
+    "./ServerPlus": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/ServerPlus.js",
+    "./ServerState": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/ServerState.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/server.js": {
+    "events": "events",
+    "rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/index.js",
+    "child_process": "child_process",
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "dgram": "dgram",
+    "osc-min": "/Users/johannes/projects/lumber/kod/scjs/node_modules/osc-min/lib/index.js",
+    "bluebird": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bluebird.js",
+    "./internals/SendOSC": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/internals/SendOSC.js",
+    "./osc/utils": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/utils.js",
+    "./osc/msg": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js",
+    "../utils/resolveOptions": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/resolveOptions.js",
+    "./default-server-options.json": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/default-server-options.json",
+    "../utils/logger": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/logger.js",
+    "./ServerState": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/ServerState.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/index.js": {
+    "./dist/rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js",
+    "./dist/rx.aggregates": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.aggregates.js",
+    "./dist/rx.async": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.async.js",
+    "./dist/rx.backpressure": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.backpressure.js",
+    "./dist/rx.binding": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.binding.js",
+    "./dist/rx.coincidence": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.coincidence.js",
+    "./dist/rx.experimental": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.experimental.js",
+    "./dist/rx.joinpatterns": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.joinpatterns.js",
+    "./dist/rx.sorting": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.sorting.js",
+    "./dist/rx.virtualtime": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.virtualtime.js",
+    "./dist/rx.testing": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.testing.js",
+    "./dist/rx.time": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.time.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.aggregates.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.async.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.backpressure.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.binding.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.coincidence.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.experimental.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.joinpatterns.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.sorting.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.virtualtime.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.testing.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.time.js": {
+    "./rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/dist/rx.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/osc-min/lib/index.js": {
+    "./osc-utilities": "/Users/johannes/projects/lumber/kod/scjs/node_modules/osc-min/lib/osc-utilities.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/osc-min/lib/osc-utilities.js": {
+    "binpack": "/Users/johannes/projects/lumber/kod/scjs/node_modules/binpack/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bluebird.js": {
+    "./promise": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/promise.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/promise.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js",
+    "./es5": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/es5.js",
+    "./async": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/async.js",
+    "./errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/errors.js",
+    "./thenables": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/thenables.js",
+    "./promise_array": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/promise_array.js",
+    "./context": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/context.js",
+    "./debuggability": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/debuggability.js",
+    "./finally": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/finally.js",
+    "./catch_filter": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/catch_filter.js",
+    "./nodeback": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/nodeback.js",
+    "./method": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/method.js",
+    "./bind": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bind.js",
+    "./cancel": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/cancel.js",
+    "./direct_resolve": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/direct_resolve.js",
+    "./synchronous_inspection": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/synchronous_inspection.js",
+    "./join": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/join.js",
+    "./map.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/map.js",
+    "./call_get.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/call_get.js",
+    "./using.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/using.js",
+    "./timers.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/timers.js",
+    "./generators.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/generators.js",
+    "./nodeify.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/nodeify.js",
+    "./promisify.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/promisify.js",
+    "./props.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/props.js",
+    "./race.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/race.js",
+    "./reduce.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/reduce.js",
+    "./settle.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/settle.js",
+    "./some.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/some.js",
+    "./filter.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/filter.js",
+    "./each.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/each.js",
+    "./any.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/any.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js": {
+    "./es5": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/es5.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/async.js": {
+    "./schedule": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/schedule.js",
+    "./queue": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/queue.js",
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/schedule.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/errors.js": {
+    "./es5": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/es5.js",
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/thenables.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/promise_array.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/debuggability.js": {
+    "./errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/errors.js",
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/finally.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js",
+    "./catch_filter": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/catch_filter.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/catch_filter.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js",
+    "./es5": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/es5.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/nodeback.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js",
+    "./errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/errors.js",
+    "./es5": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/es5.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/method.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/cancel.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/join.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/map.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/call_get.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/using.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js",
+    "./errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/errors.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/timers.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/generators.js": {
+    "./errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/errors.js",
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/nodeify.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/promisify.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js",
+    "./nodeback": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/nodeback.js",
+    "./errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/errors.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/props.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js",
+    "./es5": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/es5.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/race.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/reduce.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/settle.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/some.js": {
+    "./util": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/util.js",
+    "./errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/errors.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/internals/SendOSC.js": {
+    "events": "events",
+    "rx": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rx/index.js",
+    "../osc/utils": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/utils.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/utils.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "osc-min": "/Users/johannes/projects/lumber/kod/scjs/node_modules/osc-min/lib/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "../../Types": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Types.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/resolveOptions.js": {
+    "bluebird": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bluebird.js",
+    "../Errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Errors.js",
+    "path": "path",
+    "untildify": "/Users/johannes/projects/lumber/kod/scjs/node_modules/untildify/index.js",
+    "os": "os",
+    "js-yaml": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/index.js",
+    "fs": "fs",
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Errors.js": {
+    "lodash/assign": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/assign.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/assign.js": {
+    "./_assignValue": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_assignValue.js",
+    "./_copyObject": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_copyObject.js",
+    "./_createAssigner": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_createAssigner.js",
+    "./isArrayLike": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isArrayLike.js",
+    "./_isPrototype": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_isPrototype.js",
+    "./keys": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/keys.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_assignValue.js": {
+    "./_baseAssignValue": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseAssignValue.js",
+    "./eq": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/eq.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseAssignValue.js": {
+    "./_defineProperty": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_defineProperty.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_defineProperty.js": {
+    "./_getNative": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_getNative.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_getNative.js": {
+    "./_baseIsNative": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseIsNative.js",
+    "./_getValue": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_getValue.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseIsNative.js": {
+    "./isFunction": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isFunction.js",
+    "./_isMasked": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_isMasked.js",
+    "./isObject": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isObject.js",
+    "./_toSource": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_toSource.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isFunction.js": {
+    "./_baseGetTag": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseGetTag.js",
+    "./isObject": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isObject.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseGetTag.js": {
+    "./_Symbol": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_Symbol.js",
+    "./_getRawTag": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_getRawTag.js",
+    "./_objectToString": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_objectToString.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_Symbol.js": {
+    "./_root": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_root.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_root.js": {
+    "./_freeGlobal": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_freeGlobal.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_getRawTag.js": {
+    "./_Symbol": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_Symbol.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_isMasked.js": {
+    "./_coreJsData": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_coreJsData.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_coreJsData.js": {
+    "./_root": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_root.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_copyObject.js": {
+    "./_assignValue": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_assignValue.js",
+    "./_baseAssignValue": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseAssignValue.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_createAssigner.js": {
+    "./_baseRest": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseRest.js",
+    "./_isIterateeCall": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_isIterateeCall.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseRest.js": {
+    "./identity": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/identity.js",
+    "./_overRest": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_overRest.js",
+    "./_setToString": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_setToString.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_overRest.js": {
+    "./_apply": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_apply.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_setToString.js": {
+    "./_baseSetToString": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseSetToString.js",
+    "./_shortOut": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_shortOut.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseSetToString.js": {
+    "./constant": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/constant.js",
+    "./_defineProperty": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_defineProperty.js",
+    "./identity": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/identity.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_isIterateeCall.js": {
+    "./eq": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/eq.js",
+    "./isArrayLike": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isArrayLike.js",
+    "./_isIndex": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_isIndex.js",
+    "./isObject": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isObject.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isArrayLike.js": {
+    "./isFunction": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isFunction.js",
+    "./isLength": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isLength.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/keys.js": {
+    "./_arrayLikeKeys": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_arrayLikeKeys.js",
+    "./_baseKeys": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseKeys.js",
+    "./isArrayLike": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isArrayLike.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_arrayLikeKeys.js": {
+    "./_baseTimes": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseTimes.js",
+    "./isArguments": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isArguments.js",
+    "./isArray": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isArray.js",
+    "./isBuffer": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isBuffer.js",
+    "./_isIndex": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_isIndex.js",
+    "./isTypedArray": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isTypedArray.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isArguments.js": {
+    "./_baseIsArguments": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseIsArguments.js",
+    "./isObjectLike": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isObjectLike.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseIsArguments.js": {
+    "./_baseGetTag": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseGetTag.js",
+    "./isObjectLike": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isObjectLike.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isBuffer.js": {
+    "./_root": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_root.js",
+    "./stubFalse": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/stubFalse.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isTypedArray.js": {
+    "./_baseIsTypedArray": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseIsTypedArray.js",
+    "./_baseUnary": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseUnary.js",
+    "./_nodeUtil": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_nodeUtil.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseIsTypedArray.js": {
+    "./_baseGetTag": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseGetTag.js",
+    "./isLength": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isLength.js",
+    "./isObjectLike": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/isObjectLike.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_nodeUtil.js": {
+    "./_freeGlobal": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_freeGlobal.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_baseKeys.js": {
+    "./_isPrototype": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_isPrototype.js",
+    "./_nativeKeys": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_nativeKeys.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_nativeKeys.js": {
+    "./_overArg": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/_overArg.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/untildify/index.js": {
+    "os": "os"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/index.js": {
+    "./lib/js-yaml.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml.js": {
+    "./js-yaml/loader": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/loader.js",
+    "./js-yaml/dumper": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/dumper.js",
+    "./js-yaml/type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js",
+    "./js-yaml/schema": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema.js",
+    "./js-yaml/schema/failsafe": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/failsafe.js",
+    "./js-yaml/schema/json": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/json.js",
+    "./js-yaml/schema/core": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/core.js",
+    "./js-yaml/schema/default_safe": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/default_safe.js",
+    "./js-yaml/schema/default_full": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/default_full.js",
+    "./js-yaml/exception": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/exception.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/loader.js": {
+    "./common": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/common.js",
+    "./exception": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/exception.js",
+    "./mark": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/mark.js",
+    "./schema/default_safe": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/default_safe.js",
+    "./schema/default_full": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/default_full.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/mark.js": {
+    "./common": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/common.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/default_safe.js": {
+    "../schema": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema.js",
+    "./core": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/core.js",
+    "../type/timestamp": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/timestamp.js",
+    "../type/merge": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/merge.js",
+    "../type/binary": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/binary.js",
+    "../type/omap": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/omap.js",
+    "../type/pairs": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/pairs.js",
+    "../type/set": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/set.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema.js": {
+    "./common": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/common.js",
+    "./exception": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/exception.js",
+    "./type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js": {
+    "./exception": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/exception.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/core.js": {
+    "../schema": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema.js",
+    "./json": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/json.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/json.js": {
+    "../schema": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema.js",
+    "./failsafe": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/failsafe.js",
+    "../type/null": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/null.js",
+    "../type/bool": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/bool.js",
+    "../type/int": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/int.js",
+    "../type/float": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/float.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/failsafe.js": {
+    "../schema": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema.js",
+    "../type/str": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/str.js",
+    "../type/seq": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/seq.js",
+    "../type/map": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/map.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/str.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/seq.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/map.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/null.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/bool.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/int.js": {
+    "../common": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/common.js",
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/float.js": {
+    "../common": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/common.js",
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/timestamp.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/merge.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/binary.js": {
+    "buffer": "buffer",
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/omap.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/pairs.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/set.js": {
+    "../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/default_full.js": {
+    "../schema": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema.js",
+    "./default_safe": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/default_safe.js",
+    "../type/js/undefined": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/js/undefined.js",
+    "../type/js/regexp": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/js/regexp.js",
+    "../type/js/function": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/js/function.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/js/undefined.js": {
+    "../../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/js/regexp.js": {
+    "../../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type/js/function.js": {
+    "esprima": "/Users/johannes/projects/lumber/kod/scjs/node_modules/esprima/dist/esprima.js",
+    "../../type": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/type.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/dumper.js": {
+    "./common": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/common.js",
+    "./exception": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/exception.js",
+    "./schema/default_full": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/default_full.js",
+    "./schema/default_safe": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/lib/js-yaml/schema/default_safe.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/logger.js": {
+    "chalk": "/Users/johannes/projects/lumber/kod/scjs/node_modules/chalk/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/chalk/index.js": {
+    "escape-string-regexp": "/Users/johannes/projects/lumber/kod/scjs/node_modules/escape-string-regexp/index.js",
+    "ansi-styles": "/Users/johannes/projects/lumber/kod/scjs/node_modules/ansi-styles/index.js",
+    "strip-ansi": "/Users/johannes/projects/lumber/kod/scjs/node_modules/strip-ansi/index.js",
+    "has-ansi": "/Users/johannes/projects/lumber/kod/scjs/node_modules/has-ansi/index.js",
+    "supports-color": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supports-color/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/strip-ansi/index.js": {
+    "ansi-regex": "/Users/johannes/projects/lumber/kod/scjs/node_modules/ansi-regex/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/has-ansi/index.js": {
+    "ansi-regex": "/Users/johannes/projects/lumber/kod/scjs/node_modules/ansi-regex/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/ServerState.js": {
+    "immutable": "/Users/johannes/projects/lumber/kod/scjs/node_modules/immutable/dist/immutable.js",
+    "./internals/Store": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/internals/Store.js",
+    "./internals/allocators": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/internals/allocators.js",
+    "./node-watcher": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/node-watcher.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/internals/Store.js": {
+    "immutable": "/Users/johannes/projects/lumber/kod/scjs/node_modules/immutable/dist/immutable.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/internals/allocators.js": {
+    "immutable": "/Users/johannes/projects/lumber/kod/scjs/node_modules/immutable/dist/immutable.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/node-watcher.js": {
+    "immutable": "/Users/johannes/projects/lumber/kod/scjs/node_modules/immutable/dist/immutable.js",
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "bluebird": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bluebird.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/ServerPlus.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "./server": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/server.js",
+    "./osc/msg": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js",
+    "./node-watcher": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/node-watcher.js",
+    "../lang/SynthDefCompiler": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/SynthDefCompiler.js",
+    "../utils/resolveOptions": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/resolveOptions.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/SynthDefCompiler.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "path": "path",
+    "fs": "fs",
+    "../server/osc/msg.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js",
+    "./sclang": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/sclang.js",
+    "../Types": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Types.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/sclang.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "cuid": "/Users/johannes/projects/lumber/kod/scjs/node_modules/cuid/dist/node-cuid.js",
+    "fs": "fs",
+    "temp": "/Users/johannes/projects/lumber/kod/scjs/node_modules/temp/lib/temp.js",
+    "untildify": "/Users/johannes/projects/lumber/kod/scjs/node_modules/untildify/index.js",
+    "js-yaml": "/Users/johannes/projects/lumber/kod/scjs/node_modules/js-yaml/index.js",
+    "path": "path",
+    "events": "events",
+    "child_process": "child_process",
+    "bluebird": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bluebird.js",
+    "../utils/logger": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/logger.js",
+    "./internals/sclang-io": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/internals/sclang-io.js",
+    "../utils/resolveOptions": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/resolveOptions.js",
+    "../Errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Errors.js",
+    "../Types": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Types.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/temp/lib/temp.js": {
+    "fs": "fs",
+    "path": "path",
+    "constants": "constants",
+    "rimraf": "/Users/johannes/projects/lumber/kod/scjs/node_modules/rimraf/rimraf.js",
+    "os-tmpdir": "/Users/johannes/projects/lumber/kod/scjs/node_modules/os-tmpdir/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/rimraf/rimraf.js": {
+    "assert": "assert",
+    "path": "path",
+    "fs": "fs"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/internals/sclang-io.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "events": "events",
+    "../../Errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Errors.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/index.js": {
+    "./sclang": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/sclang.js",
+    "./SynthDefCompiler": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/SynthDefCompiler.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/checkInstall.js": {
+    "./resolveOptions": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/resolveOptions.js",
+    "fs": "fs"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/scapi.js": {
+    "./Errors": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Errors.js",
+    "./utils/logger": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/utils/logger.js",
+    "events": "events",
+    "dgram": "dgram",
+    "osc-min": "/Users/johannes/projects/lumber/kod/scjs/node_modules/osc-min/lib/index.js",
+    "cuid": "/Users/johannes/projects/lumber/kod/scjs/node_modules/cuid/dist/node-cuid.js",
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "bluebird": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bluebird.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads.js": {
+    "./dryads/index": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/index.js": {
+    "./middleware/scserver": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/middleware/scserver.js",
+    "./SCServer": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SCServer.js",
+    "./SCLang": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SCLang.js",
+    "./Group": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/Group.js",
+    "./Synth": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/Synth.js",
+    "./AudioBus": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/AudioBus.js",
+    "./SCSynthDef": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SCSynthDef.js",
+    "./SynthControl": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SynthControl.js",
+    "./SynthStream": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SynthStream.js",
+    "./SynthEventList": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SynthEventList.js",
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/middleware/scserver.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "./OSCSched": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/middleware/OSCSched.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/middleware/OSCSched.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "../../server/osc/utils": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/utils.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SCServer.js": {
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js",
+    "../server/server": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/server.js",
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js": {
+    "./lib/Dryad": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/Dryad.js",
+    "./lib/dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/dryadic.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/Dryad.js": {
+    "underscore": "/Users/johannes/projects/lumber/kod/scjs/node_modules/underscore/underscore.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/dryadic.js": {
+    "./DryadPlayer": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/DryadPlayer.js",
+    "./layer": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/layer.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/DryadPlayer.js": {
+    "underscore": "/Users/johannes/projects/lumber/kod/scjs/node_modules/underscore/underscore.js",
+    "./DryadTree": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/DryadTree.js",
+    "./CommandMiddleware": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/CommandMiddleware.js",
+    "./CommandNode": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/CommandNode.js",
+    "bluebird": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bluebird.js",
+    "./hyperscript": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/hyperscript.js",
+    "./updateContext": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/updateContext.js",
+    "./run": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/run.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/DryadTree.js": {
+    "underscore": "/Users/johannes/projects/lumber/kod/scjs/node_modules/underscore/underscore.js",
+    "./Properties": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/Properties.js",
+    "./utils": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/utils.js",
+    "./CommandNode": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/CommandNode.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/Properties.js": {
+    "underscore": "/Users/johannes/projects/lumber/kod/scjs/node_modules/underscore/underscore.js",
+    "./Dryad": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/Dryad.js",
+    "./utils": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/utils.js",
+    "./CommandNode": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/CommandNode.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/utils.js": {
+    "underscore": "/Users/johannes/projects/lumber/kod/scjs/node_modules/underscore/underscore.js",
+    "is-plain-object": "/Users/johannes/projects/lumber/kod/scjs/node_modules/is-plain-object/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/is-plain-object/index.js": {
+    "isobject": "/Users/johannes/projects/lumber/kod/scjs/node_modules/isobject/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/CommandNode.js": {
+    "underscore": "/Users/johannes/projects/lumber/kod/scjs/node_modules/underscore/underscore.js",
+    "bluebird": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bluebird.js",
+    "./utils": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/utils.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/hyperscript.js": {
+    "underscore": "/Users/johannes/projects/lumber/kod/scjs/node_modules/underscore/underscore.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/lib/updateContext.js": {
+    "underscore": "/Users/johannes/projects/lumber/kod/scjs/node_modules/underscore/underscore.js",
+    "is-plain-object": "/Users/johannes/projects/lumber/kod/scjs/node_modules/is-plain-object/index.js",
+    "bluebird": "/Users/johannes/projects/lumber/kod/scjs/node_modules/bluebird/js/release/bluebird.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SCLang.js": {
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js",
+    "../lang/sclang": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/lang/sclang.js",
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/Group.js": {
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js",
+    "../server/osc/msg.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js",
+    "../server/node-watcher": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/node-watcher.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/Synth.js": {
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js",
+    "../server/osc/msg": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js",
+    "../server/node-watcher": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/node-watcher.js",
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/AudioBus.js": {
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SCSynthDef.js": {
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js",
+    "../server/osc/msg.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js",
+    "path": "path",
+    "fs": "fs",
+    "../Types": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/Types.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SynthControl.js": {
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js",
+    "../server/osc/msg": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js",
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SynthStream.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js",
+    "./Group": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/Group.js",
+    "../server/osc/msg.js": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/SynthEventList.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js",
+    "dryadic": "/Users/johannes/projects/lumber/kod/scjs/node_modules/dryadic/index.js",
+    "./Group": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/Group.js",
+    "../server/osc/msg": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/server/osc/msg.js",
+    "./utils/iterators": "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/utils/iterators.js"
+  },
+  "/Users/johannes/projects/lumber/kod/scjs/node_modules/supercolliderjs/lib/dryads/utils/iterators.js": {
+    "lodash": "/Users/johannes/projects/lumber/kod/scjs/node_modules/lodash/lodash.js"
+  }
+}

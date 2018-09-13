@@ -1,0 +1,63 @@
+{
+  "hasArrayArgs": false,
+  "inputs": [],
+  "hasGate": false,
+  "name": "sinosc",
+  "hasVariants": false,
+  "output": [
+    {
+      "rate": "audio",
+      "startingChannel": "out",
+      "numberOfChannels": 1,
+      "type": "Out"
+    }
+  ],
+  "controls": [
+    {
+      "name": "out",
+      "defaultValue": 0,
+      "lag": 0,
+      "rate": "control",
+      "index": 0
+    },
+    {
+      "name": "freq",
+      "defaultValue": 400,
+      "lag": 0,
+      "rate": "control",
+      "spec": {
+        "default": 440,
+        "maxval": 20000,
+        "class": "FreqSpec",
+        "minval": 20,
+        "warp": "exp",
+        "step": 0,
+        "units": " Hz"
+      },
+      "index": 1
+    },
+    {
+      "name": "amp",
+      "defaultValue": 0.10000000149012,
+      "lag": 0,
+      "rate": "control",
+      "spec": {
+        "default": 0,
+        "maxval": 1,
+        "class": "ControlSpec",
+        "minval": 0,
+        "warp": "amp",
+        "step": 0,
+        "units": ""
+      },
+      "index": 2
+    }
+  ],
+  "canFreeSynth": false,
+  "sourceCode": "SynthDef('sinosc', { arg out=0, freq=400, amp=0.1;  Out.ar(out, SinOsc.ar(freq, 0, amp));})",
+  "controlNames": [
+    "out",
+    "freq",
+    "amp"
+  ]
+}

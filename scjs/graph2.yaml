@@ -1,0 +1,24 @@
+# YAML graph preset format
+# test 1
+test1:
+    ribbon1:    within(0,0.5).normalize         volume
+    ribbon2:    max(0.5)                        delay
+    ribbon4:                                    lfo speed
+
+# test 2
+test2:
+    ribbon1: 
+        # Map ribbon 1 (0 - 0.5 range) to volume (full range)
+        - volume < range(0, 0.5)
+        # Map 0.5-1 to delay, inverted (max delay at 0.5)
+        - delay < range(1, 0.5)
+    # Map ribbon 2 to delay. 
+    ribbon2: delay < max(0.5)
+    # Map ribbon 4 (0-0.5 range) to timeScrub via lfo.
+    ribbon4: timeScrub < lfo < range(0, 0.5)
+    # Map accel X to timeScrub deviation (±(0.2/2)) via rand LFO.
+    ax: timeScrub.dev(0.2) < rand
+    # Map pedal (0-0.5 range) to saturation (0-0.3)
+    pedal: saturation.max(0.3) < range(0, 0.5)
+    
+

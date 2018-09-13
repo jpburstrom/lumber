@@ -1,0 +1,9 @@
+mainBus: bus
+
+in: soundIn
+    in: 0
+    freq: 23
+    out: inBus
+
+mix: mixOut
+    in: inBus

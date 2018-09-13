@@ -1,0 +1,18 @@
+- Input:
+    soundIn: 
+        in: 0
+        freq: 23
+    soundIn2:
+        def: soundIn
+        freq: 23
+
+- Analysis: 
+    onsetDetection:
+        in: soundIn
+
+- Output:
+    mixOut:
+        in: bass
+
+
+
