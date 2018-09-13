@@ -8,7 +8,7 @@ q.macros = Require("lib/m_macros");
 q.eq = Require("lib/m_eq");
 
 //Storage - handle save/load to disk
-q.storage = Require("lib/storage");
+q.storage = Require("lib/c_storage");
 
 //Connect macros with storage
 q.storage.register(\macros, q.macros);
