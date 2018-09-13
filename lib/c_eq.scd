@@ -5,15 +5,6 @@ Proto {
 
 	~synths = ();
 
-	SynthDef(\lumberEqBand, {
-		var outbus = \outbus.kr(0);
-		var snd = In.ar(outbus, 1);
-		snd = BPeakEQ.ar(snd, \freq.kr(440), \rq.kr(0.0625), \db.kr(0, 0.1));
-		XOut.ar(outbus, Env.asr(1, 1, 1).ar(2, \gate.kr(1)), snd);
-	}).add;
-
-	//Connect to EQ model
-	//
 	~connect = { |model|
 
 		c = ConnectionList.make {
