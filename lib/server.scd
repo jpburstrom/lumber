@@ -18,6 +18,7 @@ q.main = Proto({
 		Require("synthdefs");
 		~prResetContainers.value;
 		~addBuses.value;
+		/*
 		~watcher = FileWatcher(["synths.scd", "buses.scd"].collect(_.resolveRelative), { |path|
 
 			//XXX Seems like we need to fork
@@ -44,6 +45,7 @@ q.main = Proto({
 			}.fork;
 
 		}.inEnvir);
+		*/
 
 		~ready = true;
 	};
