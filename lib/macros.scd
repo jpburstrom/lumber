@@ -2,27 +2,14 @@
 //and maps it to one or several synth parameters
 Proto({
 
-    //Macro sources
-    //That is, physical or virtual controllers
-    //This also defines gui order
-    //Should it?
-    ~sources = #[
-        activity, intensity, orientation,
-        softpot_l, softpot_s,
-        expression
-    ];
+	var common = Require("common");
+
+	~sources = common.macroSources;
 
     //Parameter labels
     //This defines macro->parameter mapping
     //Arrays also define parameter order
-    ~paramLabels = (
-        'softpot_s': ["EQ", "Delay"],
-        'orientation': [ "Delay" ],
-        'intensity': ["Freeze", "Volume", "Saturation"],
-        'softpot_l': ["Pitch", "Phase", "Delay"],
-        'activity': ["LFO"],
-        'expression': ["Weirdness"]
-    );
+    ~paramLabels = common.macroMapping;
 
     //Parameter dictionary
     ~params = ();
