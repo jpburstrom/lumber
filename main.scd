@@ -15,15 +15,3 @@ q.storage.register(\macros, q.macros);
 q.storage.register(\eq, q.eq);
 )
 
-//Synth graph (including server-side controllers)
-
-Volume
-if (!q.bela) {
-
-    q.osc.grt
-
-    q.gui
-    //GUI
-
-}
-q.macros.
