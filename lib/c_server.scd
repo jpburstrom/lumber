@@ -4,6 +4,8 @@
 q.main.free;
 q.main = Proto({
 
+	var common = Require("common");
+
 	~ready = false;
 	~server = nil;
 	~isPlaying = false;
@@ -15,7 +17,7 @@ q.main = Proto({
 	~prep = {
 
 		ServerTree.add(currentEnvironment, ~server);
-		Require("synthdefs");
+		Require("d_synthdefs");
 		~prResetContainers.value;
 		~addBuses.value;
 		/*
@@ -81,7 +83,8 @@ q.main = Proto({
 
 	~addSynths = {
 		//Static synths here
-		Synth(\ping, [\release, 10, \outbus, ~buses.main], target: ~groups.output);
+		~synths[\output] = Synth(\lumberOut, [\out, ~buses.out, \in, ~buses.main], target: ~groups.output);
+		~synths[\ping] = Synth(\ping, [\release, 10, \out, ~buses.main], target: ~groups.input);
 
 		//Controller.play
 	};
@@ -99,9 +102,11 @@ q.main = Proto({
 				};
 				if (~ready.not) { ~prep.value };
 				~prPlay.value;
+				/*
 				if (watch) {
 					~watcher.watch;
 				}
+				*/
 			}
 		};
 	};
@@ -116,11 +121,12 @@ q.main = Proto({
 
 	~stop = { |stopWatching=true|
 		~groups !? { ~groups.main.free };
-		~proxySpace.clear.remove;
 		~isPlaying = false;
+		/*
 		if (~watcher.notNil and: { stopWatching }) {
 			~watcher.stopWatching;
 		}
+		*/
 	};
 
 	~restart = {
@@ -144,6 +150,7 @@ q.main = Proto({
 	//
 	~doOnServerTree = {
 		~prResetContainers.value;
+		~isPlaying = false;
 		//currentEnvironment.prPlay;
 	};
 
@@ -151,6 +158,7 @@ q.main = Proto({
 	//Assumes things have already been freed
 	~prResetContainers = {
 		~groups = ();
+		~synths = ();
 	}
 });
 q.main.play;
