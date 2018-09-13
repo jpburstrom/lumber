@@ -15,7 +15,7 @@ var header = { |string|
 	window.view.layout.add(HLayout(
 		VLayout(
 			header.("Macros"),
-			sections.add(Require("g_macro")).last;
+			sections.add(Require("g_macros")).last;
 		),
 		VLayout(
 			header.("EQ"),
