@@ -13,16 +13,13 @@ q.macros.sources.do { |source|
     var paramLabels = q.macros.paramLabels[source];
     var knobColor = Color.rand;
 
-    paramLabels.postln;
-
     view.layout.add(StaticText().string_(source.asString).align_(\left).font_(Font.monospace));
 
     //Loop over parameter labels
-    paramLabels.do { |label|
+    paramLabels.do { |config|
         var cb, sl, params;
-
-
-        view.layout.add(
+		var label = config.name;
+	    view.layout.add(
             View().layout_(
                 HLayout(
                     StaticText().string_(label).minWidth_(75),

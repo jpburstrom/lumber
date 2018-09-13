@@ -14,9 +14,8 @@ Proto({
     //Parameter dictionary
     ~params = ();
     ~paramLabels.keysValuesDo { |k, v|
-        ~params[k] = v.collectAs({ |p|
-            //XXX maybe cv
-            p.toLower.asSymbol -> (
+        ~params[k] = v.collectAs({ |conf|
+            conf.name.toLower.asSymbol -> (
                 active: OnOffControlValue(\off),
                 amount: NumericControlValue()
             )
