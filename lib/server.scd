@@ -52,7 +52,14 @@ q.main = Proto({
 		var b, envir = currentEnvironment;
 		~prFreeBuses.value; //free buses if they exist
 		~buses = ().make {
-			Require("buses").value(envir);
+
+			~main = Bus.audio(~server, 1);
+			~out = Bus(\audio, 0, 1, ~server);
+
+			common.macroSources.do { |src|
+				currentEnvironment[src] = Bus.control(~server);
+			}
+
 		};
 
 	};
@@ -71,8 +78,10 @@ q.main = Proto({
 	};
 
 	~addSynths = {
-		var envir = currentEnvironment;
-		Require("synths").value;
+		//Static synths here
+		Synth(\ping, [\release, 10, \outbus, ~buses.main], target: ~groups.output);
+
+		//Controller.play
 	};
 
 	//Rebuild synths and groups
