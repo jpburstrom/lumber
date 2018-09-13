@@ -2,10 +2,10 @@ q = ();
 
 (
 //Macro parameters - mapping controllers to parameters
-q.macros = Require("lib/macros");
+q.macros = Require("lib/m_macros");
 
 //Macro parameters - mapping controllers to parameters
-q.eq = Require("lib/eq");
+q.eq = Require("lib/m_eq");
 
 //Storage - handle save/load to disk
 q.storage = Require("lib/storage");

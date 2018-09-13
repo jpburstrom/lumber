@@ -15,11 +15,11 @@ var header = { |string|
 	window.view.layout.add(HLayout(
 		VLayout(
 			header.("Macros"),
-			sections.add(Require("macroGui")).last;
+			sections.add(Require("g_macro")).last;
 		),
 		VLayout(
 			header.("EQ"),
-			sections.add(Require("eqGui")).last;
+			sections.add(Require("g_eq")).last;
 		)
 	));
 
