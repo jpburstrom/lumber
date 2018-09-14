@@ -1,8 +1,6 @@
 //Main sound producer
 //
-(
-q.main.free;
-q.main = Proto({
+Proto({
 
 	var common = Require("common");
 
@@ -12,12 +10,17 @@ q.main = Proto({
 	//used during reload of errored file
 	~isError = false;
 
+	~c_eq = Require("c_eq");
+	//FIXME q.eq
+	~c_eq.connect(q.eq);
+
 	//List of things to free
 
 	~prep = {
 
 		ServerTree.add(currentEnvironment, ~server);
-		Require("d_synthdefs");
+		//FIXME: paths are weird. How does resolveRelative work again?
+		Require("lib/d_synthdefs");
 		~prResetContainers.value;
 		~addBuses.value;
 		/*
@@ -86,6 +89,8 @@ q.main = Proto({
 		~synths[\output] = Synth(\lumberOut, [\out, ~buses.out, \in, ~buses.main], target: ~groups.output);
 		~synths[\ping] = Synth(\ping, [\release, 10, \out, ~buses.main], target: ~groups.input);
 
+		~c_eq.play(~groups.eq, ~buses.main);
+
 		//Controller.play
 	};
 
@@ -121,6 +126,7 @@ q.main = Proto({
 
 	~stop = { |stopWatching=true|
 		~groups !? { ~groups.main.free };
+		~c_eq.stop;
 		~isPlaying = false;
 		/*
 		if (~watcher.notNil and: { stopWatching }) {
@@ -161,24 +167,3 @@ q.main = Proto({
 		~synths = ();
 	}
 });
-q.main.play;
-)
-q.main.stop
-q.main.watcher.task.task.isPlaying
-q.main.isError
-SkipJack.verbose = true
-q.main.watcher = ()
-1
-/*
-var connection;
-~slider = Slider().front;
-~slider.onClose_ {
-	connection.free;
-};
-~dep = ().make {
-	~setEqBand = { |self, midi, db|
-		[midi, db].postln;
-	};
-};
-connection = ~slider.signal(\value).connectTo(~dep.methodSlot("setEqBand(32, value)"));
-*/

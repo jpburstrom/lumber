@@ -5,9 +5,9 @@ var sliderWidth = 35;
 var fullWidth = (sliderWidth * elements / rows) + (4 * elements / rows);
 
 view = View().minWidth_(fullWidth).minHeight_(400).layout_(
-	VLayout(*rows.collect{ HLayout() }).margins_(0).spacing_(0)
+	VLayout(Require("gui/eqview"), *rows.collect{ HLayout() }).margins_(0).spacing_(0)
 );
-
+Require("gui/eqview");
 connections.do(_.free);
 connections = List();
 

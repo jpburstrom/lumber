@@ -3,21 +3,24 @@ Proto {
 	~target = nil;
 	~isPlaying = false;
 
+	~outbus = 0;
+
 	~synths = ();
 
 	~connect = { |model|
-
-		c = ConnectionList.make {
-			q.eq.params.keysValuesDo { |key, cv|
-				cv.signal(\value).connectTo(p.methodSlot("setEqBand(%, value)".format(key)));
+		~model = model;
+		~connections = ConnectionList.make {
+			model.params.keysValuesDo { |key, cv|
+				cv.signal(\value).connectTo(
+					currentEnvironment.methodSlot("setEqBand(%, value)".format(key)));
 			}
 		}
 	};
 
-	~play = { |model, target|
+	~play = { |target, out|
 		~target = target;
-		~model = model;
-		model.getParams(\player).keysValuesDo { |midi, db|
+		~outbus = out;
+		~model.getParams(\player).keysValuesDo { |midi, db|
 
 			if (db != 0) {
 				~synths[midi] = ~prMakeSynth.value(midi.midicps, db);
@@ -32,7 +35,7 @@ Proto {
 	};
 
 	~prMakeSynth = { |freq, db|
-		Synth(\lumberEqBand, [\freq, freq, \db, db], ~target);
+		Synth(\lumberEqBand, [\freq, freq, \db, db, \out, ~outbus], ~target);
 	};
 
 	~setEqBand = { |midi, db|
@@ -57,4 +60,4 @@ Proto {
 
 };
 
-		
+
