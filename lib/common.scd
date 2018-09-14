@@ -31,5 +31,9 @@ Environment().know_(true).make({
 		'expression': [(name: "Weirdness", def: \bypass)]
 	);
 
+	//Frequencies for multi-param-eq, as semitones.
+	//(Semitones work better as dict keys)
+	~eqSemitones = (36..59);
+
 
 });
