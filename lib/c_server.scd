@@ -105,7 +105,10 @@ Proto({
 					s.doWhenBooted { cond.unhang };
 					cond.hang;
 				};
-				if (~ready.not) { ~prep.value };
+				if (~ready.not) {
+					~prep.value;
+					~server.sync;
+				};
 				~prPlay.value;
 				/*
 				if (watch) {
