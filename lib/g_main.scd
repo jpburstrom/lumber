@@ -7,11 +7,14 @@ Window.closeAll;
 	var window = Window.new("Lumber").layout_(HLayout());
 	var sections = List();
 
-var header = { |string|
-    StaticText().string_(string)
-    align_: \center
-    font_: Font().bold_(false).size_(16)
-};
+	var header = { |string|
+		StaticText().string_(string)
+		align_: \center
+		font_: Font().bold_(false).size_(16)
+	};
+
+	window.view.background_(Color.fromHexString("ddbbcc"));
+
 	window.view.layout.add(HLayout(
 		VLayout(
 			header.("Macros"),
@@ -19,16 +22,12 @@ var header = { |string|
 			nil
 		),
 		VLayout(
-			header.("Code"),
-			TextView().minWidth_(300).string_("//Custom code below\n~foo"),
-
-		),
-		VLayout(
 			header.("EQ"),
 			sections.add(Require("g_eq")).last,
 			nil
 		)
 	));
+
 
 	window.view.minHeight_(800);
 

@@ -1,5 +1,5 @@
 var layout, view, connections;
-var elements = q.eq.params.size;
+var elements = q.eq.params.keys.select(_.isNumber).size;
 var rows = 2;
 var sliderWidth = 35;
 var fullWidth = (sliderWidth * elements / rows) + (4 * elements / rows);
