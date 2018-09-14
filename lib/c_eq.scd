@@ -71,7 +71,10 @@ p = Proto {
 	};
 
 	~prMakeSynth = { |freq, db|
-		Synth(\peakEqBand, [\freq, freq, \db, db, \out, ~outbus], ~target);
+		//Quick hack
+		if (~target.notNil) {
+			Synth(\peakEqBand, [\freq, freq, \db, db, \out, ~outbus], ~target);
+		}
 	};
 
 	~setGain = { |param, db|
