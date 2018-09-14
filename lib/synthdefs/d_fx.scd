@@ -5,7 +5,6 @@ var fxFactory = { |name, func|
         var snd;
         snd = In.ar(\out.kr, 1);
         snd = func.(snd);
-		snd.poll;
         XOut.ar(\out.kr, Env.asr(0.01, 1, 0.01).ar(2, \gate.kr(1)), snd)
 
     }).add;
