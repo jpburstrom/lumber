@@ -5,20 +5,24 @@ var sliderWidth = 35;
 var fullWidth = (sliderWidth * elements / rows) + (4 * elements / rows);
 
 view = View().minWidth_(fullWidth).minHeight_(400).layout_(
-	VLayout(Require("gui/eqview"), *rows.collect{ HLayout() }).margins_(0).spacing_(0)
+	VLayout(Require("gui/eqview"), *(rows + 1).collect{ HLayout() }).margins_(0).spacing_(0)
 );
 
 //Loop over source -> parameter label list
-q.eq.params.keys.asArray.sort.do { |midinote, i|
+//FIXME: q.eq
+Require("common").eqSemitones.asArray.sort.do { |midinote, i|
 
+	//FIXME: Hardcoded reference to q.eq
 	var cv = q.eq.params[midinote];
 	var background = Color.white, knobColor = Color.rand;
 	var task, oldval, sl, txt,
 		label = midinote.midiname.asString;
 	if (label.includes($#) or: {label.includes($b)}) {
 		background = nil;
+
 	};
-	view.layout.children[i.div(elements/rows)].add(
+	// view.layout.children.postln;
+	view.layout.children[(i.div(elements/rows))].add(
 		View().layout_(
 			VLayout(
 				sl = Slider().orientation_(\vertical)
@@ -86,6 +90,34 @@ q.eq.params.keys.asArray.sort.do { |midinote, i|
 	};
 
 };
+
+view.layout.children[2].add(View().layout_(HLayout(
+	View().layout_(VLayout(
+		StaticText().string_("Low cut").align_(\center),
+		StaticText().string_("Freq"),
+		Slider().orientation_(\horizontal),
+		nil
+		).margins_(5).spacing_(5)),
+	View().layout_(VLayout(
+		StaticText().string_("Hi shelf").align_(\center),
+		StaticText().string_("Freq"),
+		Slider().orientation_(\horizontal),
+		StaticText().string_("RS"),
+		Slider().orientation_(\horizontal),
+		StaticText().string_("Gain"),
+		Slider().orientation_(\horizontal),
+		// nil
+	).margins_(5).spacing_(5)),
+	View().layout_(VLayout(
+		StaticText().string_("Preamp").align_(\center),
+		StaticText().string_("Gain"),
+		Slider().orientation_(\horizontal),
+		nil
+	).margins_(5).spacing_(5)),
+	nil
+)));
+
+
 view.onClose_({
     connections.do(_.free)
 }.inEnvir);

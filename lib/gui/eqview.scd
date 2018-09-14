@@ -24,26 +24,36 @@ view.drawFunc = { |vw|
 	freqs = ({|i| i } ! (bounds.width+1));
 	freqs = freqs.linexp(0, bounds.width, min, max);
 	frdb = List[[60, 4]];
-	values = List[BLowCut.magResponse(freqs, sr, *frdb[0])];
+	values = List[];
 	// values = List[BPeakEQ.magResponse(freqs, sr, *frdb[0])];
 
 	// Array.series(4, 36).do { |midi|
 	//FIXME: stupid
-	q.eq.getParams.keysValuesDo { |midi, db|
-		var vals = [midi.midicps, 0.0625, db];
+	q.eq.getParams.keysValuesDo { |midi, val|
+		var vals, class = BPeakEQ;
+		vals = case
+		{ midi == \lowCut } {
+			class = BLowCut;
+			[val.freq, 2]; //4th-order
+		}
+		{ midi == \hiShelf } {
+			class = BHiShelf;
+			[val.freq, val.rs, val.db];
+		}
+		{
+			[midi.midicps, 0.0625, val];
+		};
+
+		values.add(class.magResponse(freqs, sr, *vals));
 		frdb.add(vals);
-		values.add(BPeakEQ.magResponse(freqs, sr, *vals))
 	};
 
-	frdb.add([240, 1, -32]);
-	values.add(BHiShelf.magResponse(freqs, sr, *frdb.last));
 	values = values.ampdb.max(-200).min(200);
 
 	zeroline = 0.linlin(range.neg,range, bounds.height, 0, \none);
 
 	svals = values.sum.linlin(range.neg,range, bounds.height, 0, \none);
 	values = values.linlin(range.neg, range, bounds.height, 0, \none);
-
 	vlines = vlines.explin(min, max, 0, bounds.width);
 	dimvlines = dimvlines.explin(min, max, 0, bounds.width);
 
@@ -53,6 +63,7 @@ view.drawFunc = { |vw|
 		@
 		(array[1].linlin(range.neg,range,bounds.height,0,\none));
 	};
+
 
 	Pen.color_(Color.white.alpha_(0.25));
 	Pen.roundedRect(bounds, [6,6,0,0]).fill;
@@ -130,5 +141,4 @@ view.drawFunc = { |vw|
 	Pen.extrudedRect(bounds, [6,6,0,0], 1, inverse: true);
 
 };
-view.bounds.postln;
 view

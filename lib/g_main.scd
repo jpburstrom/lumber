@@ -4,7 +4,7 @@
 Window.closeAll;
 
 {
-var window = Window.new("Lumber").layout_(HLayout());
+	var window = Window.new("Lumber").layout_(HLayout());
 	var sections = List();
 
 var header = { |string|
@@ -23,6 +23,8 @@ var header = { |string|
 		)
 	));
 
+	window.view.minHeight_(800);
+
 	window.view.keyDownAction = { |view, char, modifiers, unicode, keycode, key|
 		switch(key,
 			//1
@@ -40,4 +42,3 @@ var header = { |string|
 
 	window.front;
 }.value
-
