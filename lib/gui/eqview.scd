@@ -40,12 +40,17 @@ view.drawFunc = { |vw|
 			class = BHiShelf;
 			[val.freq, val.rs, val.db];
 		}
+		{ midi == \preamp } {
+			nil
+		}
+		//default
 		{
 			[midi.midicps, 0.0625, val];
 		};
-
-		values.add(class.magResponse(freqs, sr, *vals));
-		frdb.add(vals);
+		if (vals.notNil) {
+			values.add(class.magResponse(freqs, sr, *vals));
+			frdb.add(vals);
+		};
 	};
 
 	values = values.ampdb.max(-200).min(200);

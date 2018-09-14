@@ -3,6 +3,29 @@ var elements = q.eq.params.size;
 var rows = 2;
 var sliderWidth = 35;
 var fullWidth = (sliderWidth * elements / rows) + (4 * elements / rows);
+//FIXME: don't hardcode?
+var params = q.eq.params;
+
+var fact = (
+	paramSlider: { |self, label, cv|
+		var lbl, sl, out;
+		out = VLayout(
+			HLayout(
+				StaticText().string_(label),
+				lbl = StaticText()
+					.string_("% %".format(20, cv.spec.units))
+					.align_(\right).font_(Font.monospace.size_(10)),
+			),
+			sl = Slider().orientation_(\horizontal)
+		);
+		connections.add(sl.signal(\value).connectTo(cv.inputSlot));
+		connections.add(cv.signal(\input).connectTo(sl.valueSlot));
+		connections.add(cv.signal(\value).connectTo(
+			lbl.methodSlot("string_(\"%" ++ cv.spec.units ++ "\".format(value.round(0.1)))")));
+		out;
+	};
+);
+Connection.traceAll = false;
 
 view = View().minWidth_(fullWidth).minHeight_(400).layout_(
 	VLayout(Require("gui/eqview"), *(rows + 1).collect{ HLayout() }).margins_(0).spacing_(0)
@@ -13,7 +36,7 @@ view = View().minWidth_(fullWidth).minHeight_(400).layout_(
 Require("common").eqSemitones.asArray.sort.do { |midinote, i|
 
 	//FIXME: Hardcoded reference to q.eq
-	var cv = q.eq.params[midinote];
+	var cv = params[midinote];
 	var background = Color.white, knobColor = Color.rand;
 	var task, oldval, sl, txt,
 		label = midinote.midiname.asString;
@@ -94,24 +117,18 @@ Require("common").eqSemitones.asArray.sort.do { |midinote, i|
 view.layout.children[2].add(View().layout_(HLayout(
 	View().layout_(VLayout(
 		StaticText().string_("Low cut").align_(\center),
-		StaticText().string_("Freq"),
-		Slider().orientation_(\horizontal),
-		nil
-		).margins_(5).spacing_(5)),
+		fact.paramSlider("Freq", params[\lowCut][\freq])
+	).margins_(5).spacing_(5).add(nil)),
 	View().layout_(VLayout(
 		StaticText().string_("Hi shelf").align_(\center),
-		StaticText().string_("Freq"),
-		Slider().orientation_(\horizontal),
-		StaticText().string_("RS"),
-		Slider().orientation_(\horizontal),
-		StaticText().string_("Gain"),
-		Slider().orientation_(\horizontal),
+		fact.paramSlider("Freq", params[\hiShelf][\freq]),
+		fact.paramSlider("RS", params[\hiShelf][\rs]),
+		fact.paramSlider("Gain", params[\hiShelf][\db]),
 		// nil
 	).margins_(5).spacing_(5)),
 	View().layout_(VLayout(
 		StaticText().string_("Preamp").align_(\center),
-		StaticText().string_("Gain"),
-		Slider().orientation_(\horizontal),
+		fact.paramSlider("Gain", params[\preamp][\db]),
 		nil
 	).margins_(5).spacing_(5)),
 	nil

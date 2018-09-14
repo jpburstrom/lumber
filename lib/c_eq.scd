@@ -14,12 +14,12 @@ p = Proto {
 				//Set k/v for lowcut/hishelf
 				if (cvOrDict.respondsTo(\keysValuesDo)) {
 					cvOrDict.keysValuesDo { |p, cv|
-						cvOrDict.signal(\value).connectTo(
-							currentEnvironment.methodSlot("setEqParam('%', '%', value)".format(key, p)))
+						cv.signal(\value).connectTo(
+							currentEnvironment.methodSlot("setParam('%', '%', value)".format(key, p)))
 					}
 				} {
 					cvOrDict.signal(\value).connectTo(
-						currentEnvironment.methodSlot("setEqGain(%, value)".format(key)));
+						currentEnvironment.methodSlot("setGain(%, value)".format(key)));
 				}
 			}
 		}
@@ -28,14 +28,42 @@ p = Proto {
 	~play = { |target, out|
 		~target = target;
 		~outbus = out;
-		~model.getParams(\player).keysValuesDo { |midi, db|
+		~model.getParams(\player).keysValuesDo { |key, val|
 
-			if (db != 0) {
-				~synths[midi] = ~prMakeSynth.value(midi.midicps, db);
-			}
+			switch(key,
+				\lowCut, {
+					~synths[key] = Synth(\lowCutBand,
+						[\freq, val.freq, \out, ~outbus],
+						~target
+					);
+				},
+				\hiShelf, {
+					if (val.db != 0) {
+						~synths[key] = Synth(\hiShelfBand,
+							[\freq, val.freq, \rs, val.rs, \db, val.db, \out, ~outbus],
+							~target
+						);
+					}
+				},
+				\preamp, {
+					if (val.gain != 0) {
+						~synths[key] = Synth(\gainer,
+							[\gain, val.db, \out, ~outbus],
+							~target
+						);
+					};
+				},
+				//Default: midi note number, val is gain in dB
+				{
+					if (val != 0) {
+						~synths[key] = ~prMakeSynth.value(key.midicps, val);
+					}
+				}
+			);
 
 		};
 	};
+
 
 	~stop = {
 		~synths.do(_.release);
@@ -43,10 +71,10 @@ p = Proto {
 	};
 
 	~prMakeSynth = { |freq, db|
-		Synth(\lumberEqBand, [\freq, freq, \db, db, \out, ~outbus], ~target);
+		Synth(\peakEqBand, [\freq, freq, \db, db, \out, ~outbus], ~target);
 	};
 
-	~setEqGain = { |param, db|
+	~setGain = { |param, db|
 		if (db == 0) {
 			~synths[param] !? { |x|
 				x.release;
@@ -61,10 +89,10 @@ p = Proto {
 		}
 	};
 
-	~setEqParam = { |band, key, val|
+	~setParam = { |band, key, val|
 		//Only set running synths
 		if (key == \db) {
-			~setEqGain.(band, val);
+			~setGain.(band, val);
 		} {
 			~synths[band] !? {
 				~synths[band].set(key, val);

@@ -16,7 +16,7 @@ q.make {
 	//Sound stuff
 	~server = Require("lib/c_server");
 
-
+	~server.play;
 
 
 	//
@@ -27,4 +27,5 @@ q.make {
 
 )
 
-q.server.play
+q.server.play;
+q.eq.params.hiShelf.freq.value = 200

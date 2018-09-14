@@ -23,6 +23,6 @@ fxFactory.(\lowCutBand, { |snd|
 });
 
 fxFactory.(\gainer, { |snd|
-	snd * \gain.kr(0).dbamp;
+	snd * \db.kr(0).dbamp;
 });
 

@@ -9,12 +9,13 @@ p = Require("protos/paramDict").clone {
 		~params[k] = NumericControlValue(0, ~dbSpec);
 	};
 
-	~params[\lowCut] = (freq: NumericControlValue(60, \freq.asSpec));
+	~params[\lowCut] = (freq: NumericControlValue(60, ControlSpec(20, 200, \exp, 0, 60, " Hz")));
 	~params[\hiShelf] = (
-		freq: NumericControlValue(200, \freq.asSpec),
+		freq: NumericControlValue(200, ControlSpec(100, 400, \exp, 0, 200, " Hz")),
 		rs: NumericControlValue(1, [0.1, 10, \exp, 0.0, 1].asSpec),
 		db: NumericControlValue(-24, ControlSpec(-48, 0, \db, 0.0, 0, " dB"))
 	);
+	~params[\preamp] = (db: NumericControlValue(0, ControlSpec(0, 24, \db, 0.0, 0, " dB")));
 
 	~setParams = { |obj, params|
 		params = params ?? { ~params };

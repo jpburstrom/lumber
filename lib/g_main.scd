@@ -15,11 +15,18 @@ var header = { |string|
 	window.view.layout.add(HLayout(
 		VLayout(
 			header.("Macros"),
-			sections.add(Require("g_macros")).last;
+			sections.add(Require("g_macros")).last,
+			nil
+		),
+		VLayout(
+			header.("Code"),
+			TextView().minWidth_(300).string_("//Custom code below\n~foo"),
+
 		),
 		VLayout(
 			header.("EQ"),
-			sections.add(Require("g_eq")).last;
+			sections.add(Require("g_eq")).last,
+			nil
 		)
 	));
 
