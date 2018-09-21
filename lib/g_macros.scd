@@ -23,7 +23,9 @@ q.macros.sources.do { |source|
 	view.layout.add(StaticText().string_("~" ++ source.asString.toUpper ++ "~").align_(\left));
 
 	//Loop over parameter labels
-    paramLabels.do { |config|
+	//Sort alphabetically
+	paramLabels.keys.asArray.sort.do { |key|
+		var config = paramLabels[key];
         var params;
 		var specs = Spec.specs.select(_.isKindOf(ControlSpec)).keys.asArray.sort { |x, y|
 			var lx = x.asString.find("lumber", true).notNil;

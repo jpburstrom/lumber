@@ -18,17 +18,29 @@ Environment().know_(true).make({
 	//This defines macro->parameter mapping
 	//Arrays also define parameter order
 	~macroMapping = (
-		'softpot_s': [(name: "EQ", def: \bypass),
-			(name: "Delay", def: \bypass)],
-		'orientation': [(name: "Delay", def: \bypass)],
-		'intensity': [(name: "Freeze", def: \bypass),
-			(name: "Volume", def: \bypass),
-			(name: "Saturation", def: \bypass)],
-		'softpot_l': [(name: "Pitch", def: \bypass),
-			(name: "Phase", def: \bypass),
-			(name: "Delay", def: \bypass)],
-		'activity': [(name: "LFO", def: \bypass)],
-		'expression': [(name: "Weirdness", def: \bypass)]
+		softpot_s: (
+			eq: (name: "EQ", def: \bypass, inputMapping: [220, 3200, \exp]),
+			delay: (name: "Delay", def: \bypass)
+		),
+		orientation: (
+			delay: (name: "Delay", def: \bypass)
+		),
+		intensity: (
+			freeze: (name: "Freeze", def: \bypass),
+			volume: (name: "Volume", def: \bypass),
+			saturation: (name: "Saturation", def: \bypass)
+		),
+		softpot_l: (
+			pitch: (name: "Pitch", def: \bypass),
+			phase: (name: "Phase", def: \bypass),
+			delay: (name: "Delay", def: \bypass)
+		),
+		activity: (
+			lfo: (name: "LFO", def: \bypass)
+		),
+		expression: (
+			weirdness: (name: "Weirdness", def: \bypass)
+		)
 	);
 
 	//Frequencies for multi-param-eq, as semitones.

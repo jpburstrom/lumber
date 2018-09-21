@@ -13,13 +13,14 @@ Proto({
 
     //Parameter dictionary
     ~params = ();
-    ~paramLabels.keysValuesDo { |k, v|
-        ~params[k] = v.collectAs({ |conf|
-            conf.name.toLower.asSymbol -> (
+    ~paramLabels.keysValuesDo { |src, dests|
+		~params[src] = ();
+		dests.keysValuesDo { |key, o|
+			~params[src][key] = (
                 active: OnOffControlValue(\off),
                 amount: NumericControlValue()
             )
-        }, Event)
+        }
     };
 
     //-- Methods below -------
