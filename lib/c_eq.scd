@@ -1,11 +1,4 @@
-p = Proto {
-
-	~target = nil;
-	~isPlaying = false;
-
-	~outbus = 0;
-
-	~synths = ();
+Require("protos/serverPlayer", always:false).clone {
 
 	~connect = { |model|
 		~model = model;
@@ -25,56 +18,55 @@ p = Proto {
 		}
 	};
 
-	~play = { |target, out|
-		~target = target;
-		~outbus = out;
-		~model.getParams(\player).keysValuesDo { |key, val|
+	~onFree = {
+		~connections.free;
+	};
+
+	~factory.make {
+
+		~synths = { |model, parentGroup, buses, synths, makeSynth|
+			model.getParams(\player).keysValuesDo { |key, val|
 
 			switch(key,
 				\lowCut, {
-					~synths[key] = Synth(\lowCutBand,
-						[\freq, val.freq, \out, ~outbus],
-						~target
+					currentEnvironment[key] = Synth(\lowCutBand,
+						[\freq, val.freq, \out, buses.out],
+						parentGroup
 					);
 				},
 				\hiShelf, {
 					if (val.db != 0) {
-						~synths[key] = Synth(\hiShelfBand,
-							[\freq, val.freq, \rs, val.rs, \db, val.db, \out, ~outbus],
-							~target
+						currentEnvironment[key] = Synth(\hiShelfBand,
+							[\freq, val.freq, \rs, val.rs, \db, val.db, \out, buses.out],
+							parentGroup
 						);
 					}
 				},
 				\preamp, {
 					if (val.gain != 0) {
-						~synths[key] = Synth(\gainer,
-							[\gain, val.db, \out, ~outbus],
-							~target
+						currentEnvironment[key] = Synth(\gainer,
+							[\gain, val.db, \out, buses.out],
+							parentGroup
 						);
 					};
 				},
 				//Default: midi note number, val is gain in dB
 				{
 					if (val != 0) {
-						~synths[key] = ~prMakeSynth.value(key.midicps, val);
+						synths[key] = makeSynth.value(key.midicps, val);
 					}
 				}
 			);
 
 		};
+		};
+
 	};
 
 
-	~stop = {
-		~synths.do(_.release);
-		~synths.clear;
-	};
-
-	~prMakeSynth = { |freq, db|
+	~makeSynth = { |freq, db|
 		//Quick hack
-		if (~target.notNil) {
-			Synth(\peakEqBand, [\freq, freq, \db, db, \out, ~outbus], ~target);
-		}
+		Synth(\peakEqBand, [\freq, freq, \db, db, \out, ~buses.out], ~parentGroup);
 	};
 
 	~setGain = { |param, db|
@@ -85,7 +77,7 @@ p = Proto {
 			};
 		} {
 			if (~synths[param].isNil) {
-				~synths[param] = ~prMakeSynth.value(param.midicps, db);
+				~synths[param] = ~makeSynth.value(param.midicps, db);
 			} {
 				~synths[param].set(\db, db);
 			}
@@ -104,9 +96,6 @@ p = Proto {
 	};
 
 
-	~free = {
-		~connections.free;
-	};
 
 
 };
