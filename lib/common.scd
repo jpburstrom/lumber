@@ -17,9 +17,14 @@ Environment().know_(true).make({
 	//Parameter labels
 	//This defines macro->parameter mapping
 	//Arrays also define parameter order
+	//parameters:
+	//name: GUI label
+	//def: FX synthdef
+	//in: input parameter to control
+	//spec: a spec, symbol or array which maps 0-1 from source to the input parameter.
 	~macroMapping = (
 		softpot_s: (
-			eq: (name: "EQ", def: \bypass, inputMapping: [220, 3200, \exp]),
+			eq: (name: "EQ", def: \bypass, in: \freq, spec: [220, 3200, \exp]),
 			delay: (name: "Delay", def: \bypass)
 		),
 		orientation: (
