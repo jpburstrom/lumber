@@ -1,172 +1,66 @@
 //Main sound producer
 //
-Proto({
+(
+p = Require("protos/serverPlayer", always:false).clone {
+	var common = Require("common", always:false);
 
-	var common = Require("common");
-
-	~ready = false;
-	~server = nil;
-	~isPlaying = false;
-	//used during reload of errored file
-	~isError = false;
-
-	~c_eq = Require("c_eq");
+	~eq = Require("c_eq");
 	//FIXME q.eq
-	~c_eq.connect(q.eq);
+	~eq.connect(q.eq);
 
-	//List of things to free
-
-	~prep = {
-
-		ServerTree.add(currentEnvironment, ~server);
-		//FIXME: paths are weird. How does resolveRelative work again?
-		Require("lib/d_synthdefs");
-		~prResetContainers.value;
-		~addBuses.value;
-		/*
-		~watcher = FileWatcher(["synths.scd", "buses.scd"].collect(_.resolveRelative), { |path|
-
-			//XXX Seems like we need to fork
-			//Otherwise error handling doesn't work as it should
-			//Don't know why.
-			{
-				//Reload buses if
-				if (path.basename == "buses.scd") {
-					{
-						~addBuses.value;
-					}.try {
-					};
-				};
-
-				if (~isPlaying or: { ~isError }) {
-					{
-						~restart.value;
-						~isError = false;
-					}.try { |err|
-						err.reportError;
-						~isError = true;
-					}
-				};
-			}.fork;
-
-		}.inEnvir);
-		*/
-
-		~ready = true;
+	~onPrep = {
+		Require("d_synthdefs");
+		~eq.prep;
 	};
 
-	~addBuses = {
-		var b, envir = currentEnvironment;
-		~prFreeBuses.value; //free buses if they exist
-		~buses = ().make {
+	~onPlay = {
+		~eq.play(~buses.main, ~groups.eq)
+	};
 
-			~main = Bus.audio(~server, 1);
-			~out = Bus(\audio, 0, 1, ~server);
+	~onStop = {
+		~eq.stop;
+	};
+
+	~onFree = {
+		~eq.free;
+	};
+
+	~factory.make {
+
+		~buses = { |server|
+			~main = Bus.audio(server, 1);
+			~out = Bus(\audio, 0, 1, server);
 
 			common.macroSources.do { |src|
-				currentEnvironment[src] = Bus.control(~server);
+				currentEnvironment[src] = Bus.control(server);
 			}
-
 		};
 
-	};
-
-	~addGroups = {
-		~groups.make {
-			~main = Group();
+		~groups = { |parentGroup|
+			~main = Group(parentGroup);
 			//Add to head means reverse order
 			~output 	= Group(~main);
+			//TODO maybe some of these should be created by children
 			~fx 		= Group(~main);
 			~eq 		= Group(~main);
 			~lfo 		= Group(~main);
 			~sensors 	= Group(~main);
 			~input 		= Group(~main);
-		}
-	};
+		};
 
-	~addSynths = {
-		//Static synths here
-		~synths[\output] = Synth(\lumberOut, [\out, ~buses.out, \in, ~buses.main], target: ~groups.output);
-		~synths[\ping] = Synth(\ping, [\release, 10, \out, ~buses.main], target: ~groups.input);
-
-		~c_eq.play(~groups.eq, ~buses.main);
-
-		//Controller.play
-	};
-
-	//Rebuild synths and groups
-	~play = { |watch=true|
-		if (~isPlaying.not) {
-			~server = ~server ? Server.default;
-			forkIfNeeded {
-				if (~server.hasBooted.not) {
-					var cond = Condition();
-					s.boot;
-					s.doWhenBooted { cond.unhang };
-					cond.hang;
-				};
-				if (~ready.not) {
-					~prep.value;
-					~server.sync;
-				};
-				~prPlay.value;
-				/*
-				if (watch) {
-					~watcher.watch;
-				}
-				*/
-			}
+		~synths = { |buses, groups|
+			~output = Synth(\lumberOut, [\out, buses.out, \in, buses.main], target: groups.output);
+			~ping = Synth(\ping, [\release, 10, \out, buses.main], target: groups.input);
 		};
 	};
 
-	~prPlay = {
-		"building".postln;
-		~addGroups.value;
-		~proxySpace = ProxySpace(~server, "lumber");
-		~addSynths.value;
-		~isPlaying = true;
-	};
 
-	~stop = { |stopWatching=true|
-		~groups !? { ~groups.main.free };
-		~c_eq.stop;
-		~isPlaying = false;
-		/*
-		if (~watcher.notNil and: { stopWatching }) {
-			~watcher.stopWatching;
-		}
-		*/
-	};
+};
+)
+p.buses.out
+p.prep
+p.play
+p.stop
+p.parentGroup
+p.free
 
-	~restart = {
-		//Stop but don't stop watching
-		~stop.value(false);
-		//And don't start watching again
-		~play.value(false);
-	};
-
-	~prFreeBuses = {
-		~buses !? { ~buses.do(_.free) };
-	};
-
-	~free = {
-		~stop.value;
-		~prFreeBuses.value;
-		~ready = false;
-		ServerTree.remove(currentEnvironment, ~server);
-	};
-
-	//
-	~doOnServerTree = {
-		~prResetContainers.value;
-		~isPlaying = false;
-		//currentEnvironment.prPlay;
-	};
-
-	//Reset containers of freeable stuff
-	//Assumes things have already been freed
-	~prResetContainers = {
-		~groups = ();
-		~synths = ();
-	}
-});

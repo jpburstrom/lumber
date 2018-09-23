@@ -29,6 +29,8 @@ Proto {
 	~prep = { |playNow=false|
 		//FIXME server.default can change.
 		var server = ~server ?? { Server.default };
+		ServerTree.add(currentEnvironment, ~server);
+
 		forkIfNeeded {
 			if (server.hasBooted.not) {
 				var cond = Condition();
@@ -36,6 +38,7 @@ Proto {
 				server.doWhenBooted { cond.unhang };
 				cond.hang;
 			};
+			~freeResources.value;
 			~runFactoryFunc.(\buffers);
 			~runFactoryFunc.(\buses);
 			server.sync;
@@ -58,6 +61,7 @@ Proto {
 	//----group2
 	//------synth2
 	//Play
+	//TODO: use bus arg
 	~play = { |bus=0, target, addAction=\addToHead|
 
 		"playing".postln;
@@ -88,13 +92,17 @@ Proto {
 
 		//~parentGroupFreeMethod is set in ~makeParentGroup
 		~parentGroup.perform(~parentGroupFreeMethod);
-		//TODO remove, shouldn't be necessary
-		~synths !? { ~synths.do(_.free) };
 
+		~prResetContainers.value;
 
 		~isPlaying = false;
 		~this.changed(\isPlaying, false);
 
+	};
+
+	~restart = {
+		~stop.value;
+		~play.value; //FIXME store/use previous args
 	};
 
 	~freeResources = {
@@ -108,6 +116,7 @@ Proto {
 		//Free hook
 		~onFree.value;
 		~freeResources.value;
+		ServerTree.remove(currentEnvironment, ~server);
 		~readyForPlay = false;
 	};
 
@@ -127,10 +136,25 @@ Proto {
 	//Run factory functions inside buffer/bus environments. Pass any env variables from proto
 	//as args to function (eg ~groups => { |groups| ... }
 	~runFactoryFunc = { |sym|
+		var envir = currentEnvironment;
 		~factory[sym] !? { |func|
-			currentEnvironment[sym].use({func.valueWithEnvir(currentEnvironment)});
+			currentEnvironment[sym].use({func.valueWithEnvir(envir.debug("% CE".format(sym)))});
 		}
 	};
+
+	//Stuff to do on boot and cmd+period
+	~doOnServerTree = {
+		~prResetContainers.value;
+		~isPlaying = false;
+		//currentEnvironment.prPlay;
+	};
+
+	//Reset containers of freeable stuff
+	//Assumes things have already been freed
+	~prResetContainers = {
+		~groups = ();
+		~synths = ();
+	}
 
 };
 
