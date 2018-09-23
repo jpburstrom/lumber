@@ -1,15 +1,17 @@
-//Main sound producer
-//
-(
-p = Require("protos/serverPlayer", always:false).clone {
-	var common = Require("common", always:false);
+Require("protos/serverPlayer", always:false).clone {
 
-	~eq = Require("c_eq");
+	var common = Require("common", always:false);
+	// Need to look up absolute path here, because we run Require in a routine
+	var synthdefPath = "d_synthdefs.scd".resolveRelative;
+
+	~eq = Require("c_eq", always:true);
+
+
 	//FIXME q.eq
 	~eq.connect(q.eq);
 
 	~onPrep = {
-		Require("d_synthdefs");
+		Require(synthdefPath);
 		~eq.prep;
 	};
 
@@ -56,11 +58,4 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 
 };
-)
-p.buses.out
-p.prep
-p.play
-p.stop
-p.parentGroup
-p.free
 
