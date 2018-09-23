@@ -6,6 +6,7 @@ Window.closeAll;
 {
 	var window = Window.new("Lumber").layout_(HLayout());
 	var sections = List();
+	var presetBtns = { View().layout_(HLayout(*{Button()}.dup(5)).margins_(0)).fixedSize_(Size(90, 16)) };
 
 	var header = { |string|
 		StaticText().string_(string)
@@ -13,19 +14,29 @@ Window.closeAll;
 		font_: Font().bold_(false).size_(16)
 	};
 
+	window.autoRememberPosition(\lumber, \mainWindow);
+
 	window.view.background_(Color.fromHexString("ddbbcc"));
 
 	window.view.layout.add(HLayout(
 		VLayout(
-			header.("Macros"),
-			sections.add(Require("g_macros")).last,
-			nil
+			HLayout(
+				header.("Macros"),
+				nil,
+				presetBtns.value
+			).margins_([10, 0, 10, 0]),
+			sections.add(Require("g_macros").background_(Color.fromHexString("ddbbcc"))).last,
+			// nil
 		),
 		VLayout(
-			header.("EQ"),
+			HLayout(
+				header.("EQ"),
+				nil,
+				presetBtns.value
+			).margins_([0, 0, 10, 0]),
 			sections.add(Require("g_eq")).last,
 			nil
-		)
+		).margins_([10, 0, 0, 0])
 	));
 
 
