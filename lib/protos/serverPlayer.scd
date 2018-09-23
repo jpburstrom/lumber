@@ -16,7 +16,12 @@ Proto {
 	//Different free methods depending on if parent group is created internally or not (see ~makeParentGroup)
 	~parentGroupFreeMethod = \free;
 
-	~factory = ();
+	~factory = (
+		buses: {
+			//Default bus
+			~out = Bus(\audio, 0, 2);
+		}
+	);
 	#[groups, synths, buffers, buses].do { |k|
 		currentEnvironment[k] = ();
 	};
@@ -62,7 +67,9 @@ Proto {
 	//------synth2
 	//Play
 	//TODO: use bus arg
-	~play = { |bus=0, target, addAction=\addToHead|
+	~play = { |bus, target, addAction=\addToHead|
+
+		bus !? { ~buses.out = bus };
 
 		"playing".postln;
 		if (~readyForPlay.not) {
