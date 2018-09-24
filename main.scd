@@ -1,6 +1,9 @@
 q = ();
 
 (
+//Load common variables into Library(\lumber, \common)
+Require("common", always:false);
+
 q.do(_.free);
 q.make {
 	//Macro parameters - mapping controllers to parameters

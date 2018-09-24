@@ -1,6 +1,5 @@
 Require("protos/serverPlayer", always:false).clone {
 
-	var common = Require("common", always:false);
 	// Need to look up absolute path here, not inside method.
 	var synthdefPath = "d_synthdefs.scd".resolveRelative;
 
@@ -33,7 +32,7 @@ Require("protos/serverPlayer", always:false).clone {
 			~main = Bus.audio(server, 1);
 			~out = Bus(\audio, 0, 1, server);
 
-			common.macroSources.do { |src|
+			Library.at(\lumber, \common, \macroSources).do { |src|
 				currentEnvironment[src] = Bus.control(server);
 			}
 		};
@@ -53,6 +52,9 @@ Require("protos/serverPlayer", always:false).clone {
 		~synths = { |buses, groups|
 			~output = Synth(\lumberOut, [\out, buses.out, \in, buses.main], target: groups.output);
 			~ping = Synth(\ping, [\release, 10, \out, buses.main], target: groups.input);
+
+			Library.at(\lumber, \common, \macroSources).do { |src|
+			};
 		};
 	};
 

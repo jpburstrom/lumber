@@ -1,7 +1,7 @@
 //Common data, eg labels, mappings
 //Things that needs to sync between eg synthDefs, buses and guis
 
-Environment().know_(true).make({
+var e = Environment().know_(true).make({
 
 
 	//Macro sources
@@ -54,3 +54,9 @@ Environment().know_(true).make({
 
 
 });
+
+e.keysValuesDo { |k, v|
+	Library.put(\lumber, \common, k, v);
+};
+
+e

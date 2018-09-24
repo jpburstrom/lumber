@@ -5,7 +5,7 @@ p = Require("protos/paramDict").clone {
 	//We're using a dictionary instead of an array,
 	//to be able to change frequency range while making sense
 	//of old presets
-	Require("common").eqSemitones.do { |k|
+	Library.at(\lumber, \common, \eqSemitones).do { |k|
 		~params[k] = NumericControlValue(0, ~dbSpec);
 	};
 

@@ -1,6 +1,5 @@
 (
 m = Require("protos/serverPlayer", always:false).clone {
-	var common = Require("common");
 
 	//Set of [src, dest] pairs. Pairs are added/removed when macros become "active".
 	//They are used for playing and stopping synths from ~play and ~stop
@@ -51,7 +50,8 @@ m = Require("protos/serverPlayer", always:false).clone {
 	//TODO create buses
 	~onPrep = { |target|
 		//Go through all specs and make synthdefs for them
-		common.macroMapping.keysValuesDo { |src, o|
+		~macroMapping = Library.at(\lumber, \common, \macroMapping);
+		~macroMapping.keysValuesDo { |src, o|
 			o.keysValuesDo { |dest, conf|
 				conf.spec !? { conf.specDef = ~prMakeSpecSynthDef.(conf.spec, src, dest) }
 			}
@@ -74,7 +74,7 @@ m = Require("protos/serverPlayer", always:false).clone {
 	//TODO map dest input to mapping output bus
 	~playSynth = { |src, dest|
 		//TODO: use env var instead?
-		var x = common.macroMapping[src][dest];
+		var x = ~macroMapping[src][dest];
 		var g;
 		~groups[src][dest] = g = Group(~parentGroup);
 		//TODO enclose synths in group?
@@ -101,7 +101,7 @@ m = Require("protos/serverPlayer", always:false).clone {
 	~prResetContainers = {
 		~groups = ();
 		~synths = ();
-		common.macroSources.do {|k|
+		Library.at(\lumber, \common, \macroSources).do {|k|
 			~groups[k] = ();
 			~synths[k] = ();
 		}

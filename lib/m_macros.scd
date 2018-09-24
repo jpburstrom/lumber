@@ -2,14 +2,12 @@
 //and maps it to one or several synth parameters
 Proto({
 
-	var common = Require("common");
-
-	~sources = common.macroSources;
+	~sources = Library.at(\lumber, \common, \macroSources);
 
     //Parameter labels
     //This defines macro->parameter mapping
     //Arrays also define parameter order
-    ~paramLabels = common.macroMapping;
+    ~paramLabels = Library.at(\lumber, \common, \macroMapping);
 
     //Parameter dictionary
     ~params = ();
