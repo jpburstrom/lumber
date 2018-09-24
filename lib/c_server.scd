@@ -53,7 +53,9 @@ Require("protos/serverPlayer", always:false).clone {
 			~output = Synth(\lumberOut, [\out, buses.out, \in, buses.main], target: groups.output);
 			~ping = Synth(\ping, [\release, 10, \out, buses.main], target: groups.input);
 
+			//
 			Library.at(\lumber, \common, \macroSources).do { |src|
+				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups.sensors);
 			};
 		};
 	};
