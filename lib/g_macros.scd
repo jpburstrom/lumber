@@ -11,6 +11,8 @@ scroll.hasBorder = false;
 connections.do(_.free);
 connections = List();
 
+
+
 //Loop over source -> parameter label list
 q.macros.sources.do { |source|
 
@@ -63,21 +65,10 @@ q.macros.sources.do { |source|
 						txt.("Inv"),
 						invcb = CheckBox().toolTip_("Invert"),
 						invlabel = StaticText().string_(" / "),
-					],
-					[
-						txt.("Spec"),
-						specpp = PopUpMenu().items_(specs).allowsReselection_(true),
-						specfield = View().fixedWidth_(150).layout_(HLayout(
-							[NumberBox(), s:2], [NumberBox(), s:2],
-							[TextField(), s:3], [NumberBox(), s:1]
-						).margins_(0).spacing_(0)).enabled_(false)
-
 					]
-				).spacing_([2,5]).margins_(0);
+				).spacing_([2,5]).margins_([0, 0, 10, 0]);
             )
         );
-
-		specfield.children.do(_.background_(inactiveColor));
 
         params = q.macros.getParamsFor(source, label);
 
@@ -85,7 +76,7 @@ q.macros.sources.do { |source|
 
 		cb.action = { |v|
 			active = v.value.asBoolean;
-			[sl, specpp, invcb].do(_.enabled = active);
+			[sl, invcb].do(_.enabled = active);
 		};
 
 		invcb.action = { |v|
@@ -97,18 +88,6 @@ q.macros.sources.do { |source|
 			nbx1.value = v.lo;
 			nbx2.value = v.hi;
 		};
-
-		specpp.action = { |v|
-			var spec = v.item.asSpec;
-			var c = specfield.children;
-			c[0].value = spec.minval;
-			c[1].value = spec.maxval;
-			c[2].value =  Warp.warps.findKeyForValue(spec.warp.class);
-			c[3].value = spec.step;
-		};
-
-		//Sensible default
-		specpp.valueAction_(specs.indexOf(\unipolar));
 
 		cb.valueAction_.(_.value);
 
