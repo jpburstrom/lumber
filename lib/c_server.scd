@@ -1,7 +1,7 @@
 Require("protos/serverPlayer", always:false).clone {
 
 	var common = Require("common", always:false);
-	// Need to look up absolute path here, because we run Require in a routine
+	// Need to look up absolute path here, not inside method.
 	var synthdefPath = "d_synthdefs.scd".resolveRelative;
 
 	~eq = Require("c_eq", always:true);
