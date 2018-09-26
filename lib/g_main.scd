@@ -21,12 +21,6 @@ Window.closeAll;
 		Button().states_([[name]]).action_(action).font_(Font.default.size_(12));
 	};
 
-	var serverStatus, serverView = View(nil, Rect(0, 0, 300, 100)).fixedSize_(Size(300, 100));
-	serverView.addFlowLayout;
-	serverView = SCViewHolder().view_(serverView);
-	//FIXME: Server.default
-	Server.default.makeGui(serverView);
-
 
 	window.autoRememberPosition(\lumber, \mainWindow);
 
