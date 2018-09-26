@@ -3,6 +3,7 @@
 
 var e = Environment().know_(true).make({
 
+	~belaAddress = "192.168.7.2";
 
 	//Macro sources
     //That is, physical or virtual controllers

@@ -17,9 +17,10 @@ Proto {
 	~parentGroupFreeMethod = \free;
 
 	~factory = (
-		buses: {
+
+		buses: { |server|
 			//Default bus
-			~out = Bus(\audio, 0, 2);
+			~out = Bus(\audio, 0, 2, server);
 		}
 	);
 	#[groups, synths, buffers, buses].do { |k|
@@ -33,20 +34,22 @@ Proto {
 	//Prepare resources
 	~prep = { |playNow=false|
 		//FIXME server.default can change.
-		var server = ~server ?? { Server.default };
+		//FIXME setting ~server in one object and not in other
+		//may cause multiple servers booting, since it's defaulting to Server.default
+		~server = ~server ?? { Server.default };
 		ServerTree.add(currentEnvironment, ~server);
 
 		forkIfNeeded {
-			if (server.hasBooted.not) {
+			if (~server.hasBooted.not) {
 				var cond = Condition();
-				server.boot;
-				server.doWhenBooted { cond.unhang };
+				~server.boot;
+				~server.doWhenBooted { cond.unhang };
 				cond.hang;
 			};
 			~freeResources.value;
 			~runFactoryFunc.(\buffers);
 			~runFactoryFunc.(\buses);
-			server.sync;
+			~server.sync;
 			//Prep hook, return false to cancel
 			if (~onPrep.value != false) {
 				~readyForPlay = true;
@@ -129,6 +132,9 @@ Proto {
 
 	//Create parent group if it's not already set and playing
 	~makeParentGroup = { |target, addAction|
+		if (target.isNil) {
+			target = ~server
+		};
 		if (~parentGroup.isPlaying.not) {
 			//If we have created the parentGroup, free it completely
 			~parentGroupFreeMethod = \free;

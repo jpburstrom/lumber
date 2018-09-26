@@ -17,15 +17,24 @@ q.make {
 	~storage.register(\eq, q.eq);
 
 	//Sound stuff
-	~server = Require("lib/c_server");
+	~serverController = Require("lib/c_server");
 
-	~server.play;
+	Platform.case(
+		\osx, {
+			Require("lib/g_main");
+			~serverController.server = Server.named[\bela] ?? {
+				var server = Server.remote(\bela, NetAddr(Library.at(\lumber, \common, \belaAddress), 57110));
+				server
+			};
+		},
+		//Bela
+		\linux, {
+			//Make it explicit
+			~serverController.server = Server.default;
+		}
+	);
 
-
-	//
-	if (true) { //TODO: GUI check
-		Require("lib/g_main");
-	}
+	~serverController.play(server);
 }
 
 )
