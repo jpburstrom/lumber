@@ -114,25 +114,33 @@ view.drawFunc = { |vw|
 			(vline+2)@(bounds.height - (strOffset + 1)));
 	});
 	values.do({ |svals,i|
+
 		var color;
 
-		color = Color.hsv(
-			i.linlin(0,values.size,0,1),
-			0.75, 0.5).alpha_(if (selected == i) { 0.75 } { 0.25 });
-		Pen.color = color;
-		Pen.moveTo(0@(svals[0]));
-		svals[1..].do({ |val, i|
-			Pen.lineTo((i+1)@val);
-		});
-		Pen.lineTo(bounds.width@(bounds.height/2));
-		Pen.lineTo(0@(bounds.height/2));
-		Pen.lineTo(0@(svals[0]));
-		Pen.fill;
+		try {
+			color = Color.hsv(
+				i.linlin(0,values.size,0,1),
+				0.75, 0.5).alpha_(if (selected == i) { 0.75 } { 0.25 });
+			Pen.color = color;
+			Pen.moveTo(0@(svals[0]));
+			svals[1..].do({ |val, i|
+				Pen.lineTo((i+1)@val);
+			});
+			Pen.lineTo(bounds.width@(bounds.height/2));
+			Pen.lineTo(0@(bounds.height/2));
+			Pen.lineTo(0@(svals[0]));
+			Pen.fill;
 
-		Pen.addArc(pt[i], 5, 0, 2pi);
+			Pen.addArc(pt[i], 5, 0, 2pi);
 
-		Pen.color = color.alpha_(0.75);
-		Pen.stroke;
+			Pen.color = color.alpha_(0.75);
+			Pen.stroke;
+
+		} {
+			"Error drawing eq".debug;
+			svals.debug("Values");
+		};
+
 
 	});
 
