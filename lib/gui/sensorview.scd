@@ -55,13 +55,11 @@
 			}.inEnvir, '/Regression/TargetVector');
 			~oscFuncs add: OSCFunc({ |args|
 				var val = args[1].round(1);
-				// val.postln;
 				~grtAddr.sendMsg("/TrainingClassLabel", val);
 				~touchOsc.sendMsg("/Classification/TrainingClassLabelLabel", val.asString)
 			}.inEnvir, '/Classification/TrainingClassLabel');
 			~oscFuncs add: OSCFunc({ |args|
 				var val = args[1];
-				// val.postln;
 				~grtAddr.sendMsg("/ClearTrainingDataset");
 				~touchOsc.sendMsg("/Predict", 0);
 				~touchOsc.sendMsg("/Record", 0);
@@ -69,9 +67,7 @@
 			}.inEnvir, '/ClearDataset');
 			~oscFuncs add: OSCFunc({ |args|
 				var val = args[1];
-				// val.postln;
 				~grtAddr.sendMsg("/Record", val);
-				"ok".postln;
 				if (val == 1) {
 					~sendPrediction = false;
 					~touchOsc.sendMsg("/Predict", 0);
@@ -80,14 +76,13 @@
 			}.inEnvir, '/Record');
 			~oscFuncs add: OSCFunc({ |args|
 				var val = args[1].asBoolean;
-				// val.postln;
 				if (val) {
 					~grtAddr.sendMsg("/Record", 0);
 					~grtAddr.sendMsg("/Train");
 					~touchOsc.sendMsg("/Record", 0);
 				} ;
 
-				~sendPrediction = val.postln;
+				~sendPrediction = val;
 
 				// ~touchOsc.sendMsg("/Classification/TrainingClassLabelLabel", val.asString)
 			}.inEnvir, '/Predict');
@@ -135,7 +130,6 @@
 		//Run synth and OSCfunc,storing sensor data
 		~run = { |serverName=\bela|
 			var server = Server.named[serverName];
-			// server.postln;
 			server !? {
 				~synth.free;
 				~synth = SynthDef(\belaToOSC, {
@@ -155,14 +149,12 @@
 				~func.free;
 
 				~func = OSCFunc({ |args|
-					// args.postln;
 
 					var send;
 
 					args = args[3..].clump(3);
 
 
-					// args.postln;
 					~accel = args[0];
 					~accelBounds = [~accel.min(~accelBounds[0]), ~accel.max(~accelBounds[1])];
 					~gyro = args[1];

@@ -36,8 +36,6 @@ Proto({
                     objParams[param] !? { |objSettings|
                         settings.keysValuesDo { |k, v|
                             objSettings[k] !? { |objValue|
-                                // [param, k, objValue.value].debug("loading");
-                                // ~params[macro][param][k].value = .postln;
                                 ~params[macro][param][k].value = objValue.value;
                             }
                         }
@@ -79,12 +77,9 @@ Proto({
             args = args.reverse;
             while { x.isKindOf(Event) } {
                 x = args.pop.asSymbol !? { |k|
-                    k.postln;
                     x[k];
                 }
             };
-
-            x.postln;
 
             x !? {
                 x.value = v;

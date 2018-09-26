@@ -74,7 +74,6 @@ Proto {
 
 		bus !? { ~buses.out = bus };
 
-		"playing".postln;
 		if (~readyForPlay.not) {
 			//prepare and play
 			~prep.value(true);
@@ -151,7 +150,7 @@ Proto {
 	~runFactoryFunc = { |sym|
 		var envir = currentEnvironment;
 		~factory[sym] !? { |func|
-			currentEnvironment[sym].use({func.valueWithEnvir(envir.debug("% CE".format(sym)))});
+			currentEnvironment[sym].use({func.valueWithEnvir(envir)});
 		}
 	};
 
