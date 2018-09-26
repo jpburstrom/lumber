@@ -14,7 +14,7 @@ connections = List();
 
 
 //Loop over source -> parameter label list
-q.macros.sources.do { |source|
+Library.at(\lumber, \common, \macroSources).do { |source|
 
     var paramLabels = q.macros.paramLabels[source];
     var knobColor = Color.rand;
