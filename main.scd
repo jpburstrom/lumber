@@ -1,8 +1,6 @@
-q = ();
-
 (
 //Load common variables into Library(\lumber, \common)
-Require("common", always:false);
+Require("lib/common", always:false);
 
 q.do(_.free);
 q.make {
@@ -20,6 +18,7 @@ q.make {
 	~serverController = Require("lib/c_server");
 
 	Platform.case(
+		//Load gui on osx
 		\osx, {
 			Require("lib/g_main");
 			~serverController.server = Server.named[\bela] ?? {
@@ -30,14 +29,17 @@ q.make {
 		//Bela
 		\linux, {
 			//Make it explicit
-			~serverController.server = Server.default;
+			~serverController.server = Server.local;
 		}
 	);
 
-	~serverController.play(server);
+	//Put server where others can find it
+	Library.put(\lumber, \server, ~serverController.server);
+	~serverController.play;
 }
-
 )
 
-q.server.play;
-q.eq.params.hiShelf.freq.value = 200
+Server.default = Library.at(\lumber, \server)
+.statusWatcher.prFinalizeBoot
+
+s.freeAll
