@@ -21,7 +21,7 @@ p = Require("protos/paramDict").clone {
 		params = params ?? { ~params };
 		params.keysValuesDo { |k, v|
 			if (v.respondsTo(\keysValuesDo)) {
-				~setParams.(obj[k], v);
+				obj[k] !? { |o| ~setParams.(o, v) };
 			} {
 				obj[k] !? { |newVal|
 					params[k].value = newVal;
