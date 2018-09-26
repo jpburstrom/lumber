@@ -65,7 +65,6 @@ Require("protos/serverPlayer", always:false).clone {
 
 
 	~makeSynth = { |freq, db|
-		//Quick hack
 		Synth(\peakEqBand, [\freq, freq, \db, db, \out, ~buses.out], ~parentGroup);
 	};
 

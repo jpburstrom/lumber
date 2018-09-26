@@ -8,7 +8,6 @@ m = Require("protos/serverPlayer", always:false).clone {
 	//Source is playing in ~sensors or ~lfo on ~bus (Synth("macro_%".format(~source)))
 	//dest is playing in ~fx or ~lfo, (sensor can control lfo)
 
-
 	//Connect model to controller.
 	//Connect macro.source.dest.active cv's to play/stop synths
 	//TODO: connect other cvs (mapping-related) to methods
