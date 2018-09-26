@@ -11,8 +11,8 @@ q.make {
 	//Storage - handle save/load to disk
 	~storage = Require("lib/c_storage");
 	//Connect macros with storage
-	~storage.register(\macros, q.macros);
-	~storage.register(\eq, q.eq);
+	~storage.register(\macros, ~macros);
+	~storage.register(\eq, ~eq);
 
 	//Sound stuff
 	~serverController = Require("lib/c_server");
@@ -27,6 +27,7 @@ q.make {
 			};
 		},
 		//Bela
+
 		\linux, {
 			//Make it explicit
 			~serverController.server = Server.local;
@@ -35,11 +36,7 @@ q.make {
 
 	//Put server where others can find it
 	Library.put(\lumber, \server, ~serverController.server);
+	~storage.load;
 	~serverController.play;
 }
 )
-
-Server.default = Library.at(\lumber, \server)
-.statusWatcher.prFinalizeBoot
-
-s.freeAll
