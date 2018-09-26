@@ -65,7 +65,23 @@ Window.closeAll;
 			oneShotBtn.("Server", { Server.default.makeWindow }),
 			oneShotBtn.("Meter",
 				{ Server.default.meter(2, 2) }),
-			nil
+			nil,
+			oneShotBtn.("Calibrate Accel + Gyro", { {
+				var win = Window("Calibration in 5 seconds").front;
+				5.wait;
+				win.close;
+				win = Window("Be still until window is closed").front;
+				MPU.calibrateAccelGyro(Library.at(\lumber, \server));
+				1.wait;
+				win.close;
+			}.fork(AppClock) }),
+			oneShotBtn.("Save calibration", { MPU.saveCalibration(calibrationPath,
+				Library.at(\lumber, \server)) }),
+			oneShotBtn.("Load calibration", { MPU.loadCalibration(calibrationPath,
+				Library.at(\lumber, \server)) }),
+
+			oneShotBtn.("Train sensors", Require("gui/sensorview", always:false).inEnvir(q));
+
 		),
 	));
 
