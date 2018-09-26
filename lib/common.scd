@@ -4,6 +4,8 @@
 var e = Environment().know_(true).make({
 
 	~belaAddress = "192.168.7.2";
+	~belaRoot = "/root/lumber";
+	~calibrationPath = ~belaRoot +/+ "data/calibration.bin";
 
 	//Macro sources
     //That is, physical or virtual controllers

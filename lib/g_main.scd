@@ -21,6 +21,7 @@ Window.closeAll;
 		Button().states_([[name]]).action_(action).font_(Font.default.size_(12));
 	};
 
+	var calibrationPath = Library.at(\lumber, \common, \calibrationPath);
 
 	window.autoRememberPosition(\lumber, \mainWindow);
 
