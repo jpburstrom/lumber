@@ -8,11 +8,11 @@ Require("protos/serverPlayer", always:false).clone {
 				if (cvOrDict.respondsTo(\keysValuesDo)) {
 					cvOrDict.keysValuesDo { |p, cv|
 						cv.signal(\value).connectTo(
-							currentEnvironment.methodSlot("setParam('%', '%', value)".format(key, p)))
+							currentEnvironment.methodSlot("setParam('%', '%', value)".format(key, p)), false)
 					}
 				} {
 					cvOrDict.signal(\value).connectTo(
-						currentEnvironment.methodSlot("setGain(%, value)".format(key)));
+						currentEnvironment.methodSlot("setGain(%, value)".format(key)), false);
 				}
 			}
 		}
@@ -98,6 +98,8 @@ Require("protos/serverPlayer", always:false).clone {
 
 
 };
+
+
 
 
 
