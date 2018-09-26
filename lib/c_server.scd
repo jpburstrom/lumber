@@ -3,29 +3,35 @@ Require("protos/serverPlayer", always:false).clone {
 	// Need to look up absolute path here, not inside method.
 	var synthdefPath = "d_synthdefs.scd".resolveRelative;
 
-	~eq = Require("c_eq", always:true);
+	~eq = Require("c_eq");
+	~macros = Require("c_macros");
 
 
-	//FIXME q.eq
+	//FIXME don't use global variable
 	~eq.connect(q.eq);
+	~macros.connect(q.macros);
 
 	~onPrep = {
 		Require(synthdefPath);
 		//Load calibration for MPU ugens
 		MPU.loadCalibration(Library.at(\lumber, \common, \calibrationPath), ~server);
 		~eq.prep;
+		~macros.prep;
 	};
 
 	~onPlay = {
-		~eq.play(~buses.main, ~groups.eq)
+		~eq.play(~buses.main, ~groups.eq);
+		~macros.play(~buses.main, ~groups.fx);
 	};
 
 	~onStop = {
 		~eq.stop;
+		~macros.stop;
 	};
 
 	~onFree = {
 		~eq.free;
+		~macros.free;
 	};
 
 	~factory.make {
