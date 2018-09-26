@@ -16,7 +16,8 @@ Proto({
 		dests.keysValuesDo { |key, o|
 			~params[src][key] = (
                 active: OnOffControlValue(\off),
-                amount: NumericControlValue()
+                min: NumericControlValue(),
+				max: NumericControlValue()
             )
         }
     };
