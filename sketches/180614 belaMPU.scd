@@ -32,16 +32,22 @@
 
     //Run synth and OSCfunc,storing sensor data
     ~run = { |serverName=\bela|
+		var server = Server.named[serverName];
         ~synth.free;
         ~synth = SynthDef(\belaToOSC, {
-            var out = ([\accelKr, \gyroKr, \magKr,
-                \orientationKr].collect { |sym|
+            var out;
 
-                LPF.kr(MPU.perform(sym), 5);
-            }).flatten;
+			if (serverName == \bela)  {
+				out = ([\accelKr, \gyroKr, \magKr,
+					\orientationKr].collect { |sym|
+					LPF.kr(MPU.perform(sym), 5);
+				}).flatten;
+			} {
+				out = DC.ar ! 12
+			};
 
             SendReply.kr(Impulse.kr(33), '/mpu', out);
-        }).play;
+		}).play(server);
 
         ~func.free;
 
@@ -73,7 +79,7 @@
                 ~grtAddr.sendMsg("/Data", *send);
             }
 
-        }.inEnvir, '/mpu', Server.named[serverName].notify_(true).addr)
+        }.inEnvir, '/mpu', server.notify_(true).addr)
 
     };
 
@@ -214,10 +220,7 @@
 
 
 });
-~belaMPU.run;
+~belaMPU.run(\bela);
 ~belaMPU.makeGui;
 )
-
-~belaMPU.free
-~belaMPU.accel
 
