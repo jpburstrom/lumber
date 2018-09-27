@@ -16,6 +16,7 @@ q.make {
 
 	//Sound stuff
 	~serverController = Require("lib/c_server");
+	~serverController.connectToModels(\eq, ~eq, \macros, ~macros);
 
 	Platform.case(
 		//Load gui on osx

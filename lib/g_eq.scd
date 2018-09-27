@@ -1,10 +1,11 @@
 var layout, view, connections;
-var elements = q.eq.params.keys.select(_.isNumber).size;
 var rows = 2;
 var sliderWidth = 35;
+//assuming we're in the same environment, otherwise fallback to global (it's a hack)
+var params = (~eq ? q.eq).params;
+var elements = params.keys.select(_.isNumber).size;
 var fullWidth = (sliderWidth * elements / rows) + (4 * elements / rows);
-//FIXME: don't hardcode?
-var params = q.eq.params;
+
 
 var fact = (
 	paramSlider: { |self, label, cv|
@@ -25,17 +26,16 @@ var fact = (
 		out;
 	};
 );
-Connection.traceAll = false;
+
 
 view = View().minWidth_(fullWidth).minHeight_(400).layout_(
-	VLayout(Require("gui/eqview"), *(rows + 1).collect{ HLayout() }).margins_(0).spacing_(0)
+	VLayout(Require("gui/eqview").value(params), *(rows + 1).collect{ HLayout() }).margins_(0).spacing_(0)
 );
 
+
 //Loop over source -> parameter label list
-//FIXME: q.eq
 Require("common").eqSemitones.asArray.sort.do { |midinote, i|
 
-	//FIXME: Hardcoded reference to q.eq
 	var cv = params[midinote];
 	var background = Color.white, knobColor = Color.rand;
 	var task, oldval, sl, txt,
@@ -44,7 +44,7 @@ Require("common").eqSemitones.asArray.sort.do { |midinote, i|
 		background = nil;
 
 	};
-	// view.layout.children.postln;
+
 	view.layout.children[(i.div(elements/rows))].add(
 		View().layout_(
 			VLayout(
@@ -140,4 +140,4 @@ view.onClose_({
 }.inEnvir);
 
 
-SCViewHolder().view_(view).front;
+SCViewHolder().view_(view);

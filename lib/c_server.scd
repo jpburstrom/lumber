@@ -7,9 +7,12 @@ Require("protos/serverPlayer", always:false).clone {
 	~macros = Require("c_macros");
 
 
-	//FIXME don't use global variable
-	~eq.connect(q.eq);
-	~macros.connect(q.macros);
+	~connectToModels = { |...args|
+		args.pairsDo { |k, model|
+			[k, model].postln;
+			currentEnvironment[k].postln.connect(model);
+		}
+	};
 
 	~onPrep = {
 		Require(synthdefPath);

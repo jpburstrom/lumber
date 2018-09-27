@@ -1,5 +1,5 @@
 var layout, view, connections;
-
+var model = ~macros ? q.macros; //assuming we're in the same environment, otherwise fallback to global (hack)
 var scroll = ScrollView().minWidth_(360).hasHorizontalScroller_(false).autohidesScrollers_(false);
 view = View().minWidth_(350).layout_(
     VLayout().margins_(10).spacing_(10);
@@ -64,8 +64,7 @@ Library.at(\lumber, \common, \macroSources).do { |source|
             )
         );
 
-		//FIXME q.macros global variable
-        params = q.macros.getParamsFor(source, label);
+        params = model.getParamsFor(source, label);
 
 		// curve.action = { |v| env.curves = v.value.linlin(0,1, -8, 8)};
 
@@ -106,4 +105,4 @@ view.onClose_({
 }.inEnvir);
 
 
-scroll.front;
+scroll;
