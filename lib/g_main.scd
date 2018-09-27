@@ -75,13 +75,18 @@ Window.closeAll;
 		HLayout(
 			oneShotBtn.("Play", { q.serverController.play }),
 			oneShotBtn.("Stop", { q.serverController.stop }),
+			popup.("Bela",
+				"  Reboot", { "ssh root@bela reboot".unixCmd },
+				"  Halt", { "ssh root@bela halt".unixCmd },
+			),
 			popup.("Server",
 				"  Window", { Library.at(\lumber, \server).makeWindow },
 				"  Meter",
 				{ Library.at(\lumber, \server).meter(2, 2) },
 				"  Tree",
 				{ Library.at(\lumber, \server).plotTree },
-				"  Free All", { Library.at(\lumber, \server).freeAll }
+				"  Free All", { Library.at(\lumber, \server).freeAll },
+				"  Reboot", { "TODO".postln },
 			),
 			nil,
 
