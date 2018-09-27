@@ -23,12 +23,12 @@ Proto({
 	//If key is not provided, save all keys
 	//If path is not provided, use default path
     ~save = { |keys, path|
-		var obj;
+		var obj, p;
 		keys = ~prCheckKeyArg.(keys);
 		keys.do { |k|
-			path ?? { path = ~prMakeStoragePath.value(k) };
+			p = path ?? { ~prMakeStoragePath.value(k) };
 			obj = ~objects[k].getParams(\storage);
-			~prWrite.(obj, path);
+			~prWrite.(obj, p);
 		}
 	};
 
