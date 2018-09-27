@@ -36,7 +36,21 @@ Window.closeAll;
 	};
 
 	var oneShotBtn = { |name, action|
-		Button().states_([[name]]).action_(action).font_(Font.default.size_(12));
+		Button().states_([[name, Color(),window.background]]).action_(action).font_(Font.default.size_(12))
+		;
+	};
+
+	//popup.("header", "action1", {}, "action2", {})
+	var popup = { |...args|
+		var labels, actions, header;
+		header = args[0];
+		args = args[1..].clump(2).flop;
+		labels = args[0];
+		actions = args[1];
+		PopUpMenu().items_([header] ++ labels).action_({ |btn|
+			actions[btn.value-1].value;
+			btn.value = 0;
+		}).background_(window.background).maxWidth_(80)
 	};
 
 	var calibrationPath = Library.at(\lumber, \common, \calibrationPath);
@@ -61,14 +75,31 @@ Window.closeAll;
 		HLayout(
 			oneShotBtn.("Play", { q.serverController.play }),
 			oneShotBtn.("Stop", { q.serverController.stop }),
+			popup.("Server",
+				"  Window", { Library.at(\lumber, \server).makeWindow },
+				"  Meter",
+				{ Library.at(\lumber, \server).meter(2, 2) },
+				"  Tree",
+				{ Library.at(\lumber, \server).plotTree },
+				"  Free All", { Library.at(\lumber, \server).freeAll }
+			),
 			nil,
-			oneShotBtn.("Free All", { Library.at(\lumber, \server).freeAll }),
-			oneShotBtn.("Reload script", { q.serverController.stop; mainScriptPath.load }),
-			nil,
-			oneShotBtn.("Save", { q.storage.save }),
-			oneShotBtn.("Load", { q.storage.load }),
-			oneShotBtn.("Save as…", { "TODO".postln }),
-			oneShotBtn.("Load from…", { "TODO".postln }),
+
+			popup.("Sensors",
+				"  Train sensors", Require("gui/sensorview", always:false).inEnvir(q),
+				"  Calibrate Accel + Gyro", { calibrationTask.(\calibrateAccelGyro) },
+				"  Calibrate Magnetometer", { /*calibrationTask.(\calibrateMag)*/ "FIXME".warn },
+				"  Save calibration", { MPU.saveCalibration(calibrationPath,
+					Library.at(\lumber, \server)) },
+				"  Load calibration", { MPU.loadCalibration(calibrationPath,
+					Library.at(\lumber, \server)) }
+			),
+			popup.("Storage",
+				"  Save", { q.storage.save },
+				"  Load", { q.storage.load },
+				"  Save as…", { "TODO".postln },
+				"  Load from…", { "TODO".postln }
+			)
 
 		),
 		HLayout(
@@ -92,20 +123,9 @@ Window.closeAll;
 			).margins_([10, 0, 0, 0])
 		),
 		HLayout(
-			oneShotBtn.("Server", { Library.at(\lumber, \server).makeWindow }),
-			oneShotBtn.("Meter",
-				{ Library.at(\lumber, \server).meter(2, 2) }),
-			oneShotBtn.("Tree",
-				{ Library.at(\lumber, \server).plotTree }),
 			nil,
-			oneShotBtn.("Calibrate Accel + Gyro", { calibrationTask.(\calibrateAccelGyro) }),
-			oneShotBtn.("Calibrate Magnetometer", { /*calibrationTask.(\calibrateMag)*/ "FIXME".warn }),
-			oneShotBtn.("Save calibration", { MPU.saveCalibration(calibrationPath,
-				Library.at(\lumber, \server)) }),
-			oneShotBtn.("Load calibration", { MPU.loadCalibration(calibrationPath,
-				Library.at(\lumber, \server)) }),
+			oneShotBtn.("Reload script", { q.serverController.stop; mainScriptPath.load }),
 
-			oneShotBtn.("Train sensors", Require("gui/sensorview", always:false).inEnvir(q));
 
 		),
 	));
