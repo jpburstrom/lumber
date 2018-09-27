@@ -49,6 +49,10 @@ q.make {
 	//Put server where others can find it
 	Library.put(\lumber, \server, ~serverController.server);
 	~storage.load;
-	~serverController.play;
-}
+	fork {
+		~serverController.bootPrep;
+		~serverController.play;
+	};
+};
+"ok"
 )

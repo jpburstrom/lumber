@@ -32,7 +32,7 @@ Proto {
 	//~factory.synths = { |buses| ~reverb = Synth(\reverb, [\out, buses.main]) };
 
 	//Prepare resources
-	~prep = { |playNow=false|
+	~prep = { |playNow=false, boot=false|
 		//FIXME server.default can change.
 		//FIXME setting ~server in one object and not in other
 		//may cause multiple servers booting, since it's defaulting to Server.default
@@ -40,7 +40,7 @@ Proto {
 		ServerTree.add(currentEnvironment, ~server);
 
 		forkIfNeeded {
-			if (~server.hasBooted.not) {
+			if (boot and: { ~server.hasBooted.not }) {
 				var cond = Condition();
 				~server.boot;
 				~server.doWhenBooted { cond.unhang };
@@ -61,6 +61,11 @@ Proto {
 			}
 		}
 	};
+
+	~bootPrep = {
+		~boot.value(false, true)
+	};
+
 
 	//target
 	//--parentGroup
