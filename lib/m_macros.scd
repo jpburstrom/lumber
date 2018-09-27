@@ -16,8 +16,8 @@ Proto({
 		dests.keysValuesDo { |key, o|
 			~params[src][key] = (
                 active: OnOffControlValue(\off),
-                min: NumericControlValue(),
-				max: NumericControlValue()
+                from: NumericControlValue(),
+				to: NumericControlValue()
             )
         }
     };
@@ -28,8 +28,7 @@ Proto({
     //Load param dictionary
     //Useful for preset loading
     ~setParams = { |obj|
-
-        ~params.keysValuesDo { |macro, params|
+	    ~params.keysValuesDo { |macro, params|
             //Check if obj has macro
             obj[macro] !? { |objParams|
               params.keysValuesDo { |param, settings|

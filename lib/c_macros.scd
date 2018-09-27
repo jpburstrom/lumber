@@ -1,5 +1,4 @@
-(
-m = Require("protos/serverPlayer", always:false).clone {
+Require("protos/serverPlayer", always:false).clone {
 
 	//Set of [src, dest] pairs. Pairs are added/removed when macros become "active".
 	//They are used for playing and stopping synths from ~play and ~stop
@@ -24,6 +23,8 @@ m = Require("protos/serverPlayer", always:false).clone {
 					};
 					*/
 					dest = dest.toLower;
+
+					//Add to active connections if
 					cvs.active.signal(\value).connectTo({ |v|
 						var method;
 						if (v.value == \on) {
@@ -123,6 +124,4 @@ m = Require("protos/serverPlayer", always:false).clone {
 
 
 };
-
-)
 

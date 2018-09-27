@@ -9,9 +9,7 @@ scroll.canvas = view;
 scroll.hasBorder = false;
 
 connections.do(_.free);
-connections = List();
-
-
+connections = ConnectionList();
 
 //Loop over source -> parameter label list
 Library.at(\lumber, \common, \macroSources).do { |source|
@@ -41,76 +39,60 @@ Library.at(\lumber, \common, \macroSources).do { |source|
 			}
 		};
 		var label = config.name;
-		var cb, sl, nbx1, nbx2, specpp, specfield, invcb, invlabel;
+		var cb, sl, nbx;
 		var subview;
 		var active = false;
 		var inactiveColor = Color.fromHexString("ccc");
+
+		sl = { |i|
+			Slider().orientation_(\horizontal).value_(i).maxHeight_(20)
+		} ! 2;
+		nbx = { |i|
+			NumberBox().enabled_(false)
+			.background_(inactiveColor).maxHeight_(20).maxWidth_(35).value_(i)
+		} ! 2;
 
 	    view.layout.add(
             subview = View().layout_(
                 GridLayout.columns(
 					[txt.(""), StaticText().string_(label).minWidth_(75)],
 					[txt.("On"), cb = CheckBox()],
-					[
-						txt.("Range"),
-						sl = RangeSlider().orientation_(\horizontal),
-						HLayout(
-							nbx1 = NumberBox().enabled_(false).background_(inactiveColor).maxWidth_(35),
-							nil,
-							nbx2 = NumberBox().enabled_(false).background_(inactiveColor).maxWidth_(35)
-						),
+					[txt.("Range")] ++
+					2.collect { |i| HLayout( sl[i], nbx[i] ).margins_([10, 0, 0, 0]).spacing_(10) }
 
-					],
-					[
-						txt.("Inv"),
-						invcb = CheckBox().toolTip_("Invert"),
-						invlabel = StaticText().string_(" / "),
-					]
-				).spacing_([2,5]).margins_([0, 0, 10, 0]);
+				).spacing_(0).margins_([0, 0, 10, 0]);
             )
         );
 
+		//FIXME q.macros global variable
         params = q.macros.getParamsFor(source, label);
 
 		// curve.action = { |v| env.curves = v.value.linlin(0,1, -8, 8)};
 
 		cb.action = { |v|
 			active = v.value.asBoolean;
-			[sl, invcb].do(_.enabled = active);
+			sl.do(_.enabled = active);
 		};
 
-		invcb.action = { |v|
-			var lbl = [" / ", " \\ "];
-			invlabel.string_(lbl[v.value.asInteger]);
+		2.do { |i|
+			var p = params[#[from, to][i]];
+			connections.add(sl[i].signal(\value).connectTo(nbx[i].valueSlot));
+			connections.add(sl[i].signal(\value).connectTo(p.valueSlot));
+			connections.add(p.signal(\value).connectTo(sl[i].valueSlot));
+			connections.add(p.signal(\value).connectTo(nbx[i].valueSlot));
 		};
 
-		sl.action = { |v|
-			nbx1.value = v.lo;
-			nbx2.value = v.hi;
-		};
+		connections.add(cb.signal(\value)
+			.connectTo(params[\active].inputSlot)
+			.transform({|o, w, v| [o, w, v.asInteger]})
+		);
+		connections.add(params[\active].signal(\value)
+			.connectTo(cb.valueSlot)
+			.transform({|o, w, v| [o, w, v == \on]})
+		);
+		// slFrom.signal(\value).connectTo(params[\from])
 
-		cb.valueAction_.(_.value);
 
-
-		/*
-        connections.add(cb.signal(\value)
-            .connectTo(params[\active].inputSlot)
-            .transform({|o, w, v| [o, w, v.asInteger]})
-        );
-
-        connections.add(sl.signal(\value)
-            .connectTo(params[\amount].inputSlot)
-        );
-
-        connections.add(params[\active].signal(\value)
-            .connectTo(cb.valueSlot)
-            .transform({|o, w, v| [o, w, v == \on]})
-        );
-
-        connections.add(params[\amount].signal(\value)
-            .connectTo(sl.valueSlot)
-        );
-		*/
 
 		//No more headers
 		txt = nil;
@@ -120,7 +102,7 @@ Library.at(\lumber, \common, \macroSources).do { |source|
 
 };
 view.onClose_({
-    connections.do(_.free)
+    connections.free;
 }.inEnvir);
 
 
