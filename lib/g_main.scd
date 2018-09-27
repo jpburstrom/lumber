@@ -41,17 +41,29 @@ Window.closeAll;
 
 	var calibrationPath = Library.at(\lumber, \common, \calibrationPath);
 
+	var calibrationTask = { |method|
+		{
+			var win = Window("Calibration in 5 seconds").front;
+			5.wait;
+			win.close;
+			win = Window("Be still until window is closed").front;
+			MPU.perform(method, Library.at(\lumber, \server));
+			1.wait;
+			win.close;
+		}.fork(AppClock)
+	};
+
 	window.autoRememberPosition(\lumber, \mainWindow);
 
 	window.view.background_(Color.fromHexString("ddbbcc"));
 
 	window.view.layout.add(VLayout(
 		HLayout(
-			oneShotBtn.("Play", { q.server.play }),
-			oneShotBtn.("Stop", { q.server.stop }),
+			oneShotBtn.("Play", { q.serverController.play }),
+			oneShotBtn.("Stop", { q.serverController.stop }),
 			nil,
 			oneShotBtn.("Free All", { Library.at(\lumber, \server).freeAll }),
-			oneShotBtn.("Reload script", { q.server.stop; mainScriptPath.load }),
+			oneShotBtn.("Reload script", { q.serverController.stop; mainScriptPath.load }),
 			nil,
 			oneShotBtn.("Save", { q.storage.save }),
 			oneShotBtn.("Load", { q.storage.load }),
@@ -80,19 +92,14 @@ Window.closeAll;
 			).margins_([10, 0, 0, 0])
 		),
 		HLayout(
-			oneShotBtn.("Server", { Server.default.makeWindow }),
+			oneShotBtn.("Server", { Library.at(\lumber, \server).makeWindow }),
 			oneShotBtn.("Meter",
-				{ Server.default.meter(2, 2) }),
+				{ Library.at(\lumber, \server).meter(2, 2) }),
+			oneShotBtn.("Tree",
+				{ Library.at(\lumber, \server).plotTree }),
 			nil,
-			oneShotBtn.("Calibrate Accel + Gyro", { {
-				var win = Window("Calibration in 5 seconds").front;
-				5.wait;
-				win.close;
-				win = Window("Be still until window is closed").front;
-				MPU.calibrateAccelGyro(Library.at(\lumber, \server));
-				1.wait;
-				win.close;
-			}.fork(AppClock) }),
+			oneShotBtn.("Calibrate Accel + Gyro", { calibrationTask.(\calibrateAccelGyro) }),
+			oneShotBtn.("Calibrate Magnetometer", { /*calibrationTask.(\calibrateMag)*/ "FIXME".warn }),
 			oneShotBtn.("Save calibration", { MPU.saveCalibration(calibrationPath,
 				Library.at(\lumber, \server)) }),
 			oneShotBtn.("Load calibration", { MPU.loadCalibration(calibrationPath,
