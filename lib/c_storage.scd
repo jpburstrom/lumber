@@ -35,18 +35,18 @@ Proto({
 
 	//Load object(s). Both key and path is optional (see ~save)
     ~load = { |keys, path|
-        var obj;
+        var obj, p;
 		keys = ~prCheckKeyArg.(keys);
 
 		keys.do { |k|
-			path ?? { path = ~prMakeStoragePath.value(k) };
-			if (File.exists(path)) {
-				obj = ~prRead.(path);
+			p = path ?? { ~prMakeStoragePath.value(k) };
+			if (File.exists(p)) {
+				obj = ~prRead.(p);
 				if (~objects[k].notNil) {
 					~objects[k].setParams(obj);
 				}
 			} {
-				"Storage file doesn't exist at %".format(path).error;
+				"Storage file doesn't exist at %".format(p).error;
 			}
 		};
 
