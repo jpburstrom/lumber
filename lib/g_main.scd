@@ -9,7 +9,25 @@ Window.closeAll;
 {
 	var window = Window.new("Lumber").layout_(HLayout());
 	var sections = List();
-	var presetBtns = { View().layout_(HLayout(*{Button()}.dup(5)).margins_(0)).fixedSize_(Size(90, 16)) };
+	var presetBtns = { |offset=0|
+		View().layout_(HLayout(*{ |i|
+			//TODO: preset activeIndex controls button state
+			Button().states_([
+				["", Color.black, Color.white],
+				["", Color.white, Color.black]
+			]).mouseDownAction_({ |btn, a, b, mod|
+				btn.parent.children.reject(_==btn).do(_.value = 0);
+				btn.value = 0;
+				if (mod.isShift) {
+					"Save".postln;
+					~presets.save(i+offset);
+				} {
+					"load".postln;
+					~presets.load(i+offset);
+				}
+			}.inEnvir)
+		}.dup(5)).margins_(0)).fixedSize_(Size(90, 16))
+	};
 
 	var header = { |string|
 		StaticText().string_(string)

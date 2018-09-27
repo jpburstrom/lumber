@@ -8,11 +8,22 @@ q.make {
 	~macros = Require("lib/m_macros");
 	//Macro parameters - mapping controllers to parameters
 	~eq = Require("lib/m_eq");
+
+	//Presets
+	~presets = Require("lib/c_presets");
+	~presets.register(\macros, ~macros);
+	~presets.register(\eq, ~eq);
+
 	//Storage - handle save/load to disk
 	~storage = Require("lib/c_storage");
-	//Connect macros with storage
+	//Connect params to storage
 	~storage.register(\macros, ~macros);
 	~storage.register(\eq, ~eq);
+	//And connect presets as well, making it possible to save both
+	//bank of presets and params by group
+	~storage.register(\presets, ~presets);
+
+
 
 	//Sound stuff
 	~serverController = Require("lib/c_server");

@@ -13,6 +13,9 @@ Require("../lib/protos/paramList").clone({
 		out
 	};
 
+	//TODO: implement this + setIndex + \changed etc
+	~activeIndex = 0;
+
 	//Preset holder with 10 slots
 	~params = 10.collect { `() };
 
