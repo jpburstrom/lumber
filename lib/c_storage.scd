@@ -95,14 +95,14 @@ Proto({
 	};
 
     ~prWrite = { |obj, path|
-        z = ZArchive.write(path);
+        var z = ZArchive.write(path);
         z.writeItem(obj);
         z.writeClose;
     };
 
     ~prRead = { |path|
         var things;
-        z = ZArchive.read(path);
+        var z = ZArchive.read(path);
         things = z.readItem;
         z.close;
         things;
