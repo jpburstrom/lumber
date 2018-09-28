@@ -75,10 +75,21 @@ Window.closeAll;
 		HLayout(
 			oneShotBtn.("Play", { q.serverController.play }),
 			oneShotBtn.("Stop", { q.serverController.stop }),
-			popup.("Bela",
-				"  Reboot", { "ssh root@bela reboot".unixCmd },
-				"  Halt", { "ssh root@bela halt".unixCmd },
-			),
+			value {
+				var sshCommand = Library.at(\lumber, \common, \sshCommand);
+				popup.("Bela",
+					"  Reboot", {
+						"Reboot".postln;
+						{
+							(sshCommand + "reboot").runInTerminal;
+							5.wait;
+							checkBelaStatus.value;
+						}.fork(AppClock);
+
+					},
+					"  Halt", { (sshCommand + "halt").runInTerminal }
+			)},
+			statusLed.makeGUI.mouseDownAction_(checkBelaStatus),
 			popup.("Server",
 				"  Window", { Library.at(\lumber, \server).makeWindow },
 				"  Meter",
