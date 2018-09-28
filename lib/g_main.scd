@@ -68,6 +68,7 @@ Window.closeAll;
 	};
 
 	var statusLed = Require("gui/statusLed");
+	var serverStatusLed = Require("gui/statusLed");
 	var checkBelaStatus = {
 		statusLed.setActive(false);
 		fork {
@@ -79,6 +80,13 @@ Window.closeAll;
 		}
 
 	};
+
+	var serverStatusTask = SkipJack({
+		Library.at(\lumber, \server) !? { |server|
+			serverStatusLed.setActive(server.hasBooted)
+		}
+	}, 1, { window.isClosed });
+
 	checkBelaStatus.value;
 
 	window.autoRememberPosition(\lumber, \mainWindow);
@@ -113,6 +121,7 @@ Window.closeAll;
 				"  Free All", { Library.at(\lumber, \server).freeAll },
 				"  Reboot", { "TODO".postln },
 			),
+			serverStatusLed.makeGUI,
 			nil,
 
 			popup.("Sensors",
