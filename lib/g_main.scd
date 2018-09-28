@@ -67,6 +67,20 @@ Window.closeAll;
 		}.fork(AppClock)
 	};
 
+	var statusLed = Require("gui/statusLed");
+	var checkBelaStatus = {
+		statusLed.setActive(false);
+		fork {
+			//Test ping for 30 seconds
+			"ping -t 45 -o %".format(Library.at(\lumber, \common, \belaAddress)).unixCmd({ |code|
+				statusLed.setActive((code == 0));
+
+			}, false);
+		}
+
+	};
+	checkBelaStatus.value;
+
 	window.autoRememberPosition(\lumber, \mainWindow);
 
 	window.view.background_(Color.fromHexString("ddbbcc"));
