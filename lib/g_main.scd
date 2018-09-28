@@ -127,7 +127,7 @@ Window.closeAll;
 			popup.("Sensors",
 				"  Train sensors", Require("gui/sensorview", always:false).inEnvir(q),
 				"  Calibrate Accel + Gyro", { calibrationTask.(\calibrateAccelGyro) },
-				"  Calibrate Magnetometer", { /*calibrationTask.(\calibrateMag)*/ "FIXME".warn },
+				"  Calibrate Magnetometer", { calibrationTask.(\calibrateMag); "FIXME".warn },
 				"  Save calibration", { MPU.saveCalibration(calibrationPath,
 					Library.at(\lumber, \server)) },
 				"  Load calibration", { MPU.loadCalibration(calibrationPath,
