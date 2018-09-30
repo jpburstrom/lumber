@@ -10,11 +10,17 @@ var wrap = { |key, func|
 
 
 wrap.('activity', {
-	DC.kr(0);
+	var sig = MPU.accelKr;
+	// sig = Latch.kr(sig, Impulse.kr(10));
+	sig = GestureRT.kr(sig);
+	sig.poll(1, \activity);
 });
 
 wrap.('intensity', {
-	DC.kr(0);
+	var sig = MPU.accelKr;
+	// sig = Latch.kr(sig, Impulse.kr(10));
+	sig = GestureRT.kr(sig);
+	sig.poll(1, \intensity);
 });
 
 wrap.('orientation', {
