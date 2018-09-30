@@ -63,7 +63,7 @@ Proto {
 	};
 
 	~bootPrep = {
-		~boot.value(false, true)
+		~prep.value(false, true);
 	};
 
 
