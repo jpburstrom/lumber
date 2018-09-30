@@ -18,6 +18,8 @@ Require("protos/serverPlayer", always:false).clone {
 		Require(synthdefPath);
 		//Load calibration for MPU ugens
 		MPU.loadCalibration(Library.at(\lumber, \common, \calibrationPath), ~server);
+		~eq.server = ~server;
+		~macros.server = ~server;
 		~eq.prep;
 		~macros.prep;
 	};
@@ -25,6 +27,7 @@ Require("protos/serverPlayer", always:false).clone {
 	~onPlay = {
 		~eq.play(~buses.main, ~groups.eq);
 		~macros.play(~buses.main, ~groups.fx);
+
 	};
 
 	~onStop = {
@@ -60,13 +63,19 @@ Require("protos/serverPlayer", always:false).clone {
 			~input 		= Group(~main);
 		};
 
-		~synths = { |buses, groups|
+		~synths = { |buses, groups, server|
 			~output = Synth(\lumberOut, [\out, buses.out, \in, buses.main], target: groups.output);
 			~ping = Synth(\ping, [\release, 10, \out, buses.main], target: groups.input);
 
 			//
 			Library.at(\lumber, \common, \macroSources).do { |src|
 				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups.sensors);
+			};
+			server.sync;
+			[\activity, \intensity].do { |x|
+				GestureRT.loadPipeline(
+					Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
+					currentEnvironment[x], server);
 			};
 		};
 	};

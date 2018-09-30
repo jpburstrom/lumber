@@ -77,26 +77,29 @@ Proto {
 	//TODO: use bus arg
 	~play = { |bus, target, addAction=\addToHead|
 
-		bus !? { ~buses.out = bus };
+		{
+			bus !? { ~buses.out = bus };
 
-		if (~readyForPlay.not) {
-			//prepare and play
-			~prep.value(true);
-		} {
-			if (~isPlaying.not) {
-				~makeParentGroup.(target, addAction);
-				~runFactoryFunc.(\groups);
-				~runFactoryFunc.(\synths);
 
-				//Play hook -- override for custom behaviour
-				~onPlay.value;
-
-				~isPlaying = true;
-				~this.changed(\isPlaying, true);
+			if (~readyForPlay.not) {
+				//prepare and play
+				//why fork?
+				~prep.value(true);
 			} {
-				"already playing".warn;
+				if (~isPlaying.not) {
+					~makeParentGroup.(target, addAction);
+					~runFactoryFunc.(\groups);
+					~runFactoryFunc.(\synths);
+					//Play hook -- override for custom behaviour
+					~onPlay.value;
+
+					~isPlaying = true;
+					~this.changed(\isPlaying, true);
+				} {
+					"already playing".warn;
+				}
 			}
-		}
+		}.inEnvir.fork
 	};
 
 	~stop = {
