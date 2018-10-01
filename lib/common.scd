@@ -1,7 +1,14 @@
 //Common data, eg labels, mappings
 //Things that needs to sync between eg synthDefs, buses and guis
 
-var e = Environment().know_(true).make({
+//Create synthDescLib. Put this here first to be able to use \synthDescAdded signal
+SynthDescLib.all[\lumber] ?? {
+	var servers = [Server.default];
+	Server.named[\bela] !? { |s| servers = servers.add(s) };
+	SynthDescLib(\lumber, servers);
+};
+
+Environment().know_(true).make({
 
 	~belaAddress = "192.168.7.2";
 	~belaRoot = "/root/lumber";
@@ -26,7 +33,8 @@ var e = Environment().know_(true).make({
 	//def: FX synthdef
 	//in: input parameter to control
 	//spec: a spec, symbol or array which maps 0-1 from source to the input parameter.
-	~macroMapping = (
+	~macroMapping = ();
+	/*
 		softpot_s: (
 			eq: (name: "EQ", def: \bypass, in: \freq, spec: [220, 3200, \exp]),
 			delay: (name: "Delay", def: \bypass)
@@ -51,16 +59,14 @@ var e = Environment().know_(true).make({
 			weirdness: (name: "Weirdness", def: \bypass)
 		)
 	);
+	*/
 
 	//Frequencies for multi-param-eq, as semitones.
 	//(Semitones work better as dict keys)
 	~eqSemitones = (36..59);
 
 
-});
-
-e.keysValuesDo { |k, v|
+}).keysValuesDo { |k, v|
 	Library.put(\lumber, \common, k, v);
 };
 
-e

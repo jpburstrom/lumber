@@ -26,3 +26,18 @@ fxFactory.(\gainer, { |snd|
 	snd * \db.kr(0).dbamp;
 });
 
+SynthDef(\destTest, {
+
+	\testParam.kr.poll;
+
+}).metadata_((
+	specs: (
+		testParam: \freq,
+		another: \amp
+	),
+	lumber: (
+		label: "Test",
+		group: \fx,
+		inputs: #[testParam, another]
+	)
+)).add(\lumber);

@@ -115,9 +115,14 @@ Require("protos/serverPlayer", always:false).clone {
 	~prMakeSpecSynthDef = { |spec, src, dest|
 		var name;
 		spec = spec.asSpec;
+		//TODO: better naming. All specs predefined?
+		//TODO: lagud
 		name = Spec.findKeyForSpec(spec) ?? { "%_%".format(src, dest) };
 		SynthDef("%SpecMapper".format(name), {
-			ReplaceOut.kr(\out.kr(0), spec.map(\in.kr(0).lincurve(\inMin.kr(0), \inMax.kr(1), 0, 1, \curve.kr(0))));
+			//no clipping on lincurve to allow inverted inMin/inMax (inMax < inMin)
+			//clipping is done in Spec.map
+			//FIXME But lag should probably be done before Spec.map, and after clipping. Hmm...
+			ReplaceOut.kr(\out.kr(0), spec.map(\in.kr(0).lincurve(\inMin.kr(0), \inMax.kr(1), 0, 1, \curve.kr(0), \none)));
 		}).add.name;
 
 	};

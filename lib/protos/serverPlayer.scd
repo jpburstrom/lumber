@@ -49,7 +49,7 @@ Proto {
 			~freeResources.value;
 			~runFactoryFunc.(\buffers);
 			~runFactoryFunc.(\buses);
-			~server.sync;
+			~server.debug("server").sync;
 			//Prep hook, return false to cancel
 			if (~onPrep.value != false) {
 				~readyForPlay = true;

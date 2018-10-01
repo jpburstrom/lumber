@@ -138,7 +138,8 @@
 					if (serverName == \bela)  {
 						out = ([\accelKr, \gyroKr, \magKr,
 							\orientationKr].collect { |sym|
-							LPF.kr(MPU.perform(sym), 5);
+							// LPF.kr(MPU.perform(sym), 5);
+							MPU.perform(sym)
 						}).flatten;
 					} {
 						out = DC.ar ! 12

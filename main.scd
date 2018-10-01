@@ -51,8 +51,9 @@ q.make {
 	~storage.load;
 	fork {
 		~serverController.bootPrep;
+		"play".postln;
 		~serverController.play;
 	};
 };
-"ok"
+
 )
