@@ -7,41 +7,54 @@ Proto({
     //Parameter labels
     //This defines macro->parameter mapping
     //Arrays also define parameter order
-    ~paramLabels = Library.at(\lumber, \common, \macroMapping);
+    ~destinations = Library.at(\lumber, \common, \macroDestinations);
 
     //Parameter dictionary
+	//Source -> dest -> input
     ~params = ();
-    ~paramLabels.keysValuesDo { |src, dests|
+	~sources.do { |src|
 		~params[src] = ();
-		dests.keysValuesDo { |key, o|
-			~params[src][key] = (
-                active: OnOffControlValue(\off),
-                from: NumericControlValue(),
-				to: NumericControlValue()
-            )
-        }
-    };
+		~destinations.keysValuesDo { |key, dest|
+			~params[src][key] = ();
+			dest.inputs.do { |input|
+				~params[src][key][input] = (
+					active: OnOffControlValue(\off),
+					from: NumericControlValue(),
+					to: NumericControlValue(),
+					lagU: NumericControlValue(),
+					lagD: NumericControlValue()
+				)
+			};
+		};
+	};
 
-    //-- Methods below -------
+	//-- Methods below -------
+
+
+	//TODO: Allow get/set params to change structure of dictionary.
+	//Only active params are saved.
+	//TODO: recall presets and unset previously active routings
 
 
     //Load param dictionary
     //Useful for preset loading
     ~setParams = { |obj|
-	    ~params.keysValuesDo { |macro, params|
+	    ~params.keysValuesDo { |srcKey, dests|
+			dests.keysValuesDo { |destKey, dest|
             //Check if obj has macro
-            obj[macro] !? { |objParams|
-              params.keysValuesDo { |param, settings|
-                    //Check if obj has param (in case preset structure changes)
-                    objParams[param] !? { |objSettings|
-                        settings.keysValuesDo { |k, v|
-                            objSettings[k] !? { |objValue|
-                                ~params[macro][param][k].value = objValue.value;
-                            }
-                        }
-                    }
-                }
-            }
+				obj[srcKey][destKey] !? { |objInputs|
+					dest.keysValuesDo { |input, cvs|
+						//Check if obj has param (in case preset structure changes)
+						objInputs[input] !? { |objCvs|
+							cvs.keysValuesDo { |k, v|
+								objCvs[k] !? { |objValue|
+									cvs[k].value = objValue.value;
+								}
+							}
+						}
+					}
+				}
+			}
         };
     };
 
@@ -49,17 +62,21 @@ Proto({
     //Useful for preset saving
     ~getParams = { |usage|
         var obj = ();
-        ~params.keysValuesDo { |macro, params|
-            obj[macro] = ();
-            params.keysValuesDo { |param, settings|
-                obj[macro][param] = ();
-                settings.keysValuesDo { |k, cv|
-                    obj[macro][param][k] = cv.value;
-                }
-            }
-        };
-        obj
-    };
+        ~params.keysValuesDo { |srcKey, dests|
+			obj[srcKey] = ();
+            dests.keysValuesDo { |destKey, dest|
+				obj[srcKey][destKey] = ();
+				dest.keysValuesDo { |input, cvs|
+					obj[srcKey][destKey][input] = ().make {
+						cvs.keysValuesDo { |k, cv|
+							currentEnvironment[k] = cv.value
+						};
+					}
+				}
+			}
+		};
+		obj
+	};
 
 
     ~getParamsFor = { |source, label|
@@ -89,3 +106,5 @@ Proto({
     }
 
 });
+
+
