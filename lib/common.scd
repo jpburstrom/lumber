@@ -27,7 +27,7 @@ Environment().know_(true).make({
 
 	//This is populated in d_synthdefs.scd
 	//data taken from synthdef metadata
-	~macroDestinations = ();
+	~macroDestinations = Library.at(\lumber, \common, \macroDestinations) ?? { () };
 
 	//Frequencies for multi-param-eq, as semitones.
 	//(Semitones work better as dict keys)
