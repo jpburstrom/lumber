@@ -16,29 +16,30 @@ Require("protos/serverPlayer", always:false).clone {
 		//Automagically add all created connections to ~connections
 		~connections = ConnectionList.make {
 			m.params.keysValuesDo { |source, obj|
-				obj.keysValuesDo { |dest, cvs|
+				obj.keysValuesDo { |destKey, dest|
 					/*
 					if (cvs.active.value == \on) {
 					~spawnSynth.value(source, dest);
 					};
 					*/
-					dest = dest.toLower;
+					dest.keysValuesDo { |inputKey, cvs|
 
-					//Add to active connections if
-					cvs.active.signal(\value).connectTo({ |v|
-						var method;
-						if (v.value == \on) {
-							method = \playSynth;
-							e.activeRoutings.add([source, dest]);
-						} {
-							method = \stopSynth;
-							e.activeRoutings.remove([source, dest]);
-						};
-						if (e.isPlaying) {
-							e.perform(method, source, dest);
-						}
-						// ~spawnSynth.value(source, dest);
-					}.inEnvir)
+						//Add to active connections if
+						cvs.active.signal(\value).connectTo({ |v|
+							var method;
+							if (v.value == \on) {
+								method = \playSynth;
+								e.activeRoutings.add([source, destKey, inputKey]);
+							} {
+								method = \stopSynth;
+								e.activeRoutings.remove([source, destKey, inputKey]);
+							};
+							if (e.isPlaying) {
+								e.perform(method, source, dest);
+							}
+							// ~spawnSynth.value(source, dest);
+						}.inEnvir)
+					}
 
 				};
 
