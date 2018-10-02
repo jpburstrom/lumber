@@ -25,6 +25,7 @@ wrap.('activity', {
 });
 
 wrap.('intensity', {
+	var sig;
 	if (isBela) {
 		sig = MPU.accelKr;
 	} {

@@ -129,7 +129,7 @@ Require("protos/serverPlayer", always:false).clone {
 				//clipping is done in Spec.map
 				//FIXME But lag should probably be done before Spec.map, and after clipping. Hmm...
 				in = spec.map(in.lincurve(\inMin.kr(0), \inMax.kr(1), 0, 1, \curve.kr(0), \none))
-			}
+			};
 			ReplaceOut.kr(\out.kr(0), in);
 		}).add.name;
 
