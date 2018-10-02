@@ -149,7 +149,7 @@ Window.closeAll;
 					presetBtns.value
 				).margins_([10, 0, 10, 0]),
 				//sections.add(Require("g_macros").background_(Color.fromHexString("ddbbcc"))).last,
-				Require("gui/routing"),
+				Require("gui/routing").makeWindow,
 				nil
 				// nil
 			),
