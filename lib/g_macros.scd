@@ -41,12 +41,12 @@ Proto({
 		//Number boxes
 		lagU, lagD,
 		//test to enable if moving slider
-		cbtest = cellModel[\enabled].value,
+		cbtest = cellModel[\active].value,
 		//created connections
-		rConnections;
+		rConnections, win;
 
 
-		var win = Window(bounds: Window.flipY(Rect(0, 0, 200, 50).center_(view.mapToGlobal(x@y))))
+		win = Window(bounds: Window.flipY(Rect(0, 0, 200, 50).center_(view.mapToGlobal(x@y))))
 			.layout_(VLayout(
 			HLayout(
 				cb = CheckBox(),
@@ -75,7 +75,7 @@ Proto({
 					};
 					to = sl.value;
 					specTo.value = spec.map(to);
-					nbxt.value = to;
+					nbxt.value = sl.value;
 					view.refresh;
 					})*/, s:5],
 				[nbxt = NumberBox(), s:1]
@@ -96,27 +96,35 @@ Proto({
 			if (key == 16777216) {
 				view.close
 			}
-		}).front;
+		});
 
 		//Disable view-only number boxes
 		[nbxf, nbxt].do(_.enabled_(false));
+
 
 		//slf.valueAction_(from);
 		//slt.valueAction_(to);
 
 		rConnections = ConnectionList.make {
+			//slider
 			slf.signal(\value).connectTo(cellModel[\from].inputSlot);
 			slt.signal(\value).connectTo(cellModel[\to].inputSlot);
 			cellModel[\from].signal(\value).connectTo(slf.valueSlot);
 			cellModel[\to].signal(\value).connectTo(slt.valueSlot);
+			//numberbox
+			cellModel[\from].signal(\value).connectTo(nbxf.valueSlot);
+			cellModel[\to].signal(\value).connectTo(nbxt.valueSlot);
 			//Enabled checkbox
 			cb.signal(\value)
 			.connectTo(cellModel[\active].inputSlot)
-			.transform({|o, w, v| v.debug("cb"); [o, w, v.asInteger]});
+			.transform({|o, w, v| v; [o, w, v.asInteger]});
+			cellModel[\active].value;
 			cellModel[\active].signal(\value)
-			.connectTo(cb.valueSlot)
-			.transform({|o, w, v| [o, w, v == \on]});
+			.connectTo({ |cv|
+				cb.value = (cv.value == \on)
+			});
 
+			//Lag nbx
 			lagU.signal(\value).connectTo(cellModel[\lagU].inputSlot);
 			lagD.signal(\value).connectTo(cellModel[\lagD].inputSlot);
 			cellModel[\lagU].signal(\value).connectTo(lagU.valueSlot);
@@ -125,7 +133,17 @@ Proto({
 
 		};
 
-		win
+		//Enable checkbox first time
+		if (cbtest == \off) {
+			cbtest = nil;
+			cellModel[\active].value = \on;
+			if (cellModel[\to].value == cellModel[\from].value) {
+				cellModel[\to].value = 1.0;
+				cellModel[\from].value = 0.0;
+			};
+		};
+
+		win.front;
 	};
 
 	~makeWindow = {
@@ -175,7 +193,6 @@ Proto({
 						spec = spec.asSpec;
 
 						//A square with graph from FROM to TO
-						//TODO: use envelopeView, so we can use curve
 						uview = UserView().fixedSize_(~width+1).drawFunc_({ |view|
 							if (cellModel.active.value == \on) {
 								view.background_(Color.white);
