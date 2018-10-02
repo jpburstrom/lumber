@@ -9,15 +9,27 @@ var wrap = { |key, func|
 };
 
 
+var isBela = Library.at(\lumber, \server).name == \bela;
+
+
 wrap.('activity', {
-	var sig = MPU.accelKr;
+	var sig;
+	if (isBela) {
+		sig = MPU.accelKr;
+	} {
+		sig = \MouseX.asClass.perform(\kr);
+	};
 	// sig = Latch.kr(sig, Impulse.kr(10));
 	sig = GestureRT.kr(sig);
 	sig.poll(1, \activity);
 });
 
 wrap.('intensity', {
-	var sig = MPU.accelKr;
+	if (isBela) {
+		sig = MPU.accelKr;
+	} {
+		sig = \MouseY.asClass.perform(\kr);
+	};
 	// sig = Latch.kr(sig, Impulse.kr(10));
 	sig = GestureRT.kr(sig);
 	sig.poll(1, \intensity);
