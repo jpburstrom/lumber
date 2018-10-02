@@ -182,6 +182,7 @@ Window.closeAll;
 
 	window.view.minHeight_(800);
 
+	/*
 	window.view.keyDownAction = { |view, char, modifiers, unicode, keycode, key|
 		switch(key,
 			//1
@@ -196,6 +197,7 @@ Window.closeAll;
 			}
 		);
 	};
+	*/
 
 	window.front;
 }.value
