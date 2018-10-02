@@ -114,16 +114,23 @@ Require("protos/serverPlayer", always:false).clone {
 	//Make a synthdef from given spec
 	//Name after Spec.specs key, or src_dest
 	~prMakeSpecSynthDef = { |spec, src, dest|
-		var name;
+		var name, func;
 		spec = spec.asSpec;
 		//TODO: better naming. All specs predefined?
 		//TODO: lagud
+		func = Library(\lumber, \mapfunc, \src, \dest);
 		name = Spec.findKeyForSpec(spec) ?? { "%_%".format(src, dest) };
 		SynthDef("%SpecMapper".format(name), {
-			//no clipping on lincurve to allow inverted inMin/inMax (inMax < inMin)
-			//clipping is done in Spec.map
-			//FIXME But lag should probably be done before Spec.map, and after clipping. Hmm...
-			ReplaceOut.kr(\out.kr(0), spec.map(\in.kr(0).lincurve(\inMin.kr(0), \inMax.kr(1), 0, 1, \curve.kr(0), \none)));
+			var in = \in.kr(0);
+			if (func.notNil) {
+				in = SynthDef.wrap(func, prependArgs:[in, spec]);
+			} {
+				//no clipping on lincurve to allow inverted inMin/inMax (inMax < inMin)
+				//clipping is done in Spec.map
+				//FIXME But lag should probably be done before Spec.map, and after clipping. Hmm...
+				in = spec.map(in.lincurve(\inMin.kr(0), \inMax.kr(1), 0, 1, \curve.kr(0), \none))
+			}
+			ReplaceOut.kr(\out.kr(0), in);
 		}).add.name;
 
 	};
