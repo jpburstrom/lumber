@@ -28,12 +28,23 @@ Proto({
 		};
 	};
 
+
 	//-- Methods below -------
 
-
-	//TODO: Allow get/set params to change structure of dictionary.
-	//Only active params are saved.
-	//TODO: recall presets and unset previously active routings
+	~recursiveDo = { |cb, maxDepth=5|
+		var rec = { |obj, cb, keys, count=0|
+			count = count + 1;
+			obj.keysValuesDo { |k, v|
+				if (v.respondsTo(\keysValuesDo) and: { count < maxDepth }) {
+					rec.(v, cb, keys ++ k.asArray, count + 1);
+				} {
+					cb.(*(keys ++ [k, v]));
+				}
+			};
+			currentEnvironment
+		};
+		rec.(~params, cb);
+	};
 
 
     //Load param dictionary
