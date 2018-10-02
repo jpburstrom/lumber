@@ -5,6 +5,7 @@ Require("lib/d_synthdefs", always:true);
 
 q.do(_.free);
 q.make {
+	~serverName = \local;
 	//Macro parameters - mapping controllers to parameters
 	~macros = Require("lib/m_macros");
 	//Macro parameters - mapping controllers to parameters
@@ -25,7 +26,6 @@ q.make {
 	~storage.register(\presets, ~presets);
 
 
-
 	//Sound stuff
 	~serverController = Require("lib/c_server");
 	~serverController.connectToModels(\eq, ~eq, \macros, ~macros);
@@ -34,10 +34,15 @@ q.make {
 		//Load gui on osx
 		\osx, {
 			Require("lib/g_main");
-			~serverController.server = Server.named[\bela] ?? {
-				var server = Server.remote(\bela, NetAddr(Library.at(\lumber, \common, \belaAddress), 57110));
-				server
-			};
+			if (~serverName == \local) {
+				~serverController.server = Server.local
+			} {
+				~serverController.server = Server.named[\bela] ?? {
+					var server = Server.remote(\bela,
+						NetAddr(Library.at(\lumber, \common, \belaAddress), 57110));
+					server
+				};
+			}
 		},
 		//Bela
 
@@ -52,7 +57,6 @@ q.make {
 	~storage.load;
 	fork {
 		~serverController.bootPrep;
-		"play".postln;
 		~serverController.play;
 	};
 };
