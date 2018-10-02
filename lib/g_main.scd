@@ -9,25 +9,35 @@ Window.closeAll;
 {
 	var window = Window.new("Lumber").layout_(HLayout());
 	var sections = List();
-	var presetBtns = { |offset=0|
-		View().layout_(HLayout(*{ |i|
-			//TODO: preset activeIndex controls button state
-			Button().states_([
-				["", Color.black, Color.white],
-				["", Color.white, Color.black]
-			]).mouseDownAction_({ |btn, a, b, mod|
-				btn.parent.children.reject(_==btn).do(_.value = 0);
-				btn.value = 0;
-				if (mod.isShift) {
-					"Save".postln;
-					~presets.save(i+offset);
-				} {
-					"load".postln;
-					~presets.load(i+offset);
-				}
-			}.inEnvir)
-		}.dup(5)).margins_(0)).fixedSize_(Size(90, 16))
-	};
+	var presetBtns = {
+		var offset = 0;
+		{ |count, keys|
+			var status;
+			var view = View().layout_(HLayout(status=StaticText(), *{ |i|
+				//TODO: preset activeIndex controls button state
+				var curOffset = offset;
+				var label = (i+offset+1).asString;
+				Button().states_([
+					[label, Color.black, Color.white],
+					[label, Color.white, Color.black]
+				]).mouseDownAction_({ |btn, a, b, mod|
+					btn.parent.children(Button).reject(_==btn).do(_.value = 0);
+					btn.value = 0;
+					if (mod.isShift) {
+						~presets.save(i+curOffset, keys);
+					} {
+						~presets.load(i+curOffset, keys);
+
+					}
+				}.inEnvir)
+				.toolTip_("Click to load, Shift+click to save");
+
+			}.dup(count)).margins_(0).spacing_(0)).fixedSize_(Size(count * 20, 16));
+			offset = offset + count;
+			view
+		}
+	}.value;
+
 
 	var header = { |string|
 		StaticText().string_(string)
@@ -146,7 +156,7 @@ Window.closeAll;
 				HLayout(
 					header.("Macros"),
 					nil,
-					presetBtns.value
+					presetBtns.value(6, \macros)
 				).margins_([10, 0, 10, 0]),
 				sections.add(Require("g_macros").makeWindow).last,
 				nil
@@ -156,7 +166,7 @@ Window.closeAll;
 				HLayout(
 					header.("EQ"),
 					nil,
-					presetBtns.value
+					presetBtns.value(4, \eq)
 				).margins_([0, 0, 10, 0]),
 				sections.add(Require("g_eq")).last,
 				nil
