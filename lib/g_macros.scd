@@ -13,6 +13,10 @@ Proto({
 		"%:%".format(~destinations[dest].label, input);
 	};
 
+	~staticText = { |str|
+		StaticText().string_(str).font_(Font.monospace.size_(10))
+	};
+
 	//closure
 	~activateHeaders = {
 		var activeHeaders = nil ! 2;
@@ -35,7 +39,7 @@ Proto({
 		//Slider to & from
 		slt, slf,
 		//Number boxes
-		specFrom, specTo,
+		lagU, lagD,
 		//test to enable if moving slider
 		cbtest = cellModel[\enabled].value,
 		//created connections
@@ -46,48 +50,44 @@ Proto({
 			.layout_(VLayout(
 			HLayout(
 				cb = CheckBox(),
-				StaticText().string_(connectionString).font_(Font.monospace.size_(10)).minWidth_(200)
+				~staticText.(connectionString).minWidth_(200)
 			),
 			HLayout(
-				[StaticText().string_("From").font_(Font.monospace.size_(10)), s:1],
+				[~staticText.("From"), s:1],
 				[slf = Slider().orientation_(\horizontal)/*.action_({|sl|
 					if (cbtest.not) {
-						cb.valueAction_(true);
-						cbtest = true; //Only first time
+					cb.valueAction_(true);
+					cbtest = true; //Only first time
 					};
 					from = sl.value;
 					nbxf.value = from;
 					specFrom.value = spec.map(from);
 					view.refresh;
-				})*/, s:5],
+					})*/, s:5],
 				[nbxf = NumberBox(), s:1]
 			),
 			HLayout(
-				[StaticText().string_("To   ").font_(Font.monospace.size_(10)), s:1],
+				[~staticText.("To   "), s:1],
 				[slt = Slider().orientation_(\horizontal)/*.action_({|sl|
 					if (cbtest.not) {
-						cb.valueAction_(true);
-						cbtest = true; //Only first time
+					cb.valueAction_(true);
+					cbtest = true; //Only first time
 					};
 					to = sl.value;
 					specTo.value = spec.map(to);
 					nbxt.value = to;
 					view.refresh;
-				})*/, s:5],
+					})*/, s:5],
 				[nbxt = NumberBox(), s:1]
 			),
-			StaticText().string_("Lag").align_(\center).font_(Font.monospace.size_(10)),
 			//Spec views
 			HLayout(
-				//
-				NumberBox().scroll_step_(0.01).action_({ |v|
-					"TODO".postln;
-				}),
-				NumberBox().scroll_step_(0.01).action_({ |v|
-					"TODO".postln;
-				})
-			),
-			TextView().font_(Font.monospace.size_(10));
+				[~staticText.("Lag U"), s:1],
+				[lagU = NumberBox().scroll_step_(0.01), s:1],
+				[~staticText.("Lag D"), s:1],
+				[lagD = NumberBox().scroll_step_(0.01), s:1]
+			)
+			//TextView().font_(Font.monospace.size_(10));
 		)).onClose_({
 			rConnections.free;
 			view.refresh;
@@ -116,6 +116,11 @@ Proto({
 			cellModel[\active].signal(\value)
 			.connectTo(cb.valueSlot)
 			.transform({|o, w, v| [o, w, v == \on]});
+
+			lagU.signal(\value).connectTo(cellModel[\lagU].inputSlot);
+			lagD.signal(\value).connectTo(cellModel[\lagD].inputSlot);
+			cellModel[\lagU].signal(\value).connectTo(lagU.valueSlot);
+			cellModel[\lagD].signal(\value).connectTo(lagD.valueSlot);
 
 
 		};
