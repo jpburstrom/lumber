@@ -1,7 +1,7 @@
 (
 //Load common variables into Library(\lumber, \common)
 Require("lib/common", always:false);
-Require("lib/d_synthdefs", always:false);
+Require("lib/d_synthdefs", always:true);
 
 q.do(_.free);
 q.make {
