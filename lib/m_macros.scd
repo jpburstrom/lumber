@@ -19,8 +19,9 @@ Proto({
 			dest.inputs.do { |input|
 				~params[src][key][input] = (
 					active: OnOffControlValue(\off),
-					from: NumericControlValue(),
-					to: NumericControlValue(),
+					levels: NumericControlValue([0,0.5,0.5,1], \unipolar.asSpec),
+					times: NumericControlValue([0.4, 0.2, 0.4], \unipolar.asSpec),
+					curves: NumericControlValue([-4, 0, 4], ControlSpec(-16, 16, \lin)),
 					lagU: NumericControlValue(),
 					lagD: NumericControlValue()
 				)
