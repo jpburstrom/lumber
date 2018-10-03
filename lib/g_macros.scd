@@ -17,17 +17,6 @@ Proto({
 		StaticText().string_(str).font_(Font.monospace.size_(10))
 	};
 
-	//closure
-	~activateHeaders = {
-		var activeHeaders = nil ! 2;
-	//highlight headers for currently mouseover'd cell
-		{ |x, y|
-			activeHeaders.do { |h| h !? { h.stringColor_(Color.black) } };
-			activeHeaders = [x, y];
-			activeHeaders.do(_.stringColor_(Color.red));
-		};
-	}.value;
-
 	~makeWindow = {
 
 		var connections = ConnectionList();
@@ -70,27 +59,35 @@ Proto({
 							Env(m.levels.value, m.times.value, m.curves.value);
 						};
 
+						//Enable on first window open, if not already
+						var firstTest = cellModel.active.value == \off;
+						envEditor.model = cellModel;
+
 						container = View().fixedSize_(~width).background_(Color.gray(0.9))
 						.mouseDownAction_({ |view, x, y, mod|
-							var connectionString = "% ▷ %".format(source, ~makeDestString.(destKey, inputKey));
-							var win = envEditor.makeWindow;
-							win.name = connectionString;
-							win.bounds_(Window.flipY(win.bounds.center_(view.mapToGlobal(x@y))));
-							//XXX test
-							cellModel.active.value = \on;
-						}.inEnvir)
-						.mouseOverAction_({ |view, x, y|
-							~activateHeaders.(sourceHeader, ~destinationHeaders[i]);
+							if (mod.isShift) {
+								cellModel.active.toggle;
+							} {
+								var connectionString = "% ▷ %".format(source, ~makeDestString.(destKey, inputKey));
+								var win = envEditor.makeWindow;
+								win.name = connectionString;
+								win.bounds_(Window.flipY(win.bounds.center_(view.mapToGlobal(x@y))));
+								//XXX test
+								if (firstTest) {
+									cellModel.active.value = \on;
+									firstTest = false;
+								}
+							}
 						}.inEnvir);
+
 						destWidgets.add([container, a: \center]);
 
 						eview = EnvelopeView(container, container.bounds.insetBy(-11))
 						.setEnv(envFromModel.(cellModel))
 						.gridOn_(false).drawRects_(false)
 						.editable_(false)
-						.mouseOverAction_(false)
 						.mouseDownAction_(false)
-						.visible_(cellModel.active == \on);
+						.visible_(cellModel.active.value == \on);
 						//A square with graph from FROM to TO
 
 
@@ -106,7 +103,6 @@ Proto({
 
 						#[levels, times, curves].do { |k|
 							connections.add(cellModel[k].signal(\value).connectTo({ |cv|
-								"c".postln;
 								envEditor[k].putEach(Array.series(cv.value.size), cv.value);
 								eview.setEnv(envFromModel.(cellModel));
 							}).collapse(0.1));
@@ -134,7 +130,6 @@ Proto({
 				}
 			)
 		));
-		~view.acceptsMouseOver = true;
 
 		~view.onClose = {
 			connections.free;

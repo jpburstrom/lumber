@@ -67,6 +67,19 @@ Proto {
 				~levels.putEach(Array.series(new.size), new);
 				// ~envelope.curves.do {|val, i| ~envelope.curves[i] = val.neg };
 			},
+			"Slider test": {
+				{
+					var dur = 2;
+					var steps = dur * 30;
+					steps.do { |i|
+						~testSlider.valueAction = i / (steps-1);
+						(dur/steps).wait;
+					}
+				}.fork(AppClock)
+			},
+			"Audio test": {
+				~envelope.test;
+			}
 		].clump(2).collect({ |pairs|
 			var label, env, action;
 			#label, env = pairs;
@@ -113,10 +126,11 @@ Proto {
 
 	//Create and return window
 	~makeWindow = {
-		var sl1, sl2;
+		var sl2;
 		var levelBoxes = ~boxGroup.(\levels, 4);
 		var timeBoxes = ~boxGroup.(\times, 3);
 		var curveBoxes = ~boxGroup.(\curves, 3, [-8, 8], 0.5);
+		var enabledBox;
 		~win !? {
 			if (~win.isClosed.not) {
 				~win.close
@@ -125,7 +139,7 @@ Proto {
 		~win = Window.new.front.layout_(VLayout(
 			HLayout(
 				//First slider: mapped through envelope to second slider
-				sl1 = Slider().action_({ |sl|
+				~testSlider = Slider().action_({ |sl|
 					sl2.value = ~envelope.at(sl.value);
 				}.inEnvir),
 				~eview = EnvelopeView().setEnv(~envelope).action_({ |z|
@@ -142,22 +156,15 @@ Proto {
 				[[StaticText().string_("Curves"), \columns, 2]].addAll(curveBoxes.collect { |x| [x, \columns, 2] }),
 			).margins_(0).spacing_(2),
 			HLayout(
+				HLayout(
+					enabledBox = CheckBox(),
+					StaticText().string_("Enabled").align_(\left).mouseDownAction_({
+						~model.active.toggle;
+					}.inEnvir),
+					nil
+				).spacing_(10),
 				~presetGroup.value,
 				~actionGroup.value,
-				//Run test with sliders
-				Button().states_([["Slider test"]]).action_({
-					{
-						var steps = 100;
-						steps.do { |i|
-							sl1.valueAction = i / (steps-1);
-							(1/steps).wait;
-						}
-					}.fork(AppClock)
-				}),
-				Button().states_([["Audio test"]]).action_({
-					~envelope.test;
-				}.inEnvir);
-
 			).margins_(0).spacing_(2)
 
 		)).onClose_({
@@ -168,6 +175,27 @@ Proto {
 		//A bit redundant to re-set envelope on view, if view has edited envelope
 		~connections.add(currentEnvironment.signal(\value).connectTo(~updateEnvelope.inEnvir));
 
+		~model !? {
+			~connections.add(enabledBox.signal(\value)
+				.connectTo(~model[\active].inputSlot)
+				.transform({|o, w, v| v; [o, w, v.asInteger]})
+			);
+			~connections.add(~model[\active].value;
+				~model[\active].signal(\value)
+				.connectTo({ |cv|
+					enabledBox.value = (cv.value == \on)
+				})
+			);
+		};
+
+		~eview.keyDownAction_({ |view, char, mod, unicode, keycode, key|
+			if (key == 16777216) {
+				false;
+			} {
+				view.defaultKeyDownAction(char, mod, unicode, keycode, key);
+			}
+		});
+
 		~win.view.keyDownAction_({ |view, char, mod, unicode, keycode, key|
 			//Close window with ESC
 			if (key == 16777216 or: { char == $w and: {mod.isCmd} }) {
@@ -177,4 +205,5 @@ Proto {
 
 		~win
 	}
-};
+}
+
