@@ -4,7 +4,7 @@ var model = ~macros ? q.macros; //assuming we're in the same environment, otherw
 Proto({
 
 	~model = model;
-	~width = 25;
+	~width = 50;
 	~sources = Library.at(\lumber, \common, \macroSources);
 	~destinations = Library.at(\lumber, \common, \macroDestinations);
 	~destinationKeys = ~destinations.keys.asArray.sort;
@@ -28,124 +28,6 @@ Proto({
 		};
 	}.value;
 
-
-	~openRoutingWindow = { |view, x, y, cellModel, connectionString|
-
-		var
-		//Slider numberbox
-		nbxf, nbxt,
-		//Enabled checkbox
-		cb,
-		//Slider to & from
-		slt, slf,
-		//Number boxes
-		lagU, lagD,
-		//test to enable if moving slider
-		cbtest = cellModel[\active].value,
-		//created connections
-		rConnections, win;
-
-
-		win = Window(bounds: Window.flipY(Rect(0, 0, 200, 50).center_(view.mapToGlobal(x@y))))
-			.layout_(VLayout(
-			HLayout(
-				cb = CheckBox(),
-				~staticText.(connectionString).minWidth_(200)
-			),
-			HLayout(
-				[~staticText.("From"), s:1],
-				[slf = Slider().orientation_(\horizontal)/*.action_({|sl|
-					if (cbtest.not) {
-					cb.valueAction_(true);
-					cbtest = true; //Only first time
-					};
-					from = sl.value;
-					nbxf.value = from;
-					specFrom.value = spec.map(from);
-					view.refresh;
-					})*/, s:5],
-				[nbxf = NumberBox(), s:1]
-			),
-			HLayout(
-				[~staticText.("To   "), s:1],
-				[slt = Slider().orientation_(\horizontal)/*.action_({|sl|
-					if (cbtest.not) {
-					cb.valueAction_(true);
-					cbtest = true; //Only first time
-					};
-					to = sl.value;
-					specTo.value = spec.map(to);
-					nbxt.value = sl.value;
-					view.refresh;
-					})*/, s:5],
-				[nbxt = NumberBox(), s:1]
-			),
-			//Spec views
-			HLayout(
-				[~staticText.("Lag U"), s:1],
-				[lagU = NumberBox().scroll_step_(0.01), s:1],
-				[~staticText.("Lag D"), s:1],
-				[lagD = NumberBox().scroll_step_(0.01), s:1]
-			)
-			//TextView().font_(Font.monospace.size_(10));
-		)).onClose_({
-			rConnections.free;
-			view.refresh;
-		}).view.keyDownAction_({ |view, char, mod, unicode, keycode, key|
-			//Close window with ESC
-			if (key == 16777216) {
-				view.close
-			}
-		});
-
-		//Disable view-only number boxes
-		[nbxf, nbxt].do(_.enabled_(false));
-
-
-		//slf.valueAction_(from);
-		//slt.valueAction_(to);
-
-		rConnections = ConnectionList.make {
-			//slider
-			slf.signal(\value).connectTo(cellModel[\from].inputSlot);
-			slt.signal(\value).connectTo(cellModel[\to].inputSlot);
-			cellModel[\from].signal(\value).connectTo(slf.valueSlot);
-			cellModel[\to].signal(\value).connectTo(slt.valueSlot);
-			//numberbox
-			cellModel[\from].signal(\value).connectTo(nbxf.valueSlot);
-			cellModel[\to].signal(\value).connectTo(nbxt.valueSlot);
-			//Enabled checkbox
-			cb.signal(\value)
-			.connectTo(cellModel[\active].inputSlot)
-			.transform({|o, w, v| v; [o, w, v.asInteger]});
-			cellModel[\active].value;
-			cellModel[\active].signal(\value)
-			.connectTo({ |cv|
-				cb.value = (cv.value == \on)
-			});
-
-			//Lag nbx
-			lagU.signal(\value).connectTo(cellModel[\lagU].inputSlot);
-			lagD.signal(\value).connectTo(cellModel[\lagD].inputSlot);
-			cellModel[\lagU].signal(\value).connectTo(lagU.valueSlot);
-			cellModel[\lagD].signal(\value).connectTo(lagD.valueSlot);
-
-
-		};
-
-		//Enable checkbox first time
-		if (cbtest == \off) {
-			cbtest = nil;
-			cellModel[\active].value = \on;
-			if (cellModel[\to].value == cellModel[\from].value) {
-				cellModel[\to].value = 1.0;
-				cellModel[\from].value = 0.0;
-			};
-		};
-
-		win.front;
-	};
-
 	~makeWindow = {
 
 		var connections = ConnectionList();
@@ -154,21 +36,15 @@ Proto({
 			// k.postln;
 			~destinations[k].inputs.collect { |input|
 				var txt = ~makeDestString.(k, input);
-				StaticText().fixedWidth_(~width).string_(txt[..2]).font_(Font.monospace.size_(10)).toolTip_(txt)
+				StaticText().maxWidth_(100).fixedHeight_(75).string_(txt).font_(Font.monospace.size_(10))
 			}
 		}).flatten;
 
 
-		~view = View().layout_(GridLayout.rows(
+		~view = View().layout_(GridLayout.columns(
 			//Top Headers
-			[nil] ++ ~destinationHeaders.collect { |h|
-				HLayout(
-					h.align_(\center),
-					LevelIndicator().fixedHeight_(~width).fixedWidth_(5)
-				)
-			},
 			//Sources are rows
-			* ~sources.collect { |source, i|
+			* (~sources.collect { |source, sourceIndex|
 				var sourceHeader;
 				var destWidgets = List();
 				var counter = -1;
@@ -182,84 +58,82 @@ Proto({
 					dest.inputs.do { |inputKey|
 						//TODO: These values should be collected from CVs somewhere
 
-						var spec = dest.specs[inputKey];
-						var uview;
+						var container, eview;
 						var i = counter = (counter + 1);
 
 						//FIXME
 						//Keep a copy of current input params
 						var cellModel = model.params[source][destKey][inputKey];
+						var envEditor = Require("gui/envelopeEditor");
 
-						spec = spec.asSpec;
-
-						//A square with graph from FROM to TO
-						uview = UserView().fixedSize_(~width+1).drawFunc_({ |view|
-							if (cellModel.active.value == \on) {
-								view.background_(Color.white);
-								Pen.fillColor = Color.fromHexString("ff6699");
-								Pen.moveTo(0@~width);
-								Pen.lineTo(Point(0, ~width - (~width * cellModel.from.value)));
-								Pen.lineTo(Point(~width, ~width - (~width * cellModel.to.value)));
-								Pen.lineTo(~width@~width);
-								Pen.fill;
-							} {
-								view.background_(QPalette.light.color(\window));
-							};// Pen.lineTo
-							Pen.moveTo(0@~width);
-							Pen.lineTo(0@0);
-							Pen.lineTo(~width@0);
-							Pen.stroke;
-
-							//Activate headers on mouse over
-						}.inEnvir).mouseWheelAction_({ |view, x, y, mod, xDelta, yDelta|
-							if (cellModel.active.value == \on) {
-
-								var deltaMul = 0.01;
-								if (x <= (0.5 * ~width)) {
-									cellModel.from.value = (cellModel.from.value - (yDelta * deltaMul)).max(0).min(1)
-								} {
-									cellModel.to.value = (cellModel.to.value - (yDelta * deltaMul)).min(1).max(0)
-								};
-
-								view.refresh;
-							};
-						}.inEnvir).mouseOverAction_({ |view|
-							~activateHeaders.(sourceHeader, ~destinationHeaders[i]);
-							//Open routing window on click
-							//2 sliders, from & to
-							//Checkbox to enable routing
-							//2 number boxes to set values from destination spec
-						}.inEnvir).mouseDownAction_({ |view, x, y, mod|
-							if (mod.isCmd) {
-								cellModel.active.toggle.postln;
-								if (cellModel.from.value == cellModel.to.value) {
-									cellModel.to.value = 1.0;
-									cellModel.from.value = 0.0;
-								}
-							} {
-								var connectionString = "% ▷ %".format(source, ~makeDestString.(destKey, inputKey));
-								~openRoutingWindow.value(view, x, y, cellModel, connectionString)
-							}
-						}.inEnvir);
-
-						destWidgets.add(uview);
-
-						#[from, to, active].do { |x|
-							connections.add(cellModel[x].signal(\value).connectTo { uview.refresh })
+						var envFromModel = { |m|
+							Env(m.levels.value, m.times.value, m.curves.value);
 						};
+
+						container = View().fixedSize_(~width).background_(Color.gray(0.9))
+						.mouseDownAction_({ |view, x, y, mod|
+							var connectionString = "% ▷ %".format(source, ~makeDestString.(destKey, inputKey));
+							var win = envEditor.makeWindow;
+							win.name = connectionString;
+							win.bounds_(Window.flipY(win.bounds.center_(view.mapToGlobal(x@y))));
+							//XXX test
+							cellModel.active.value = \on;
+						}.inEnvir)
+						.mouseOverAction_({ |view, x, y|
+							~activateHeaders.(sourceHeader, ~destinationHeaders[i]);
+						}.inEnvir);
+						destWidgets.add([container, a: \center]);
+
+						eview = EnvelopeView(container, container.bounds.insetBy(-11))
+						.setEnv(envFromModel.(cellModel))
+						.gridOn_(false).drawRects_(false)
+						.editable_(false)
+						.mouseOverAction_(false)
+						.mouseDownAction_(false)
+						.visible_(cellModel.active == \on);
+						//A square with graph from FROM to TO
+
+
+
+						connections.add(envEditor.signal(\value).connectTo { |editor, what, key|
+							key ?? { key = #[levels, times, curves] };
+							key = key.asArray;
+							key.do { |k|
+								cellModel[k].value = editor[k];
+							};
+
+						});
+
+						#[levels, times, curves].do { |k|
+							connections.add(cellModel[k].signal(\value).connectTo({ |cv|
+								"c".postln;
+								envEditor[k].putEach(Array.series(cv.value.size), cv.value);
+								eview.setEnv(envFromModel.(cellModel));
+							}).collapse(0.1));
+						};
+						connections.add(cellModel[\active].signal(\value).connectTo { |cv|
+							eview.visible = cv.value == \on;
+						})
 
 					}
 				});
 
 
 				[HLayout(
-					sourceHeader = StaticText()
-					.string_(source).font_(Font.monospace.size_(10)).maxWidth_(200),
+					sourceHeader = StaticText().fixedWidth_(75).align_(\center)
+					.string_(source).toolTip_(source).font_(Font.monospace.size_(10)),
 					LevelIndicator().fixedWidth_(5).fixedHeight_(~width)
-				)] ++ destWidgets
-			};
-		)
-		);
+				)] ++ destWidgets ++ [nil]
+			}).add(
+				[nil] ++ ~destinationHeaders.collect { |h|
+					HLayout(
+
+						LevelIndicator().fixedHeight_(~width).fixedWidth_(5),
+						h.align_(\center),
+					)
+				}
+			)
+		));
 		~view.acceptsMouseOver = true;
 
 		~view.onClose = {

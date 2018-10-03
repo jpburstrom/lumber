@@ -12,6 +12,14 @@ Proto {
 	//Cached envelope. Envelope is regenerated on every value change.
 	~envelope = Env(~levels, ~times, ~curves);
 
+	~value_ = { |val|
+		~levels = val[0];
+		~times = val[1];
+		~curves = val[2];
+		~updateEnvelope.value;
+		~eview.setEnv(~envelope);
+	};
+
 	//Get values as array
 	~value = {
 		[~levels, ~times, ~curves]
@@ -88,7 +96,7 @@ Proto {
 				}  {
 					model[i] = box.value;
 				};
-				currentEnvironment.changed(\value);
+				currentEnvironment.changed(\value, key);
 			}.inEnvir).clipLo_(range[0]).clipHi_(range[1]).scroll_step_(step);
 			~connections.add(currentEnvironment.signal(\value).connectTo({
 				box.value = model[i];
@@ -100,6 +108,7 @@ Proto {
 	//Update cached envelope
 	~updateEnvelope = {
 		~envelope = Env(~levels, ~times, ~curves);
+		~eview.setEnv(~envelope);
 	};
 
 	//Create and return window
@@ -108,6 +117,11 @@ Proto {
 		var levelBoxes = ~boxGroup.(\levels, 4);
 		var timeBoxes = ~boxGroup.(\times, 3);
 		var curveBoxes = ~boxGroup.(\curves, 3, [-8, 8], 0.5);
+		~win !? {
+			if (~win.isClosed.not) {
+				~win.close
+			}
+		};
 		~win = Window.new.front.layout_(VLayout(
 			HLayout(
 				//First slider: mapped through envelope to second slider
@@ -118,7 +132,7 @@ Proto {
 					//EnvelopeView edit updates levels and times. Curves are edited with number boxes
 					~levels.putEach(Array.series(4), z.value[1]);
 					~times.putEach(Array.series(3), z.value[0].differentiate[1..]);
-					currentEnvironment.changed(\value, z);
+					currentEnvironment.changed(\value, [\levels, \times]);
 				}.inEnvir).keepHorizontalOrder_(true),
 				sl2 = Slider().enabled_(false)
 			),
@@ -152,10 +166,14 @@ Proto {
 
 		//This updates envelope and view on value change.
 		//A bit redundant to re-set envelope on view, if view has edited envelope
-		~connections.add(currentEnvironment.signal(\value).connectTo({
-			~updateEnvelope.value;
-			~eview.setEnv(~envelope);
-		}.inEnvir));
+		~connections.add(currentEnvironment.signal(\value).connectTo(~updateEnvelope.inEnvir));
+
+		~win.view.keyDownAction_({ |view, char, mod, unicode, keycode, key|
+			//Close window with ESC
+			if (key == 16777216 or: { char == $w and: {mod.isCmd} }) {
+				view.close
+			}
+		});
 
 		~win
 	}

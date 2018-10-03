@@ -199,6 +199,8 @@ Window.closeAll;
 	};
 	*/
 
+	window.acceptsMouseOver_(true);
+
 	window.front;
 }.value
 
