@@ -1,10 +1,12 @@
-var layout, view, connections;
+var layout, view, connections = ConnectionList();
 var rows = 2;
 var sliderWidth = 35;
 //assuming we're in the same environment, otherwise fallback to global (it's a hack)
 var params = (~eq ? q.eq).params;
+var paramList = ConnectionList();
 var elements = params.keys.select(_.isNumber).size;
 var fullWidth = (sliderWidth * elements / rows) + (4 * elements / rows);
+var eqview;
 
 
 var fact = (
@@ -28,9 +30,17 @@ var fact = (
 );
 
 
+
 view = View().minWidth_(fullWidth).minHeight_(400).layout_(
-	VLayout(Require("gui/eqview").value(params), *(rows + 1).collect{ HLayout() }).margins_(0).spacing_(0)
+	VLayout(eqview = Require("gui/eqview").value(params), *(rows + 1).collect{ HLayout() }).margins_(0).spacing_(0)
 );
+
+params.deepDo(3, (paramList.add(_)));
+x = 0;
+connections.add(paramList.signal(\value).connectTo({
+	(x = x + 1).debug("update");
+	eqview.refresh;
+}).collapse(0.033));
 
 
 //Loop over source -> parameter label list
@@ -58,6 +68,7 @@ Require("common").eqSemitones.asArray.sort.do { |midinote, i|
 
 	connections.add(sl.signal(\value).connectTo(cv.inputSlot));
 	connections.add(cv.signal(\input).connectTo(sl.valueSlot));
+
 
 	oldval = cv.value;
 

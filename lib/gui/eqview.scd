@@ -5,7 +5,8 @@
 	var selected = nil;
 
 	view.frameRate = 5;
-	view.animate = true;
+
+	params.postln;
 
 	view.drawFunc = { |vw|
 		var freqs, svals, values, bounds, zeroline;
