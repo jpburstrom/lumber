@@ -19,6 +19,8 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 			m.recursiveDo({ |source, destKey, inputKey, cvs|
 				cvs.active.signal(\value).connectTo({ |v|
+					"TODO: play/stop synth".postln;
+					/*
 					if (v.value == \on) {
 						//FIXME  this logic should be in playSynth/stopSynth instead
 
@@ -34,6 +36,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 						}
 					};
 					// ~spawnSynth.value(source, dest);
+					*/
 				}.inEnvir)
 			}, 4);
 
@@ -77,6 +80,28 @@ p = Require("protos/serverPlayer", always:false).clone {
 		};
 
 	};
+
+	//source->[busA]->specMapper->[busB]->destination
+	//busA is (currently) defined in c_server
+	//source synths are spawned in c_server as well
+	//specMapper has bus index input
+	//
+	//destination input is regular control (not In.kr)
+
+	//MIXING SEVERAL SOURCES to same input
+	//sourceA->[busA]->specMapperA->[busX]
+	//sourceB->[busB]->specMapperB->[busX]
+	//specMapperA/B
+	//blend/LinXFade2
+	//But how check that we need to blend?
+	//ReplaceOut.ar(bus, LinXFade.ar(snd, In.ar(bus), \blend.kr(0)))
+	//Synth 1: Play on bus
+	//Synth 2: Play on bus, add to tail, set \blend to 0.5
+	//but then synth 3 will be double weight compared to 1 & 2
+
+	//sourceA->[busA]->				specMapperA->[busX]->syn
+	//sourceB->[busB]->specMapperB/
+
 
 	//Spawn single dest synth + mapping
 	//TODO play on designated busses
