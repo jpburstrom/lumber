@@ -1,11 +1,11 @@
 //Single bus multiplier
 //Used before destination synths to
 //scale down output from several mapping synths
-SynthDef(\controlBusMul, { |bus=0, countBus|
-	ReplaceOut.kr(bus, In.kr(bus) / In.kr(countBus).max(1));
+SynthDef(\controlBusDiv, { |bus=0, divisorBus|
+	ReplaceOut.kr(bus, In.kr(bus) / In.kr(divisorBus).max(1));
 });
-SynthDef(\audioBusMul, { |bus=0, mul|
-	ReplaceOut.ar(bus, In.ar(bus) / In.kr(countBus).max(1));
+SynthDef(\audioBusDiv, { |bus=0, divisorBus|
+	ReplaceOut.ar(bus, In.ar(bus) / In.kr(divisorBus).max(1));
 });
 
 
