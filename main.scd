@@ -1,4 +1,6 @@
 (
+TODO: The preceding error dump is for ERROR: Message 'lumber' not understood.
+Ändra till desclib
 //Load common variables into Library(\lumber, \common)
 Require("lib/common", always:false);
 Require("lib/d_synthdefs", always:true);
@@ -33,7 +35,9 @@ q.make {
 	Platform.case(
 		//Load gui on osx
 		\osx, {
+			//Show GUI
 			Require("lib/g_main");
+
 			if (~serverName == \local) {
 				~serverController.server = Server.local
 			} {
@@ -60,5 +64,5 @@ q.make {
 		~serverController.play;
 	};
 };
-
 )
+

@@ -1,13 +1,14 @@
-var fxFactory = { |name, func|
+var fxFactory = { |name, func, meta|
 
     SynthDef(name, {
 
         var snd;
         snd = In.ar(\out.kr, 1);
         snd = func.(snd);
-        XOut.ar(\out.kr, Env.asr(0.01, 1, 0.01).ar(2, \gate.kr(1)), snd)
+		//FIXME: settable fadetime
+        XOut.ar(\out.kr, Env.asr(0.01, 1, 0.01).ar(Done.freeGroup, \gate.kr(1)), snd)
 
-    }).add;
+	}, metadata:meta).add(\lumber);
 
 };
 
@@ -26,11 +27,9 @@ fxFactory.(\gainer, { |snd|
 	snd * \db.kr(0).dbamp;
 });
 
-SynthDef(\destTest, {
-
-	\testParam.kr.poll;
-
-}).metadata_((
+fxFactory.(\destTest, {
+	SinOsc.ar(\testParam.kr.poll(1, "testParam")) * 0.1 * SinOsc.ar(\another.kr.poll(1, "another"));
+},(
 	specs: (
 		testParam: \freq,
 		another: \amp
@@ -41,3 +40,4 @@ SynthDef(\destTest, {
 		inputs: #[testParam, another]
 	)
 )).add(\lumber);
+

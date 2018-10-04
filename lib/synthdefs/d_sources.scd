@@ -5,12 +5,12 @@ var wrap = { |key, func|
 		sig = SynthDef.wrap(func);
 
 		Out.kr(\out.kr(0), sig);
-	}).add;
+	}).add(\lumber);
 };
 
 
-var isBela = Library.at(\lumber, \server).name == \bela;
-
+// var isBela = Library.at(\lumber, \server).name == \bela;
+var isBela = false; //FIXME
 
 wrap.('activity', {
 	var sig;
@@ -21,7 +21,7 @@ wrap.('activity', {
 	};
 	// sig = Latch.kr(sig, Impulse.kr(10));
 	sig = GestureRT.kr(sig);
-	sig.poll(1, \activity);
+	// sig.poll(1, \activity);
 });
 
 wrap.('intensity', {
@@ -33,11 +33,11 @@ wrap.('intensity', {
 	};
 	// sig = Latch.kr(sig, Impulse.kr(10));
 	sig = GestureRT.kr(sig);
-	sig.poll(1, \intensity);
+	// sig.poll(1, \intensity);
 });
 
 wrap.('orientation', {
-	DC.kr(0);
+	DC.kr(1);
 });
 
 wrap.('softpot_l', {
