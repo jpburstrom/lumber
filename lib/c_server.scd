@@ -22,6 +22,9 @@ Require("protos/serverPlayer", always:false).clone {
 		~macros.server = ~server;
 		~eq.prep;
 		~macros.prep;
+
+		//XXX hack to let ~macros access macroSource buses
+		~macros.buses.parent = ~buses;
 	};
 
 	~onPlay = {
@@ -46,6 +49,7 @@ Require("protos/serverPlayer", always:false).clone {
 			~main = Bus.audio(server, 1);
 			~out = Bus(\audio, 0, 1, server);
 
+			//TODO Later move to ~macros
 			Library.at(\lumber, \common, \macroSources).do { |src|
 				currentEnvironment[src] = Bus.control(server);
 			}
@@ -67,16 +71,19 @@ Require("protos/serverPlayer", always:false).clone {
 			~output = Synth(\lumberOut, [\out, buses.out, \in, buses.main], target: groups.output);
 			~ping = Synth(\ping, [\release, 10, \out, buses.main], target: groups.input);
 
-			//
+			//TODO later maybe move these to c_macros
 			Library.at(\lumber, \common, \macroSources).do { |src|
 				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups.sensors);
 			};
 			server.sync;
+			"FIXME:load pipeline".postln;
+			/*
 			[\activity, \intensity].do { |x|
 				GestureRT.loadPipeline(
 					Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
 					currentEnvironment[x], server);
 			};
+			*/
 		};
 	};
 
