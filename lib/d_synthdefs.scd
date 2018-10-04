@@ -5,13 +5,15 @@ Require("synthdefs/*");
 
 //Set all synthDescs from lumber lib as macro destinations
 SynthDescLib.all[\lumber].synthDescs.do { |desc|
-	desc.metadata.lumber !? { |lum|
-		var group = lum.group;
-		sources[desc.name.asSymbol] = lum.copy.make {
-			~specs = (
-				desc.metadata.specs
-			);
-		};
+	desc.metadata !? {
+		desc.metadata.lumber !? { |lum|
+			var group = lum.group;
+			sources[desc.name.asSymbol] = lum.copy.make {
+				~specs = (
+					desc.metadata.specs
+				);
+			};
+		}
 	}
 };
 
