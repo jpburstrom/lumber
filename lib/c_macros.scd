@@ -1,9 +1,24 @@
 p = Require("protos/serverPlayer", always:false).clone {
 
-	//Bag of [src, dest] pairs. Pairs are added/removed when macros become "active".
-	//They are used for playing and stopping synths from ~play and ~stop
-	~activeDestinations = Bag();
-	~activeInputs = Set();
+	//Reset containers of freeable stuff
+	//Assumes things have already been freed
+	//Redefinition
+	~prResetContainers = {
+		//Bag of [src, dest] pairs. Pairs are added/removed when macros become "active".
+		//They are used for playing and stopping synths from ~play and ~stop
+		~activeDestinations = Bag();
+		~activeInputs = Set();
+
+		~groups = ();
+		//Destination synths
+		~synths = ();
+		//Mapping synths. dest = MultiLevelIdentityDictionary(source, input, Synth())
+		~mappingSynths = ();
+
+	};
+
+	//Need to do this to update data structure
+	~prResetContainers.value;
 
 	//Source is playing in ~sensors or ~lfo on ~bus (Synth("macro_%".format(~source)))
 	//dest is playing in ~fx or ~lfo, (sensor can control lfo)
@@ -19,24 +34,10 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 			m.recursiveDo({ |source, destKey, inputKey, cvs|
 				cvs.active.signal(\value).connectTo({ |v|
-					"TODO: play/stop synth".postln;
-					/*
-					if (v.value == \on) {
-						//FIXME  this logic should be in playSynth/stopSynth instead
-
-						if (e.activeDestinations.includes[destKey].not) {
-							e.playSynth(source, destKey, inputKey);
-						};
-						//We add this every time to keep count
-						e.activeDestinations.add([source, destKey]);
-					} {
-						e.activeDestinations;
-						if (e.activeDestination.remove(destKey).includes([source, destKey]).not) {
-							e.stopSynth(source, destKey, inputKey);
-						}
-					};
-					// ~spawnSynth.value(source, dest);
-					*/
+					switch(v.value,
+						\on, { e.playSynth(source, destKey, inputKey) },
+						\off, { e.stopSynth(source, destKey, inputKey) }
+					);
 				}.inEnvir)
 			}, 4);
 
@@ -45,25 +46,25 @@ p = Require("protos/serverPlayer", always:false).clone {
 		};
 	};
 
-
-
 	//Prepare, create groups and buses
 	//TODO create buses
 	~onPrep = { |target|
-		//Go through all specs and make synthdefs for them
-		var e = currentEnvironment;
+
+		var makeDef = ~prMakeMappingDef.inEnvir;
 
 		//Loop through sources and destination and populate ~macroMapping dict
 		//sourceKey -> destKey -> inputKey -> (spec: a ControlSpec, specDef: a SynthDef)
 		~macroMapping = ();
 		Library.at(\lumber, \common, \macroSources).do { |src|
-			~macroMapping[src] = ().make {
+			~macroMapping[src] = ().make { |srcMap|
 				Library.at(\lumber, \common, \macroDestinations).keysValuesDo { |destKey, dest|
-					currentEnvironment[destKey] = ().make {
+					srcMap[destKey] = ().make { |destMap|
 						dest.inputs.do { |inputKey|
-							currentEnvironment[inputKey] = (
+							destMap[inputKey] = (
+								//spec for input
 								spec: dest.specs[inputKey],
-								specDef: e.prMakeSpecSynthDef.(dest.specs[inputKey], src, destKey->inputKey)
+								//Mapping synthdef f
+								mappingDef: makeDef.(dest.specs[inputKey], src, destKey, inputKey)
 							)
 						}
 					}
@@ -75,6 +76,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//Play everything
 	//TODO play sources?m
 	~onPlay = {
+		//FIXME
 		~activeRoutings.asArray.flatten.pairsDo { |src, dest|
 			~playSynth.(src, dest);
 		};
@@ -109,50 +111,85 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//TODO map dest input to mapping output bus
 	~playSynth = { |src, dest, input|
 		//TODO: use env var instead?
-		var x = ~macroMapping[src][dest][input];
-		var g;
-		g = ~groups[src][dest] ?? {
-			~groups[src][dest] = g = Group(~parentGroup);
-			~synths[src][dest] = Synth(dest, [], g, \addToTail);
-			~groups[src][dest];
+
+
+
+		if (~activeInputs.includes([src, dest, input]).not) {
+			if (~activeDestinations.includes(dest).not) {
+				~prPlayDestSynth.(dest);
+			};
+			~prPlayMappingSynth.(src, dest, input);
+			//Add another instance to the bag
+			~activeDestinations.add(dest);
+			"Spawn synth src:%, dest:%, input:%".format(src, dest, input).postln;
+		} {
+			"Already playing src: %, dest: %, input: %".format(src, dest, input).postln;
 		};
-		//TODO enclose synths in group?
-		x.specDef.postln !? { Synth(x.specDef, [], g, \addToHead) };
-		"Spawn synth src:%, dest:%, input:%".format(src, dest, input).postln;
+
 	};
 
-	//Stop single dest synth
-	//XXX should buses be kept or freed?
+	//Create group and play synth
+	~prPlayDestSynth = { |dest|
+		var grp = ~groups[dest] = Group(~parentGroup);
+		//TODO: synth arguments
+		~synths[dest] = Synth(dest, [], grp).register(true).onFree(~prResetDestination.inEnvir);
+		~mappingSynths[dest] = MultiLevelIdentityDictionary();
+	};
+
+
+	//Play mapping synth
+	~prPlayMappingSynth = { |src, dest, input|
+		//Go through all input params, exclude on/off and make synthdef args
+		//TODO: get mapping synthdef
+		var args = ~macroMapping[src][dest][input].reject({ |v, k|
+			k == \active
+		}).collect(_.value).asPairs;
+
+		//TODO: set mapping def
+		var def = \ping;
+
+		~activeInputs.add([src, dest, input]);
+		~mappingSynths[dest].put(
+			src, input,
+			Synth(def, args, ~groups[dest], \addToHead).register(true).onFree({
+				~mappingSynths[dest].removeAt(src, input);
+				~activeInputs.remove([src, dest, input])
+			}.inEnvir)
+		);
+	};
+
 	~stopSynth = { |src, dest, input|
-		//TODO add conditional logic, free if last playing destination
-		~groups[src][dest].free;
-		~groups[src][dest] = nil;
-		~synths[src][dest] = nil;
+		if (~activeDestination.remove(dest).includes(dest).not) {
+			"Stopping destination synth %".format(src).postln;
+			//Will free group from doneAction.
+			//Group & synth counters are released from .onFree above
+			~synths[dest].release;
+		} {
+			//synth counters are released from .onFree above
+			~mappingSynths[dest].at(src, input).release;
+		}
 	};
 
 	~onFree = {
 		~connections.do(_.free);
 	};
 
-	//Reset containers of freeable stuff
-	//Assumes things have already been freed
-	//Redefinition
-	~prResetContainers = {
-		~groups = ();
-		~synths = ();
-		Library.at(\lumber, \common, \macroSources).do {|k|
-			~groups[k] = ();
-			~synths[k] = ();
-		}
+	//Reset counters and bags for destination
+	//Called from ~synths[dest].onFree
+	~prResetDestination = { |dest|
+		//XXX should buses be kept or freed?
+		~groups[dest] = nil;
+		~synths[dest] = nil;
+		//Empty counters to be sure
+		~activeDestination.remove(dest, inf);
+		~activeInputs = ~activeInputs - ~activeInputs.select({ |x| x[1] == dest});
 	};
 
-	//Need to do this to update data structure
-	~prResetContainers.value;
 
 	//Make a synthdef from given spec
 	//Name after Spec.specs key, or src_dest
 	//TODO: three args
-	~prMakeSpecSynthDef = { |spec, src, dest|
+	~prMakeMappingDef = { |spec, src, dest, input|
 		var name, func;
 		spec = spec.asSpec;
 		//TODO: better naming. All specs predefined?
