@@ -28,7 +28,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//TODO: connect other cvs (mapping-related) to methods
 	~connect = { |m|
 		var e = currentEnvironment;
-		~model = m;
+		~model = m.params;
 		//Automagically add all created connections to ~connections
 		~connections = ConnectionList.make {
 
@@ -39,6 +39,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 						\off, { e.stopSynth(source, destKey, inputKey) }
 					);
 				}.inEnvir)
+				//TODO: map cvs to running synths
 			}, 4);
 
 
@@ -52,11 +53,11 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 		var makeDef = ~prMakeMappingDef.inEnvir;
 
-		//Loop through sources and destination and populate ~macroMapping dict
+		//Loop through sources and destination and populate ~allInputs dict
 		//sourceKey -> destKey -> inputKey -> (spec: a ControlSpec, specDef: a SynthDef)
-		~macroMapping = ();
+		~allInputs = ();
 		Library.at(\lumber, \common, \macroSources).do { |src|
-			~macroMapping[src] = ().make { |srcMap|
+			~allInputs[src] = ().make { |srcMap|
 				Library.at(\lumber, \common, \macroDestinations).keysValuesDo { |destKey, dest|
 					srcMap[destKey] = ().make { |destMap|
 						dest.inputs.do { |inputKey|
@@ -112,55 +113,82 @@ p = Require("protos/serverPlayer", always:false).clone {
 	~playSynth = { |src, dest, input|
 		//TODO: use env var instead?
 
+		if (~isPlaying) {
 
-
-		if (~activeInputs.includes([src, dest, input]).not) {
-			if (~activeDestinations.includes(dest).not) {
-				~prPlayDestSynth.(dest);
+			if (~activeInputs.includes([src, dest, input]).not) {
+				if (~activeDestinations.includes(dest).not) {
+					~prPlayDestSynth.(dest);
+				};
+				~prPlayMappingSynth.(src, dest, input);
+				//Add another instance to the bag
+				~activeDestinations.add(dest);
+				"Spawn synth src:%, dest:%, input:%".format(src, dest, input).postln;
+			} {
+				"Already playing src: %, dest: %, input: %".format(src, dest, input).postln;
 			};
-			~prPlayMappingSynth.(src, dest, input);
-			//Add another instance to the bag
-			~activeDestinations.add(dest);
-			"Spawn synth src:%, dest:%, input:%".format(src, dest, input).postln;
-		} {
-			"Already playing src: %, dest: %, input: %".format(src, dest, input).postln;
-		};
+		}
 
 	};
 
-	//Create group and play synth
+	//Create group, bus and play synth
 	~prPlayDestSynth = { |dest|
-		var grp = ~groups[dest] = Group(~parentGroup);
+		var grp = Group(~parentGroup);
+		~groups[dest] = grp;
+		~buses[dest] = ();
 		//TODO: synth arguments
-		~synths[dest] = Synth(dest, [], grp).register(true).onFree(~prResetDestination.inEnvir);
+		~synths[dest] = Synth(dest, [\out, ~buses.out], grp).debug("destSyn").register(true).onFree(~prResetDestination.inEnvir);
 		~mappingSynths[dest] = MultiLevelIdentityDictionary();
 	};
 
 
 	//Play mapping synth
 	~prPlayMappingSynth = { |src, dest, input|
+		var def, bus, args, synth;
+		//Get pre-generated mapping synthDef
+		//FIXME
+		def = ~allInputs[src][dest][input].mappingDef;
+		//Create buses. Inputs from different sources share buses, so we make sure
+		//we only create them once per input.
+		bus = ~buses[dest][input] ?? {
+			"creating bus for input %.%".format(dest, input).postln;
+			~buses[dest][input] = bus = (
+				//Main bus for input
+				main: Bus.control(~server),
+				//All routing synths play a 1 on a count bus,
+				//which is used for scaling the output with a \controlBusMul synth.
+				//This also makes it possible to fade in/out destinations smoothly,
+				//by using the same attack/release on the count signal
+				count: Bus.control(~server)
+			);
+			~mappingSynths[dest].put(\specMapping,
+				Synth(def.name, [\bus, bus[\main]], ~synths[dest], \addBefore));
+			~mappingSynths[dest].put(\controlBusDiv,
+				Synth(\controlBusDiv,
+					[\bus, bus[\main], \divisorBus, bus[\count]],
+					~mappingSynths[dest][\specMapping], \addBefore));
+			~synths[dest].map(input, bus[\main]);
+			bus
+		};
 		//Go through all input params, exclude on/off and make synthdef args
-		//TODO: get mapping synthdef
-		var args = ~macroMapping[src][dest][input].reject({ |v, k|
+		args = ~model[src][dest][input].reject({ |v, k|
 			k == \active
 		}).collect(_.value).asPairs;
 
-		//TODO: set mapping def
-		var def = \ping;
+		args = args ++ [\inbus, ~buses.debug("buses")[src.postln], \outbus, bus.main, \countbus, bus[\count]];
 
+		//Play input mapping synth
+		synth = Synth(\inputMapper, args, ~groups[dest], \addToHead).register(true).onFree({
+			~mappingSynths[dest].removeAt(src, input);
+			~activeInputs.remove([src, dest, input]);
+		}.inEnvir);
+
+		~mappingSynths[dest].put(src, input, synth.debug("inputMapper"));
 		~activeInputs.add([src, dest, input]);
-		~mappingSynths[dest].put(
-			src, input,
-			Synth(def, args, ~groups[dest], \addToHead).register(true).onFree({
-				~mappingSynths[dest].removeAt(src, input);
-				~activeInputs.remove([src, dest, input])
-			}.inEnvir)
-		);
 	};
 
 	~stopSynth = { |src, dest, input|
-		if (~activeDestination.remove(dest).includes(dest).not) {
-			"Stopping destination synth %".format(src).postln;
+		if (~activeDestinations.remove(dest).includes(dest).not) {
+			"Stopping destination synth %".format(dest).postln;
 			//Will free group from doneAction.
 			//Group & synth counters are released from .onFree above
 			~synths[dest].release;
@@ -171,6 +199,8 @@ p = Require("protos/serverPlayer", always:false).clone {
 	};
 
 	~onFree = {
+		~mappingSynths.do(_.unregister);
+		~synths.do(_.unregister);
 		~connections.do(_.free);
 	};
 
@@ -178,10 +208,12 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//Called from ~synths[dest].onFree
 	~prResetDestination = { |dest|
 		//XXX should buses be kept or freed?
+		~buses[dest].free;
+		~buses[dest] = nil;
 		~groups[dest] = nil;
 		~synths[dest] = nil;
 		//Empty counters to be sure
-		~activeDestination.remove(dest, inf);
+		~activeDestinations.remove(dest, inf);
 		~activeInputs = ~activeInputs - ~activeInputs.select({ |x| x[1] == dest});
 	};
 
@@ -192,24 +224,12 @@ p = Require("protos/serverPlayer", always:false).clone {
 	~prMakeMappingDef = { |spec, src, dest, input|
 		var name, func;
 		spec = spec.asSpec;
-		//TODO: better naming. All specs predefined?
-		//TODO: lagud
-		//TODO: move func to preset
-		//TODO: use envir variables instead of prependArgs, + Environment.use: ~in, ~spec.
-		func = Library.at(\lumber, \mapfunc, \src, \dest);
-		name = Spec.findKeyForSpec(spec) ?? { "%_%".format(src, dest) };
-		SynthDef("%SpecMapper".format(name), {
-			var in = \in.kr(0);
-			if (func.notNil) {
-				in = SynthDef.wrap(func, prependArgs:[in, spec]);
-			} {
-				//no clipping on lincurve to allow inverted inMin/inMax (inMax < inMin)
-				//clipping is done in Spec.map
-				//FIXME But lag should probably be done before Spec.map, and after clipping. Hmm...
-				in = spec.map(in.lincurve(\inMin.kr(0), \inMax.kr(1), 0, 1, \curve.kr(0), \none))
-			};
-			ReplaceOut.kr(\out.kr(0), in);
-		}).add.name;
+		name = Spec.findKeyForSpec(spec) ?? { "%@%".format(input, dest) };
+		//This should run last before input,
+		//maps 0-1 to input spec
+		SynthDef("%SpecMapper".format(name), { |bus=0|
+			ReplaceOut.kr(bus, spec.map(In.kr(bus)));
+		}).add(\lumber);
 
 	};
 
