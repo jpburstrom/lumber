@@ -125,20 +125,21 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//TODO map dest input to mapping output bus
 	~playSynth = { |src, dest, input|
 		//TODO: use env var instead?
-
+		var synth;
 		if (~isPlaying) {
 
 			if (~activeInputs.includes([src, dest, input]).not) {
 				if (~activeDestinations.includes(dest).not) {
 					~prPlayDestSynth.(dest);
 				};
-				~prPlayMappingSynth.(src, dest, input);
+				synth = ~prPlayMappingSynth.(src, dest, input);
 				//Add another instance to the bag
 				~activeDestinations.add(dest);
-				"Spawn synth src:%, dest:%, input:%".format(src, dest, input).postln;
+				"Spawn synth src:%, dest:%, input:%".format(src, dest, input);
 			} {
-				"Already playing src: %, dest: %, input: %".format(src, dest, input).postln;
+				"Already playing src: %, dest: %, input: %".format(src, dest, input);
 			};
+			synth;
 		}
 
 	};
