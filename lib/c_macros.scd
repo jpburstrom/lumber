@@ -31,15 +31,28 @@ p = Require("protos/serverPlayer", always:false).clone {
 		~model = m.params;
 		//Automagically add all created connections to ~connections
 		~connections = ConnectionList.make {
+			var keys = #[levels, times, curves, lagU, lagD];
 
 			m.recursiveDo({ |source, destKey, inputKey, cvs|
-				cvs.active.signal(\value).connectTo({ |v|
+				var synth, connections;
+				cvs[\active].signal(\value).connectTo({ |v|
 					switch(v.value,
-						\on, { e.playSynth(source, destKey, inputKey) },
-						\off, { e.stopSynth(source, destKey, inputKey) }
+						\on, {
+							e.playSynth(source, destKey, inputKey) !? { |syn|
+								synth = syn;
+								connections = keys.collect({ |key|
+									cvs[key];
+								}).connectEach(\value, synth.argSlots(*keys));
+							}
+						},
+						\off, {
+							e.stopSynth(source, destKey, inputKey);
+							connections.free;
+						}
 					);
-				}.inEnvir)
-				//TODO: map cvs to running synths
+				}.inEnvir);
+
+
 			}, 4);
 
 
