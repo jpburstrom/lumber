@@ -124,6 +124,18 @@ Proto {
 		~eview.setEnv(~envelope);
 	};
 
+	~prReactivateSynth = {
+		if (~model[\active].value == \on) {
+			//HACK: restart when env ha
+			{
+				~model[\active].toggle;
+				Library.at(\lumber, \server).sync;
+				~model[\active].toggle;
+			}.fork(AppClock);
+		}
+	};
+
+
 	//Create and return window
 	~makeWindow = {
 		var sl2;
@@ -180,13 +192,18 @@ Proto {
 				.connectTo(~model[\active].inputSlot)
 				.transform({|o, w, v| v; [o, w, v.asInteger]})
 			);
-			~connections.add(~model[\active].value;
-				~model[\active].signal(\value)
+			~connections.add(~model[\active].signal(\value)
 				.connectTo({ |cv|
 					enabledBox.value = (cv.value == \on)
 				})
 			);
+			//XXX Hack, IEnvGen currently can't change values while running, so we reactivate
+			//on value change.
+			~connections.add(currentEnvironment.signal(\value).connectTo(~prReactivateSynth.inEnvir)
+				//Every 1/4 seconds, at least.
+				.collapse(0.25));
 		};
+
 
 		~eview.keyDownAction_({ |view, char, mod, unicode, keycode, key|
 			if (key == 16777216) {
