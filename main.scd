@@ -1,6 +1,4 @@
 (
-TODO: The preceding error dump is for ERROR: Message 'lumber' not understood.
-Ändra till desclib
 //Load common variables into Library(\lumber, \common)
 Require("lib/common", always:false);
 Require("lib/d_synthdefs", always:true);

@@ -6,8 +6,6 @@
 
 	view.frameRate = 5;
 
-	params.postln;
-
 	view.drawFunc = { |vw|
 		var freqs, svals, values, bounds, zeroline;
 		var min = 40, max = 320, range = 24;

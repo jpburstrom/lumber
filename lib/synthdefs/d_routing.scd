@@ -1,4 +1,3 @@
-"routing synthdefs".postln;
 SynthDef(\lumberOut, {
 
 	var snd = In.ar(\in.kr, 1);

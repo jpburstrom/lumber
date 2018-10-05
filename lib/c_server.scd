@@ -9,8 +9,7 @@ Require("protos/serverPlayer", always:false).clone {
 
 	~connectToModels = { |...args|
 		args.pairsDo { |k, model|
-			[k, model].postln;
-			currentEnvironment[k].postln.connect(model);
+			currentEnvironment[k].connect(model);
 		}
 	};
 

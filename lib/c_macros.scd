@@ -150,7 +150,8 @@ p = Require("protos/serverPlayer", always:false).clone {
 		~groups[dest] = grp;
 		~buses[dest] = ();
 		//TODO: synth arguments
-		~synths[dest] = Synth(dest, [\out, ~buses.out], grp).debug("destSyn").register(true).onFree(~prResetDestination.inEnvir);
+		~synths[dest] = Synth(dest,
+			[\out, ~buses.out], grp).register(true).onFree(~prResetDestination.inEnvir);
 		~mappingSynths[dest] = MultiLevelIdentityDictionary();
 	};
 
@@ -164,7 +165,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 		//Create buses. Inputs from different sources share buses, so we make sure
 		//we only create them once per input.
 		bus = ~buses[dest][input] ?? {
-			"creating bus for input %.%".format(dest, input).postln;
+			"creating bus for input %.%".format(dest, input);
 			~buses[dest][input] = bus = (
 				//Main bus for input
 				main: Bus.control(~server),
@@ -188,7 +189,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 			k == \active
 		}).collect(_.value).asPairs;
 
-		args = args ++ [\inbus, ~buses.debug("buses")[src.postln], \outbus, bus.main, \countbus, bus[\count]];
+		args = args ++ [\inbus, ~buses[src], \outbus, bus.main, \countbus, bus[\count]];
 
 		//Play input mapping synth
 		synth = Synth(\inputMapper, args, ~groups[dest], \addToHead).register(true).onFree({
@@ -196,13 +197,14 @@ p = Require("protos/serverPlayer", always:false).clone {
 			~activeInputs.remove([src, dest, input]);
 		}.inEnvir);
 
-		~mappingSynths[dest].put(src, input, synth.debug("inputMapper"));
+		~mappingSynths[dest].put(src, input, synth);
 		~activeInputs.add([src, dest, input]);
+		synth
 	};
 
 	~stopSynth = { |src, dest, input|
 		if (~activeDestinations.remove(dest).includes(dest).not) {
-			"Stopping destination synth %".format(dest).postln;
+			"Stopping destination synth %".format(dest);
 			//Will free group from doneAction.
 			//Group & synth counters are released from .onFree above
 			~synths[dest].release;

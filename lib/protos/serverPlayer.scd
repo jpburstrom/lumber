@@ -26,7 +26,6 @@ Proto {
 	#[groups, synths, buffers, buses].do { |k|
 		currentEnvironment[k] = ();
 	};
-
 	//~factory.groups = { ~main = Group() };
 	//~factory.buses = { ~fxBus = Bus.audio };
 	//~factory.synths = { |buses| ~reverb = Synth(\reverb, [\out, buses.main]) };
