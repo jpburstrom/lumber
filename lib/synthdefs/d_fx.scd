@@ -41,3 +41,17 @@ fxFactory.(\destTest, {
 	)
 )).add(\lumber);
 
+fxFactory.(\boogie, {
+	SinOsc.ar(\freq.kr.poll(1, "freq")) * \amp.kr(0.1);
+},(
+	specs: (
+		amp: \amp,
+		freq: \freq
+	),
+	lumber: (
+		label: "Boogie",
+		group: \fx,
+		inputs: #[amp, freq]
+	)
+)).add(\lumber);
+

@@ -37,11 +37,11 @@ wrap.('intensity', {
 });
 
 wrap.('orientation', {
-	DC.kr(1);
+	LFTri.kr(0.5).range(0, 1);
 });
 
 wrap.('softpot_l', {
-	DC.kr(0);
+	LFTri.kr(0.3).range(0, 1);
 });
 
 wrap.('softpot_s', {
