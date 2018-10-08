@@ -1,4 +1,5 @@
 var wrap = { |key, func, meta|
+	meta ?? { meta = () };
 	SynthDef(key, {
 		var sig;
 
@@ -53,7 +54,7 @@ wrap.('expression', {
 });
 
 wrap.(\lfo1, {
-	SinOsc.kr(\freq.kr(1)) * \depth.kr(0.1);
+	SinOsc.kr(\freq.kr(1)).range(0,1) * \depth.kr(0.1);
 }, (
 	specs: (
 		\freq: [0.125, 20, \exp],

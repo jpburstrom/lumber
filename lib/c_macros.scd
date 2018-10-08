@@ -126,15 +126,14 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//Create group, bus and play synth
 	~prPlayDestSynth = { |dest|
 		var grp = Group(~parentGroup);
-		var metadata = SynthDescLib.all[\lumber][\boogie].metadata;
+		var metadata = Library.at(\lumber, \common, \macroDestinations)[dest];
 		~groups[dest] = grp;
 		~buses[dest] = ();
-		//TODO: synth arguments
 		~synths[dest] = Synth(dest,
 			[\out, ~buses.out], grp).register(true).onFree(~prResetDestination.inEnvir);
 		~mappingSynths[dest] = MultiLevelIdentityDictionary();
 		//Set all params to default value
-		metadata[\lumber].inputs.do { |input|
+		metadata.inputs.do { |input|
 			~synths[dest].set(input, metadata[\specs][input].asSpec.default);
 		};
 	};

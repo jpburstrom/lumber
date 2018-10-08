@@ -8,7 +8,7 @@ var fxFactory = { |name, func, meta|
 		//FIXME: settable fadetime
         XOut.ar(\out.kr, Env.asr(0.01, 1, 0.01).ar(Done.freeGroup, \gate.kr(1)), snd)
 
-	}, metadata: meta !? (_.put(\destination, true))).add(\lumber);
+	}, metadata: meta !? { meta.put(\destination, true) }).add(\lumber);
 
 };
 

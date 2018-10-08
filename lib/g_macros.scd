@@ -43,8 +43,10 @@ Proto({
 				//~destinations are synthdefs with metadata
 				//dest.specs has inputs
 				//We just grab all of them, but maybe it would be better to use lumber.inputs or similar
-				~destinations.keysValuesDo({ |destKey, dest|
-					dest.inputs.do { |inputKey|
+
+				~destinationKeys.do({ |destKey|
+
+					~destinations[destKey].inputs.do { |inputKey|
 						//TODO: These values should be collected from CVs somewhere
 
 						var container, eview;

@@ -51,16 +51,18 @@ Proto({
     //Load param dictionary
     //Useful for preset loading
     ~setParams = { |obj|
-	    ~params.keysValuesDo { |srcKey, dests|
-			dests.keysValuesDo { |destKey, dest|
-            //Check if obj has macro
-				obj[srcKey][destKey] !? { |objInputs|
-					dest.keysValuesDo { |input, cvs|
-						//Check if obj has param (in case preset structure changes)
-						objInputs[input] !? { |objCvs|
-							cvs.keysValuesDo { |k, v|
-								objCvs[k] !? { |objValue|
-									cvs[k].value = objValue.value;
+		~params.keysValuesDo { |srcKey, dests|
+			obj.srcKey !? {
+				dests.keysValuesDo { |destKey, dest|
+					//Check if obj has macro
+					obj[srcKey][destKey] !? { |objInputs|
+						dest.keysValuesDo { |input, cvs|
+							//Check if obj has param (in case preset structure changes)
+							objInputs[input] !? { |objCvs|
+								cvs.keysValuesDo { |k, v|
+									objCvs[k] !? { |objValue|
+										cvs[k].value = objValue.value;
+									}
 								}
 							}
 						}
