@@ -197,11 +197,7 @@ Proto {
 					enabledBox.value = (cv.value == \on)
 				})
 			);
-			//XXX Hack, IEnvGen currently can't change values while running, so we reactivate
-			//on value change.
-			~connections.add(currentEnvironment.signal(\value).connectTo(~prReactivateSynth.inEnvir)
-				//Every 1/4 seconds, at least.
-				.collapse(0.25));
+
 		};
 
 
