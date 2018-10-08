@@ -5,7 +5,7 @@ Proto({
 
 	~model = model;
 	~width = 50;
-	~sources = Library.at(\lumber, \common, \macroSources);
+	~sources = Library.at(\lumber, \common, \macroSources).keys.asArray.sort;
 	~destinations = Library.at(\lumber, \common, \macroDestinations);
 	~destinationKeys = ~destinations.keys.asArray.sort;
 	//StaticTexts

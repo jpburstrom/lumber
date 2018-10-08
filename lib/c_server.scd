@@ -49,7 +49,7 @@ Require("protos/serverPlayer", always:false).clone {
 			~out = Bus(\audio, 0, 1, server);
 
 			//TODO Later move to ~macros
-			Library.at(\lumber, \common, \macroSources).do { |src|
+			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
 				currentEnvironment[src] = Bus.control(server);
 			}
 		};
@@ -71,7 +71,7 @@ Require("protos/serverPlayer", always:false).clone {
 			~ping = Synth(\ping, [\release, 10, \out, buses.main], target: groups.input);
 
 			//TODO later maybe move these to c_macros
-			Library.at(\lumber, \common, \macroSources).do { |src|
+			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
 				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups.sensors);
 			};
 			server.sync;

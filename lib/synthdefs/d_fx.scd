@@ -8,7 +8,7 @@ var fxFactory = { |name, func, meta|
 		//FIXME: settable fadetime
         XOut.ar(\out.kr, Env.asr(0.01, 1, 0.01).ar(Done.freeGroup, \gate.kr(1)), snd)
 
-	}, metadata:meta).add(\lumber);
+	}, metadata: meta !? (_.put(\destination, true))).add(\lumber);
 
 };
 
@@ -34,11 +34,9 @@ fxFactory.(\destTest, {
 		testParam: \freq,
 		another: \amp
 	),
-	lumber: (
-		label: "Test",
-		group: \fx,
-		inputs: #[testParam, another]
-	)
+	label: "Test",
+	group: \fx,
+	inputs: #[testParam, another]
 )).add(\lumber);
 
 fxFactory.(\boogie, {
@@ -48,10 +46,8 @@ fxFactory.(\boogie, {
 		amp: \amp.asSpec.default_(0.1),
 		freq: \freq
 	),
-	lumber: (
-		label: "Boogie",
-		group: \fx,
-		inputs: #[amp, freq]
-	)
+	label: "Boogie",
+	group: \fx,
+	inputs: #[amp, freq]
 )).add(\lumber);
 

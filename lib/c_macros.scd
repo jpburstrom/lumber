@@ -70,7 +70,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 		//Loop through sources and destination and populate ~allInputs dict
 		//sourceKey -> destKey -> inputKey -> (spec: a ControlSpec, specDef: a SynthDef)
 		~allInputs = ();
-		Library.at(\lumber, \common, \macroSources).do { |src|
+		Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
 			~allInputs[src] = ().make { |srcMap|
 				Library.at(\lumber, \common, \macroDestinations).keysValuesDo { |destKey, dest|
 					srcMap[destKey] = ().make { |destMap|

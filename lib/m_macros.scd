@@ -12,7 +12,7 @@ Proto({
     //Parameter dictionary
 	//Source -> dest -> input
     ~params = ();
-	~sources.do { |src|
+	~sources.keysValuesDo { |src|
 		~params[src] = ();
 		~destinations.keysValuesDo { |key, dest|
 			~params[src][key] = ();

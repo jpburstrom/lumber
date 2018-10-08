@@ -1,11 +1,11 @@
-var wrap = { |key, func|
+var wrap = { |key, func, meta|
 	SynthDef(key, {
 		var sig;
 
 		sig = SynthDef.wrap(func);
 
 		Out.kr(\out.kr(0), sig);
-	}).add(\lumber);
+	}, metadata: meta !? (_.put(\source, true))).add(\lumber);
 };
 
 
@@ -52,3 +52,15 @@ wrap.('expression', {
 	DC.kr(0);
 });
 
+wrap.(\lfo1, {
+	SinOsc.kr(\freq.kr(1)) * \depth.kr(0.1);
+}, (
+	specs: (
+		\freq: [0.125, 20, \exp],
+		\depth: [0.001, 1, \exp]
+	),
+	label: "LFO1",
+	group: \lfo,
+	inputs: #[freq, depth],
+	destination: true
+));

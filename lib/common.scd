@@ -19,15 +19,14 @@ Environment().know_(true).make({
     //That is, physical or virtual controllers
     //This also defines gui order
     //Should it?
-    ~macroSources = #[
-        activity, intensity, orientation,
-        softpot_l, softpot_s,
-        expression
-    ];
+	~macroSources = ();  //Library.at(\lumber, \common, \macroSources) ?? { () };
 
 	//This is populated in d_synthdefs.scd
 	//data taken from synthdef metadata
-	~macroDestinations = Library.at(\lumber, \common, \macroDestinations) ?? { () };
+	//(synthDefName: (inputs: [name1, name2], specs: (name1: ControlSpec(), name2: \specKey)
+	//label: "GUI label", group: \serverGroupKey)
+	//... where group is found in q.serverController[\groups][\serverGroupKey]
+	~macroDestinations =(); // Library.at(\lumber, \common, \macroDestinations) ?? { () };
 
 	//Frequencies for multi-param-eq, as semitones.
 	//(Semitones work better as dict keys)
