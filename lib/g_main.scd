@@ -97,11 +97,14 @@ Window.closeAll;
 		}
 	}, 1, { window.isClosed });
 
+	var tabby = TabbedView2(window, Rect(0, 0, 600, 800));
+
 	checkBelaStatus.value;
 
 	window.autoRememberPosition(\lumber, \mainWindow);
 
 	window.view.background_(Color.fromHexString("ddbbcc"));
+	tabby.backgrounds = [Color.fromHexString("ddbbcc")];
 
 	window.view.layout.add(VLayout(
 		HLayout(
@@ -148,39 +151,29 @@ Window.closeAll;
 				"  Load", { q.storage.load },
 				"  Save as…", { "TODO".postln },
 				"  Load from…", { "TODO".postln }
-			)
-
-		),
-		HLayout(
-			VLayout(
-				HLayout(
-					header.("Macros"),
-					nil,
-					presetBtns.value(6, \macros)
-				).margins_([10, 0, 10, 0]),
-				sections.add(Require("g_macros").makeWindow).last,
-				nil
-				// nil
 			),
-			VLayout(
-				HLayout(
-					header.("EQ"),
-					nil,
-					presetBtns.value(4, \eq)
-				).margins_([0, 0, 10, 0]),
-				sections.add(Require("g_eq")).last,
-				nil
-			).margins_([10, 0, 0, 0])
-		),
-		HLayout(
-			nil,
-			oneShotBtn.("Reload script", { q.serverController.stop; mainScriptPath.load }),
-
+			oneShotBtn.("Reload script", { q.serverController.stop; mainScriptPath.load })
 
 		),
+		tabby.view,
+	));
+
+	tabby.add("Macros", scroll:true);
+	tabby.add("EQ", scroll:false);
+	tabby.tabViews[0].layout_(VLayout(
+		HLayout(nil, presetBtns.value(6, \macros)),
+		Require("g_macros").makeWindow,
+		nil
+	));
+
+	tabby.tabViews[1].layout_(VLayout(
+		HLayout(nil, presetBtns.value(4, \eq)),
+		Require("g_eq")
 	));
 
 	window.view.minHeight_(800);
+
+	{ tabby.refresh }.defer(0.2);
 
 	/*
 	window.view.keyDownAction = { |view, char, modifiers, unicode, keycode, key|
