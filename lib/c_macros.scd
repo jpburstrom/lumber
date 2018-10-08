@@ -147,21 +147,29 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//Create group, bus and play synth
 	~prPlayDestSynth = { |dest|
 		var grp = Group(~parentGroup);
+		var metadata = SynthDescLib.all[\lumber][\boogie].metadata;
 		~groups[dest] = grp;
 		~buses[dest] = ();
 		//TODO: synth arguments
 		~synths[dest] = Synth(dest,
 			[\out, ~buses.out], grp).register(true).onFree(~prResetDestination.inEnvir);
 		~mappingSynths[dest] = MultiLevelIdentityDictionary();
+		//Set all params to default value
+		metadata[\lumber].inputs.do { |input|
+			~synths[dest].set(input.postln, metadata[\specs][input].asSpec.default.postln);
+		};
 	};
 
 
 	//Play mapping synth
 	~prPlayMappingSynth = { |src, dest, input|
-		var def, bus, args, synth;
-		//Get pre-generated mapping synthDef
-		//FIXME
-		def = ~allInputs[src][dest][input].mappingDef;
+		var def, bus, args, synth, spec;
+
+		 ~allInputs[src][dest][input].use {
+			spec = ~spec.asSpec;
+			def = ~mappingDef;
+		};
+
 		//Create buses. Inputs from different sources share buses, so we make sure
 		//we only create them once per input.
 		bus = ~buses[dest][input] ?? {
@@ -175,12 +183,21 @@ p = Require("protos/serverPlayer", always:false).clone {
 				//by using the same attack/release on the count signal
 				count: Bus.control(~server)
 			);
+			//Mapping 0-1 to spec range
 			~mappingSynths[dest].put(\specMapping,
 				Synth(def.name, [\bus, bus[\main]], ~synths[dest], \addBefore));
+			//Divides input from n mapping synths to fit in 0-1 range
 			~mappingSynths[dest].put(\controlBusDiv,
 				Synth(\controlBusDiv,
 					[\bus, bus[\main], \divisorBus, bus[\count]],
-					~mappingSynths[dest][\specMapping], \addBefore));
+					~mappingSynths[dest][\specMapping], \addBefore)
+			);
+			//Value is already within spec range, so we put it closest to dest synth
+			~mappingSynths[dest].put(\controlBusValue,
+				Synth(\controlBusValue,
+					[\bus, bus[\main], \divisorBus, bus[\count], \value, spec.default.debug("specavae")],
+					~synths[dest], \addBefore)
+			);
 			~synths[dest].map(input, bus[\main]);
 			bus
 		};

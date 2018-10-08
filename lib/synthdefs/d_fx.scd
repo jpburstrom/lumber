@@ -45,7 +45,7 @@ fxFactory.(\boogie, {
 	SinOsc.ar(\freq.kr.poll(1, "freq")) * \amp.kr(0.1);
 },(
 	specs: (
-		amp: \amp,
+		amp: \amp.asSpec.default_(0.1),
 		freq: \freq
 	),
 	lumber: (
