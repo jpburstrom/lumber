@@ -89,10 +89,10 @@ Proto {
 					~makeParentGroup.(target, addAction);
 					~runFactoryFunc.(\groups);
 					~runFactoryFunc.(\synths);
+					~isPlaying = true;
 					//Play hook -- override for custom behaviour
 					~onPlay.value;
 
-					~isPlaying = true;
 					~this.changed(\isPlaying, true);
 				} {
 					"already playing".warn;
