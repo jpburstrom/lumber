@@ -8,6 +8,8 @@ p = Require("protos/serverPlayer", always:false).clone {
 		//They are used for playing and stopping synths from ~play and ~stop
 		~activeDestinations = Bag();
 		~activeInputs = Set();
+		//Inputs waiting for onPlay to play
+		~pendingInputs = Set();
 
 		~groups = ();
 		//Destination synths
@@ -25,7 +27,6 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 	//Connect model to controller.
 	//Connect macro.source.dest.active cv's to play/stop synths
-	//TODO: connect other cvs (mapping-related) to methods
 	~connect = { |m|
 		var e = currentEnvironment;
 		~model = m.params;
@@ -90,44 +91,18 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//Play everything
 	//TODO play sources?m
 	~onPlay = {
-		//FIXME
-		~activeRoutings.asArray.flatten.pairsDo { |src, dest|
-			~playSynth.(src, dest);
+		~pendingInputs.asArray.do { |srcDestInput|
+			~playSynth.(*srcDestInput);
 		};
+		~pendingInputs.clear;
 
 	};
 
-	//source->[busA]->specMapper->[busB]->destination
-	//busA is (currently) defined in c_server
-	//source synths are spawned in c_server as well
-	//specMapper has bus index input
-	//
-	//destination input is regular control (not In.kr)
-
-	//MIXING SEVERAL SOURCES to same input
-	//sourceA->[busA]->specMapperA->[busX]
-	//sourceB->[busB]->specMapperB->[busX]
-	//specMapperA/B
-	//blend/LinXFade2
-	//But how check that we need to blend?
-	//ReplaceOut.ar(bus, LinXFade.ar(snd, In.ar(bus), \blend.kr(0)))
-	//Synth 1: Play on bus
-	//Synth 2: Play on bus, add to tail, set \blend to 0.5
-	//but then synth 3 will be double weight compared to 1 & 2
-
-	//sourceA->[busA]->				specMapperA->[busX]->syn
-	//sourceB->[busB]->specMapperB/
-
-
 	//Spawn single dest synth + mapping
-	//TODO play on designated busses
-	//TODO map mapping input to src output bus
-	//TODO map dest input to mapping output bus
 	~playSynth = { |src, dest, input|
 		//TODO: use env var instead?
 		var synth;
 		if (~isPlaying) {
-
 			if (~activeInputs.includes([src, dest, input]).not) {
 				if (~activeDestinations.includes(dest).not) {
 					~prPlayDestSynth.(dest);
@@ -140,7 +115,11 @@ p = Require("protos/serverPlayer", always:false).clone {
 				"Already playing src: %, dest: %, input: %".format(src, dest, input);
 			};
 			synth;
-		}
+		} {
+			//IF not playing, add to pending inputs
+			~pendingInputs.add([src, dest, input]);
+			nil;
+		};
 
 	};
 
@@ -156,7 +135,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 		~mappingSynths[dest] = MultiLevelIdentityDictionary();
 		//Set all params to default value
 		metadata[\lumber].inputs.do { |input|
-			~synths[dest].set(input.postln, metadata[\specs][input].asSpec.default.postln);
+			~synths[dest].set(input, metadata[\specs][input].asSpec.default);
 		};
 	};
 
@@ -195,7 +174,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 			//Value is already within spec range, so we put it closest to dest synth
 			~mappingSynths[dest].put(\controlBusValue,
 				Synth(\controlBusValue,
-					[\bus, bus[\main], \divisorBus, bus[\count], \value, spec.default.debug("specavae")],
+					[\bus, bus[\main], \divisorBus, bus[\count], \value, spec.default],
 					~synths[dest], \addBefore)
 			);
 			~synths[dest].map(input, bus[\main]);
