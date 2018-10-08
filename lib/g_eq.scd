@@ -36,9 +36,8 @@ view = View().minWidth_(fullWidth).minHeight_(400).layout_(
 );
 
 params.deepDo(3, (paramList.add(_)));
-x = 0;
+
 connections.add(paramList.signal(\value).connectTo({
-	(x = x + 1).debug("update");
 	eqview.refresh;
 }).collapse(0.033));
 
@@ -102,7 +101,8 @@ Require("common").eqSemitones.asArray.sort.do { |midinote, i|
 	//k: up
 	//0: zero
 	sl.keyDownAction = { |view, char, modifiers, unicode, keycode, key|
-		var inc = case
+		var ret=true, inc;
+		inc = case
 		{ modifiers.isCmd } { 3 }
 		{ modifiers.isShift } { 0.1 }
 		{ 1 };
@@ -110,6 +110,7 @@ Require("common").eqSemitones.asArray.sort.do { |midinote, i|
 			//0
 			48, {
 				cv.value = 0;
+
 			},
 			//k
 			75, {
@@ -118,9 +119,14 @@ Require("common").eqSemitones.asArray.sort.do { |midinote, i|
 			//j
 			74, {
 				cv.value = cv.value - inc;
-			}
+			},
+			{ret = false}
 		);
-		sl.defaultKeyDownAction(char, modifiers, unicode, keycode, key);
+		if (ret.not) {
+			ret = sl.defaultKeyDownAction(char, modifiers, unicode, keycode, key);
+		};
+		ret;
+
 	};
 
 };
