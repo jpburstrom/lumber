@@ -3,8 +3,7 @@
 
 var mainScriptPath = "../main.scd".resolveRelative;
 
-Window.closeAll;
-
+Library.at(\lumber, \mainWindow) !? (_.close);
 
 {
 	var window = Window.new("Lumber").layout_(HLayout());
@@ -193,6 +192,8 @@ Window.closeAll;
 	*/
 
 	window.acceptsMouseOver_(true);
+
+	Library.put(\lumber, \mainWindow, window);
 
 	window.front;
 }.value
