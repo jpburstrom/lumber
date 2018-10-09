@@ -69,20 +69,18 @@ Require("protos/serverPlayer", always:false).clone {
 		~synths = { |buses, groups, server|
 			~output = Synth(\lumberOut, [\out, buses.out, \in, buses.main], target: groups.output);
 			~ping = Synth(\ping, [\release, 10, \out, buses.main], target: groups.input);
-
 			//TODO later maybe move these to c_macros
 			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
 				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups.sensors);
 			};
 			server.sync;
-			"FIXME:load pipeline".postln;
-			/*
-			[\activity, \intensity].do { |x|
-				GestureRT.loadPipeline(
-					Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
-					currentEnvironment[x], server);
-			};
-			*/
+			if (server.name == \bela) {
+				[\activity, \intensity].do { |x|
+					GestureRT.loadPipeline(
+						Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
+						currentEnvironment[x], server);
+				};
+			}
 		};
 	};
 
