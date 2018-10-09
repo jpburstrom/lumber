@@ -22,8 +22,8 @@ Proto({
 					levels: NumericControlValue([0,0.5,0.5,1], \unipolar.asSpec),
 					times: NumericControlValue([0.4, 0.2, 0.4], \unipolar.asSpec),
 					curves: NumericControlValue([-4, 0, 4], ControlSpec(-16, 16, \lin)),
-					lagU: NumericControlValue(),
-					lagD: NumericControlValue()
+					lagU: NumericControlValue(0, [0, 10, -4].asSpec),
+					lagD: NumericControlValue(0, [0, 10, -4].asSpec)
 				)
 			};
 		};

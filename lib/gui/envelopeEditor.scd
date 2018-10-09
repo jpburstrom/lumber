@@ -139,6 +139,7 @@ Proto {
 	//Create and return window
 	~makeWindow = {
 		var sl2;
+		var lagU, lagD;
 		var levelBoxes = ~boxGroup.(\levels, 4);
 		var timeBoxes = ~boxGroup.(\times, 3);
 		var curveBoxes = ~boxGroup.(\curves, 3, [-8, 8], 0.5);
@@ -166,6 +167,12 @@ Proto {
 				[[StaticText().string_("Levels")]].addAll(levelBoxes.collect { |x| [x, \columns, 2] }),
 				[[StaticText().string_("Times"), \columns, 2]].addAll(timeBoxes.collect { |x| [x, \columns, 2] }),
 				[[StaticText().string_("Curves"), \columns, 2]].addAll(curveBoxes.collect { |x| [x, \columns, 2] }),
+				[
+					[StaticText().string_("LagU"), \columns, 2],
+					[lagU = NumberBox().scroll_step_(0.1), \columns, 2],
+					[StaticText().string_("LagD"), \columns, 2],
+					[lagD = NumberBox().scroll_step_(0.1), \columns, 2]
+				]
 			).margins_(0).spacing_(2),
 			HLayout(
 				HLayout(
@@ -188,15 +195,21 @@ Proto {
 		~connections.add(currentEnvironment.signal(\value).connectTo(~updateEnvelope.inEnvir));
 
 		~model !? {
-			~connections.add(enabledBox.signal(\value)
+			~connections.addAll(ConnectionList.make {
+				enabledBox.signal(\value)
 				.connectTo(~model[\active].inputSlot)
-				.transform({|o, w, v| v; [o, w, v.asInteger]})
-			);
-			~connections.add(~model[\active].signal(\value)
+				.transform({|o, w, v| v; [o, w, v.asInteger]});
+				~model[\active].signal(\value)
 				.connectTo({ |cv|
 					enabledBox.value = (cv.value == \on)
-				})
-			);
+				});
+				~model[\lagU].signal(\value).connectTo(lagU.valueSlot);
+				~model[\lagD].signal(\value).connectTo(lagD.valueSlot);
+				lagU.signal(\value).connectTo(~model[\lagU].valueSlot);
+				lagD.signal(\value).connectTo(~model[\lagD].valueSlot);
+			});
+
+
 
 		};
 
