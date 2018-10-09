@@ -62,7 +62,6 @@ p = Require("protos/serverPlayer", always:false).clone {
 	};
 
 	//Prepare, create groups and buses
-	//TODO create buses
 	~onPrep = { |target|
 
 		var makeDef = ~prMakeMappingDef.inEnvir;
@@ -89,7 +88,6 @@ p = Require("protos/serverPlayer", always:false).clone {
 	};
 
 	//Play everything
-	//TODO play sources?m
 	~onPlay = {
 		~pendingInputs.asArray.do { |srcDestInput|
 			~playSynth.(*srcDestInput);
@@ -100,7 +98,6 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 	//Spawn single dest synth + mapping
 	~playSynth = { |src, dest, input|
-		//TODO: use env var instead?
 		var synth;
 		if (~isPlaying) {
 			if (~activeInputs.includes([src, dest, input]).not) {
@@ -218,7 +215,6 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//Reset counters and bags for destination
 	//Called from ~synths[dest].onFree
 	~prResetDestination = { |dest|
-		//XXX should buses be kept or freed?
 		~buses[dest].free;
 		~buses[dest] = nil;
 		~groups[dest] = nil;
@@ -231,7 +227,6 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 	//Make a synthdef from given spec
 	//Name after Spec.specs key, or src_dest
-	//TODO: three args
 	~prMakeMappingDef = { |spec, src, dest, input|
 		var name, func;
 		spec = spec.asSpec;
