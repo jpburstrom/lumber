@@ -54,14 +54,13 @@ wrap.('expression', {
 });
 
 wrap.(\lfo1, {
-	SinOsc.kr(\freq.kr(1)).range(0,1) * \depth.kr(0.1);
+	SinOsc.kr(\freq.kr(1)).range(0,1);
 }, (
 	specs: (
-		\freq: [0.125, 20, \exp],
-		\depth: [0.001, 1, \exp]
+		\freq: [0.125, 20, \exp]
 	),
 	label: "LFO1",
 	group: \lfo,
-	inputs: #[freq, depth],
+	inputs: #[freq],
 	destination: true
 ));
