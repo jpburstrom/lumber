@@ -127,8 +127,11 @@ Proto({
 
 
 				[HLayout(
-					sourceHeader = StaticText().fixedWidth_(75).align_(\center)
-					.string_(source).toolTip_(source).font_(Font.monospace.size_(10)),
+					value {
+						var label = Library.at(\lumber, \common, \macroSources)[source].label ? source;
+						sourceHeader = StaticText().fixedWidth_(75).align_(\center)
+						.string_(label).toolTip_(source).font_(Font.monospace.size_(10))
+					},
 					LevelIndicator().fixedWidth_(5).fixedHeight_(~width)
 				)] ++ destWidgets ++ [nil]
 			}).add(
