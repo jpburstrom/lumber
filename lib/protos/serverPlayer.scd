@@ -120,10 +120,9 @@ Proto {
 		~stop.value;
 		~play.value; //FIXME store/use previous args
 	};
-
 	~freeResources = {
-		~buses !? { ~buses.do(_.free) };
-		~buffers !? { ~buffers.do(_.free) };
+		~buses.reject({|b| b.index.isNil }).do(_.free);
+		~buffers.reject({|b| b.bufnum.isNil }).do(_.free);
 	};
 
 	//Frees entire Proto
