@@ -6,7 +6,7 @@ var mainScriptPath = "../main.scd".resolveRelative;
 Library.at(\lumber, \mainWindow) !? (_.close);
 
 {
-	var window = Window.new("Lumber").layout_(HLayout());
+	var window = Window.new("Lumber");
 	var sections = List();
 	var presetBtns = {
 		var offset = 0;
@@ -96,7 +96,9 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 		}
 	}, 1, { window.isClosed });
 
-	var tabby = TabbedView2(window, Rect(0, 0, 600, 800));
+	var tabby = TabbedView2(window);
+
+	window.view.minHeight_(800);
 
 	checkBelaStatus.value;
 
@@ -105,7 +107,7 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 	window.view.background_(Color.fromHexString("ddbbcc"));
 	tabby.backgrounds = [Color.fromHexString("ddbbcc")];
 
-	window.view.layout.add(VLayout(
+	window.layout_(VLayout(
 		HLayout(
 			oneShotBtn.("Play", { q.serverController.play }),
 			oneShotBtn.("Stop", { q.serverController.stop }),
@@ -154,7 +156,7 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 			oneShotBtn.("Reload script", { q.serverController.stop; mainScriptPath.load })
 
 		),
-		tabby.view,
+		tabby.view
 	));
 
 	tabby.add("Macros", scroll:true);
@@ -170,7 +172,6 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 		Require("g_eq")
 	));
 
-	window.view.minHeight_(800);
 
 	{ tabby.refresh }.defer(0.2);
 
