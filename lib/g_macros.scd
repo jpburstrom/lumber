@@ -55,7 +55,9 @@ Proto({
 
 				~destinationKeys.do({ |destKey|
 
-					~destinations[destKey].inputs.do { |inputKey|
+					var dest = ~destinations[destKey];
+
+					dest.inputs.do { |inputKey|
 						//TODO: These values should be collected from CVs somewhere
 
 						var container, eview;
@@ -73,6 +75,7 @@ Proto({
 						//Enable on first window open, if not already
 						var firstTest = cellModel.active.value == \off;
 						envEditor.model = cellModel;
+						envEditor.spec = dest[\specs][inputKey].asSpec;
 
 						container = View().fixedSize_(~width).background_(Color.gray(0.9))
 						.mouseDownAction_({ |view, x, y, mod|

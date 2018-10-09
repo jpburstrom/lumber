@@ -4,6 +4,9 @@ Proto {
 	//Keep internal connections between model and ui
 	~connections = ConnectionList();
 
+	//For display purposes, corresponding to input spec of destination
+	~spec = \unipolar.asSpec;
+
 	//Envelope values. These are updated from the ui
 	~levels = [ 0.0, 0.5, 0.5, 1.0 ];
 	~times = [ 0.4, 0.2, 0.4 ];
@@ -141,6 +144,9 @@ Proto {
 		var sl2;
 		var lagU, lagD;
 		var levelBoxes = ~boxGroup.(\levels, 4);
+		var specBoxes =  4.collect {
+			NumberBox().enabled_(false).background_(QPalette.light.window)
+		};
 		var timeBoxes = ~boxGroup.(\times, 3);
 		var curveBoxes = ~boxGroup.(\curves, 3, [-8, 8], 0.5);
 		var enabledBox;
@@ -165,6 +171,7 @@ Proto {
 			),
 			GridLayout.rows(
 				[[StaticText().string_("Levels")]].addAll(levelBoxes.collect { |x| [x, \columns, 2] }),
+				[[StaticText().string_("Output")]].addAll(specBoxes.collect { |x| [x, \columns, 2] }),
 				[[StaticText().string_("Times"), \columns, 2]].addAll(timeBoxes.collect { |x| [x, \columns, 2] }),
 				[[StaticText().string_("Curves"), \columns, 2]].addAll(curveBoxes.collect { |x| [x, \columns, 2] }),
 				[
@@ -207,6 +214,12 @@ Proto {
 				~model[\lagD].signal(\value).connectTo(lagD.valueSlot);
 				lagU.signal(\value).connectTo(~model[\lagU].valueSlot);
 				lagD.signal(\value).connectTo(~model[\lagD].valueSlot);
+
+				~model[\levels].connectTo({|levels|
+					levels.value.do { |val, i|
+						specBoxes[i].value = ~spec.map(val);
+					};
+				});
 			});
 
 
@@ -232,4 +245,3 @@ Proto {
 		~win
 	}
 }
-
