@@ -3,7 +3,7 @@
 Require("lib/common", always:false);
 Require("lib/d_synthdefs", always:true);
 
-q.do(_.free);
+q.reject(_.isSymbol).do { |x| x.free };
 q.make {
 	~serverName = \local;
 	//Macro parameters - mapping controllers to parameters
@@ -62,5 +62,6 @@ q.make {
 		~serverController.play;
 	};
 };
+\done
 )
 
