@@ -25,6 +25,9 @@ p = Require("protos/serverPlayer", always:false).clone {
 		};
 	};
 
+	//Don't empty on reset, we need it to keep previously active inputs
+	~pendingInputs = Set();
+
 	//Reset containers of freeable stuff
 	//Assumes things have already been freed
 	//Redefinition
@@ -36,7 +39,6 @@ p = Require("protos/serverPlayer", always:false).clone {
 		~activeDestinations = Bag();
 		~activeInputs = Set();
 		//Inputs waiting for onPlay to play
-		~pendingInputs = Set();
 
 		~groups = ();
 		//Destination synths
@@ -212,7 +214,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 		//Play input mapping synth
 		synth = Synth(\inputMapper, args, ~groups[dest], \addToHead).register(true).onFree({
-			~mappingSynths[dest].removeAt(src, input);
+			~mappingSynths[dest] !? { |x| x.removeAt(src, input) };
 			~activeInputs.remove([src, dest, input]);
 		}.inEnvir);
 
@@ -237,9 +239,16 @@ p = Require("protos/serverPlayer", always:false).clone {
 		}
 	};
 
-	~onFree = {
-		~mappingSynths.do(_.unregister);
+	~onStop = {
+		~mappingSynths.do { |mlid|
+			mlid.leafDo { |path, syn| syn.unregister };
+		};
 		~synths.do(_.unregister);
+		~pendingInputs = ~activeInputs.copy;
+		~activeInputs.clear;
+	};
+
+	~onFree = {
 		~connections.do(_.free);
 	};
 
