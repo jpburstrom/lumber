@@ -24,13 +24,14 @@ Require("protos/serverPlayer", always:false).clone {
 		~eq.prep;
 		~macros.prep;
 
-		//XXX hack to let ~macros access macroSource buses
+		//XXX hack to let ~macros access macroSource buses & groups
 		~macros.buses.parent = ~buses;
 	};
 
 	~onPlay = {
+		~macros.groups.parent = ~groups;
 		~eq.play(~buses.main, ~groups.eq);
-		~macros.play(~buses.main, ~groups.fx);
+		~macros.play(~buses.main);
 
 	};
 
@@ -71,18 +72,6 @@ Require("protos/serverPlayer", always:false).clone {
 		~synths = { |buses, groups, server|
 			~output = Synth(\lumberOut, [\out, buses.out, \in, buses.main], target: groups.output);
 			~ping = Synth(\ping, [\release, 10, \out, buses.main], target: groups.input);
-			//TODO later maybe move these to c_macros
-			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
-				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups.sensors);
-			};
-			server.sync;
-			if (server.name == \bela) {
-				[\activity, \intensity].do { |x|
-					GestureRT.loadPipeline(
-						Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
-						currentEnvironment[x], server);
-				};
-			}
 		};
 	};
 

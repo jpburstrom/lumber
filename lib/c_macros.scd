@@ -1,9 +1,29 @@
 p = Require("protos/serverPlayer", always:false).clone {
 
+	~factory.make {
+		~synths = { |activeSources, buses, groups, server|
+			//TODO later maybe move these to c_macros
+			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
+				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups.sensors);
+				activeSources.add(src);
+			};
+			server.sync;
+			if (server.name == \bela) {
+				[\activity, \intensity].do { |x|
+					GestureRT.loadPipeline(
+						Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
+						currentEnvironment[x], server);
+				};
+			}
+		};
+	};
+
 	//Reset containers of freeable stuff
 	//Assumes things have already been freed
 	//Redefinition
 	~prResetContainers = {
+
+		~activeSources = Set(); //Always playing
 		//Bag of [src, dest] pairs. Pairs are added/removed when macros become "active".
 		//They are used for playing and stopping synths from ~play and ~stop
 		~activeDestinations = Bag();
@@ -35,15 +55,14 @@ p = Require("protos/serverPlayer", always:false).clone {
 			var keys = #[levels, times, curves, lagU, lagD];
 
 			m.recursiveDo({ |source, destKey, inputKey, cvs|
-				var synth, connections;
+				var connections;
 				cvs[\active].signal(\value).connectTo({ |v|
 					switch(v.value,
 						\on, {
 							e.playSynth(source, destKey, inputKey) !? { |syn|
-								synth = syn;
 								connections = keys.collect({ |key|
 									cvs[key];
-								}).connectEach(\value, synth.argSlots(*keys));
+								}).connectEach(\value, syn.argSlots(*keys));
 							}
 						},
 						\off, {
@@ -55,9 +74,6 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 
 			}, 4);
-
-
-
 		};
 	};
 
@@ -195,7 +211,10 @@ p = Require("protos/serverPlayer", always:false).clone {
 	};
 
 	~stopSynth = { |src, dest, input|
-		if (~activeDestinations.remove(dest).includes(dest).not) {
+		if (~activeDestinations.remove(dest).includes(dest).not
+			//Destination can be source as well. In that case we don't want to stop the synth.
+			and: { ~activeSources.includes(dest).not };
+		) {
 			"Stopping destination synth %".format(dest);
 			//Will free group from doneAction.
 			//Group & synth counters are released from .onFree above

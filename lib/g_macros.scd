@@ -3,11 +3,20 @@ var model = ~macros ? q.macros; //assuming we're in the same environment, otherw
 
 Proto({
 
+	//Update these after defining new synths
+	//They define order of sources/destinations in macro matrix
+	var sourceOrder = #[intensity, activity, orientation, expression, softpot_l, softpot_s];
+	var destOrder = #[boogie, lfo1, destTest]; //TODO
+
 	~model = model;
 	~width = 50;
-	~sources = Library.at(\lumber, \common, \macroSources).keys.asArray.sort;
+	~sources = Library.at(\lumber, \common, \macroSources).keys.asArray.sort { |x, y|
+		(sourceOrder.indexOf(x) ? inf) < (sourceOrder.indexOf(y) ? inf)
+	};
 	~destinations = Library.at(\lumber, \common, \macroDestinations);
-	~destinationKeys = ~destinations.keys.asArray.sort;
+	~destinationKeys = ~destinations.keys.asArray.sort { |x, y|
+		(destOrder.indexOf(x) ? inf) < (destOrder.indexOf(y) ? inf)
+	};
 	//StaticTexts
 	~makeDestString = { |dest, input|
 		"%:%".format(~destinations[dest].label, input);
