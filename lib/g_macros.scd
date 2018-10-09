@@ -119,7 +119,7 @@ Proto({
 							}).collapse(0.1));
 						};
 						connections.add(cellModel[\active].signal(\value).connectTo { |cv|
-							eview.visible = cv.value == \on;
+							eview.visible = (cv.value == \on);
 						})
 
 					}

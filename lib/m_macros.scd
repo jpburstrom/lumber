@@ -52,7 +52,7 @@ Proto({
     //Useful for preset loading
     ~setParams = { |obj|
 		~params.keysValuesDo { |srcKey, dests|
-			obj.srcKey !? {
+			obj[srcKey] !? {
 				dests.keysValuesDo { |destKey, dest|
 					//Check if obj has macro
 					obj[srcKey][destKey] !? { |objInputs|
