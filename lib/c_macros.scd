@@ -1,11 +1,18 @@
 p = Require("protos/serverPlayer", always:false).clone {
 
 	~factory.make {
-		~synths = { |activeSources, buses, groups, server|
+		~synths = { |activeSources, activeDestinations, mappingSynths, buses, groups, server|
 			//TODO later maybe move these to c_macros
-			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
-				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups.sensors);
+			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src, conf|
+				groups[src] = Group( groups[conf[\group] ? \sensors] );
+				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups[src]);
 				activeSources.add(src);
+				if (conf.destination == true) {
+					buses[src] = ();
+					activeDestinations.add(src);
+					mappingSynths[src] = MultiLevelIdentityDictionary();
+				};
+
 			};
 			server.sync;
 			if (server.name == \bela) {
@@ -138,8 +145,8 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 	//Create group, bus and play synth
 	~prPlayDestSynth = { |dest|
-		var grp = Group(~parentGroup);
 		var metadata = Library.at(\lumber, \common, \macroDestinations)[dest];
+		var grp = Group(~groups[metadata[\group] ? \fx]);
 		~groups[dest] = grp;
 		~buses[dest] = ();
 		~synths[dest] = Synth(dest,
@@ -211,11 +218,12 @@ p = Require("protos/serverPlayer", always:false).clone {
 	};
 
 	~stopSynth = { |src, dest, input|
-		if (~activeDestinations.remove(dest).includes(dest).not
+		if (~activeDestinations.itemCount(dest) <= 1
 			//Destination can be source as well. In that case we don't want to stop the synth.
-			and: { ~activeSources.includes(dest).not };
+			and: { ~activeSources.includes(dest).not }
 		) {
 			"Stopping destination synth %".format(dest);
+			~activeDestinations.remove(dest);
 			//Will free group from doneAction.
 			//Group & synth counters are released from .onFree above
 			~synths[dest].release;
