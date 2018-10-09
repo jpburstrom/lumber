@@ -6,7 +6,7 @@ var wrap = { |key, func, meta|
 		sig = SynthDef.wrap(func);
 
 		Out.kr(\out.kr(0), sig);
-	}, metadata: meta !? (_.put(\source, true))).add(\lumber);
+	}, metadata: meta.put(\source, true)).add(\lumber);
 };
 
 
@@ -23,7 +23,7 @@ wrap.('activity', {
 	// sig = Latch.kr(sig, Impulse.kr(10));
 	sig = GestureRT.kr(sig);
 	// sig.poll(1, \activity);
-});
+}, (label: "Activity"));
 
 wrap.('intensity', {
 	var sig;
@@ -35,31 +35,33 @@ wrap.('intensity', {
 	// sig = Latch.kr(sig, Impulse.kr(10));
 	sig = GestureRT.kr(sig);
 	// sig.poll(1, \intensity);
-});
+}, (label: "Intensity"));
 
 wrap.('orientation', {
 	LFTri.kr(0.5).range(0, 1);
-});
+}, (label: "Orientation"));
 
 wrap.('softpot_l', {
 	LFTri.kr(0.3).range(0, 1);
-});
+}, (label: "Softpot L"));
 
 wrap.('softpot_s', {
 	DC.kr(0);
-});
+}, (label: "Softpot S"));
 
 wrap.('expression', {
 	DC.kr(0);
-});
+}, (label: "Expression"));
 
 wrap.(\lfo1, {
-	SinOsc.kr(\freq.kr(1)).range(0,1);
+	SinOsc.kr(\freq.kr(1)) * \depth.kr(0.01);
 }, (
 	specs: (
-		\freq: [0.125, 20, \exp]
+		\freq: [0.125, 20, \exp],
+		\depth: [0, 1, \lin, 0.01]
 	),
-	label: "LFO1",
+	\outputSpec: \bipolar.asSpec,
+	label: "LFO 1",
 	group: \lfo,
 	inputs: #[freq],
 	destination: true

@@ -94,12 +94,13 @@ p = Require("protos/serverPlayer", always:false).clone {
 		//Loop through sources and destination and populate ~allInputs dict
 		//sourceKey -> destKey -> inputKey -> (spec: a ControlSpec, specDef: a SynthDef)
 		~allInputs = ();
-		Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
+		Library.at(\lumber, \common, \macroSources).keysValuesDo { |src, sourceconf|
 			~allInputs[src] = ().make { |srcMap|
 				Library.at(\lumber, \common, \macroDestinations).keysValuesDo { |destKey, dest|
 					srcMap[destKey] = ().make { |destMap|
 						dest.inputs.do { |inputKey|
 							destMap[inputKey] = (
+								outputSpec: sourceconf[\outputSpec].asSpec,
 								//spec for input
 								spec: dest.specs[inputKey],
 								//Mapping synthdef f
@@ -167,11 +168,12 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 	//Play mapping synth
 	~prPlayMappingSynth = { |src, dest, input|
-		var def, bus, args, synth, spec;
+		var def, bus, args, synth, spec, outputSpec;
 
 		 ~allInputs[src][dest][input].use {
 			spec = ~spec.asSpec;
 			def = ~mappingDef;
+			outputSpec = ~outputSpec;
 		};
 
 		//Create buses. Inputs from different sources share buses, so we make sure
@@ -199,8 +201,8 @@ p = Require("protos/serverPlayer", always:false).clone {
 			//Value is already within spec range, so we put it closest to dest synth
 			~mappingSynths[dest].put(\controlBusValue,
 				Synth(\controlBusValue,
-					[\bus, bus[\main], \divisorBus, bus[\count], \value, spec.default],
-					~synths[dest], \addBefore)
+					[\bus, bus[\main], \divisorBus, bus[\count], \value, spec.unmap(spec.default)],
+					~mappingSynths[dest][\specMapping], \addBefore)
 			);
 			~synths[dest].map(input, bus[\main]);
 			bus
@@ -213,7 +215,16 @@ p = Require("protos/serverPlayer", always:false).clone {
 		args = args ++ [\inbus, ~buses[src], \outbus, bus.main, \countbus, bus[\count]];
 
 		//Play input mapping synth
-		synth = Synth(\inputMapper, args, ~groups[dest], \addToHead).register(true).onFree({
+		//Check for bipolar specs
+		synth = if (abs(outputSpec.minval.sign - outputSpec.maxval.sign).postln == 2) {
+			//Put bipolar mapping right before spec mapping
+			//So controlBusDiv doesn't affect the output
+			Synth(\inputMapperBipolar, args, ~mappingSynths[dest][\specMapping], \addBefore);
+		} {
+			Synth(\inputMapper, args, ~groups[dest], \addToHead)
+		};
+
+		synth.register(true).onFree({
 			~mappingSynths[dest] !? { |x| x.removeAt(src, input) };
 			~activeInputs.remove([src, dest, input]);
 		}.inEnvir);
