@@ -123,13 +123,17 @@ p = Require("protos/serverPlayer", always:false).clone {
 	~playSynth = { |src, dest, input|
 		var synth;
 		if (~isPlaying) {
+
 			if (~activeInputs.includes([src, dest, input]).not) {
 				if (~activeDestinations.includes(dest).not) {
 					~prPlayDestSynth.(dest);
 				};
 				synth = ~prPlayMappingSynth.(src, dest, input);
-				//Add another instance to the bag
-				~activeDestinations.add(dest);
+				//If dest is not also source, add another item to the bag.
+				//Otherwise destination is playing continously
+				if (~activeSources.includes(dest).not) {
+					~activeDestinations.add(dest);
+				};
 				"Spawn synth src:%, dest:%, input:%".format(src, dest, input);
 			} {
 				"Already playing src: %, dest: %, input: %".format(src, dest, input);
@@ -218,18 +222,18 @@ p = Require("protos/serverPlayer", always:false).clone {
 	};
 
 	~stopSynth = { |src, dest, input|
-		if (~activeDestinations.itemCount(dest) <= 1
-			//Destination can be source as well. In that case we don't want to stop the synth.
-			and: { ~activeSources.includes(dest).not }
-		) {
-			"Stopping destination synth %".format(dest);
+		var notSource = ~activeSources.includes(dest).not;
+		if (notSource) {
 			~activeDestinations.remove(dest);
+		};
+		if (~activeDestinations.includes(dest).not) {
+			// "Stopping destination synth %".format(dest);
 			//Will free group from doneAction.
 			//Group & synth counters are released from .onFree above
 			~synths[dest].release;
 		} {
 			//synth counters are released from .onFree above
-			~mappingSynths[dest].at(src, input).release;
+			~mappingSynths[dest] !? { |x| x.at(src, input).release };
 		}
 	};
 
