@@ -16,7 +16,9 @@ Require("protos/serverPlayer", always:false).clone {
 	~onPrep = {
 		Require(synthdefPath);
 		//Load calibration for MPU ugens
-		MPU.loadCalibration(Library.at(\lumber, \common, \calibrationPath), ~server);
+		if (~server.name == \bela) {
+			MPU.loadCalibration(Library.at(\lumber, \common, \calibrationPath), ~server);
+		};
 		~eq.server = ~server;
 		~macros.server = ~server;
 		~eq.prep;
