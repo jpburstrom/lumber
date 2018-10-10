@@ -72,6 +72,7 @@
 					// ~envelope.curves.do {|val, i| ~envelope.curves[i] = val.neg };
 				},
 				"Normalize to…": ~normalizeDialog.inEnvir,
+				"Change gain…": ~changeGainDialog.inEnvir,
 				"Slider test": {
 					{
 						var dur = 2;
@@ -246,7 +247,9 @@
 
 			~win.view.keyDownAction_({ |view, char, mod, unicode, keycode, key|
 				//Close window with ESC
-				case {key == 16777216 or: { char == $w and: {mod.isCmd} } }{
+				case
+
+				{key == 16777216 or: { char == $w and: {mod.isCmd} } }{
 					view.close;
 					true
 				}
@@ -254,11 +257,37 @@
 				{ mod.isCmd and: { key == 78 } } {
 					~normalizeDialog.value;
 					true
-				};
+				}
 
+				//cmd + g
+				{ mod.isCmd and: { key == 71 } } {
+					~changeGainDialog.value;
+					true
+				}
+
+				//cmd + +
+				{ mod.isCmd and: { key == 43 } } {
+					~prChangeLevelGain.(1.025);
+					true
+				}
+
+				//cmd + -
+				{ mod.isCmd and: { key == 45 } } {
+					~prChangeLevelGain.(0.975);
+					true
+				};
 			}.inEnvir);
 
 			~win
+		};
+
+		~prChangeLevelGain = { |fact|
+			var spec = ~model.levels.spec;
+			fact = fact.min(spec.clipHi.abs.max(spec.clipLo.abs) / ~levels.abs.maxItem);
+			~levels.do { |val, i|
+				~levels[i] = spec.constrain(~levels[i] * fact);
+			};
+			currentEnvironment.changed(\value);
 		};
 
 		~normalizeDialog = {
@@ -267,12 +296,27 @@
 				NumberBox().value_(1).clipLo_(0).clipHi_(1).action_({ |v|
 					//value can be nil if window is closed
 					v.value !? {
-						var spec = ~model.levels.spec;
-						var fact = (spec.clipHi / ~levels.abs.maxItem.max(0.01)) * v.value;
-						~levels.do { |val, i|
-							~levels[i] = ~levels[i] * fact;
-						};
-						currentEnvironment.changed(\value);
+						var fact = (~model.levels.spec.clipHi / ~levels.abs.maxItem.max(0.01)) * v.value;
+						~prChangeLevelGain.(fact);
+						v.parent.close;
+					};
+				}.inEnvir);
+			)).front.view.keyDownAction_({ |view, char, mod, unic, keyc, key|
+				//Close window with ESC
+				if (key == 16777216) {
+					view.close
+				};
+				true
+			});
+		};
+
+		~changeGainDialog = {
+			Window.new("Change gain", Rect(0, 0, 200, 100).center_(~win.bounds.center))
+			.layout_(VLayout(
+				NumberBox().value_(1).action_({ |v|
+					//value can be nil if window is closed
+					v.value !? {
+						~prChangeLevelGain.(v.value);
 						v.parent.close;
 					};
 				}.inEnvir);
