@@ -11,27 +11,29 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 	var presetBtns = {
 		var offset = 0;
 		{ |count, keys|
-			var status;
-			var view = View().layout_(HLayout(status=StaticText(), *{ |i|
+			var textField;
+			var view = View().layout_(HLayout(
+				textField = TextField().font_(Font.default.size_(10)).fixedWidth_(120),
+				*{ |i|
 				//TODO: preset activeIndex controls button state
-				var curOffset = offset;
-				var label = (i+offset+1).asString;
-				Button().states_([
-					[label, Color.black, Color.white],
-					[label, Color.white, Color.black]
-				]).mouseDownAction_({ |btn, a, b, mod|
-					btn.parent.children(Button).reject(_==btn).do(_.value = 0);
-					btn.value = 0;
-					if (mod.isShift) {
-						~presets.save(i+curOffset, keys);
-					} {
-						~presets.load(i+curOffset, keys);
+					var curOffset = offset;
+					var label = (i+offset+1).asString;
+					Button().fixedWidth_(20).states_([
+						[label, Color.black, Color.white],
+						[label, Color.white, Color.black]
+					]).mouseDownAction_({ |btn, a, b, mod|
+						btn.parent.children(Button).reject(_==btn).do(_.value = 0);
+						btn.value = 0;
+						if (mod.isShift) {
+							~presets.save(i+curOffset, keys, textField.string);
+						} {
+							textField.string = ~presets.load(i+curOffset, keys) ? "";
 
-					}
-				}.inEnvir)
-				.toolTip_("Click to load, Shift+click to save");
+						}
+					}.inEnvir)
+					.toolTip_("Click to load, Shift+click to save");
 
-			}.dup(count)).margins_(0).spacing_(0)).fixedSize_(Size(count * 20, 16));
+			}.dup(count)).margins_(0).spacing_(0)).fixedSize_(Size((count * 20) + 120, 16));
 			offset = offset + count;
 			view
 		}

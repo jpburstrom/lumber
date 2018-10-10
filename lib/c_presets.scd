@@ -37,11 +37,14 @@ Require("../lib/protos/paramList").clone({
         ~objects[key] = nil;
     };
 
-	~save = { |index=0, keys|
+	~save = { |index=0, keys, name|
 		var obj = ();
 		keys = ~prCheckKeyArg.(keys);
 		keys.do { |k|
 			obj[k] = ~objects[k].getParams(\preset);
+		};
+		if (name.notNil) {
+			obj[\_presetName] = name
 		};
 		~params[index].value = obj;
 	};
@@ -51,7 +54,9 @@ Require("../lib/protos/paramList").clone({
 		keys = ~prCheckKeyArg.(keys);
 		keys.do { |k|
 			~objects[k].setParams(obj[k]);
-		}
+		};
+		//Return preset name
+		obj[\_presetName];
 	};
 
 	~setSpecs = { |params|
