@@ -216,7 +216,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 		//Play input mapping synth
 		//Check for bipolar specs
-		synth = if (abs(outputSpec.minval.sign - outputSpec.maxval.sign).postln == 2) {
+		synth = if ((outputSpec.clipHi.sign - outputSpec.clipLo.sign) == 2) {
 			//Put bipolar mapping right before spec mapping
 			//So controlBusDiv doesn't affect the output
 			Synth(\inputMapperBipolar, args, ~mappingSynths[dest][\specMapping], \addBefore);
