@@ -10,7 +10,7 @@ var editorFactory = Require("envelopeEditor"); //A proto.
 	var envEditor = editorFactory.value;
 
 	var envFromModel = { |m|
-		Env(m.levels.value, m.times.value, m.curves.value);
+		Env(m.levels.input, m.times.value, m.curves.value);
 	};
 
 	//Enable on first window open, if not already

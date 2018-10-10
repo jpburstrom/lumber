@@ -28,7 +28,6 @@
 			~times = val[1];
 			~curves = val[2];
 			~updateEnvelope.value;
-			~eview.setEnv(~envelope);
 		};
 
 		//Get values as array
@@ -42,7 +41,7 @@
 				var label, env, action;
 				#label, env = pairs;
 				action = {
-					env[0].do { |val, i| ~levels[i] = val };
+					env[0].do { |val, i| ~levels[i] = ~model.levels.spec.map(val) };
 					env[1].do { |val, i| ~times[i] = val };
 					env[2].do { |val, i| ~curves[i] = val };
 					currentEnvironment.changed(\value);
@@ -101,8 +100,9 @@
 		};
 
 		//Group of number boxes, corresponding to levels/curves etc
-		~boxGroup = { |key, size, range=#[0,1], step=0.01|
+		~boxGroup = { |key, size, step=0.01|
 			var model = currentEnvironment[key];
+			var spec = ~model[key].spec;
 			size.collect { |i|
 				var box = NumberBox().value_(model[i]).action_({ |box|
 					if (key == \times) {
@@ -115,7 +115,7 @@
 						model[i] = box.value;
 					};
 					currentEnvironment.changed(\value, key);
-				}.inEnvir).clipLo_(range[0]).clipHi_(range[1]).scroll_step_(step);
+				}.inEnvir).clipLo_(spec.clipLo).clipHi_(spec.clipHi).scroll_step_(step);
 				~connections.add(currentEnvironment.signal(\value).connectTo({
 					box.value = model[i];
 				}.inEnvir));
@@ -125,7 +125,7 @@
 
 		//Update cached envelope
 		~updateEnvelope = {
-			~envelope = Env(~levels, ~times, ~curves);
+			~envelope = Env(~model.levels.spec.unmap(~levels), ~times, ~curves);
 			~eview.setEnv(~envelope);
 		};
 
@@ -150,8 +150,14 @@
 				NumberBox().enabled_(false).background_(QPalette.light.window)
 			};
 			var timeBoxes = ~boxGroup.(\times, 3);
-			var curveBoxes = ~boxGroup.(\curves, 3, [-8, 8], 0.5);
+			var curveBoxes = ~boxGroup.(\curves, 3, 0.5);
 			var enabledBox;
+
+			value {
+				var spec = ~model.levels.spec;
+				~isBipolar = ((spec.clipHi.sign - spec.clipLo.sign) == 2);
+			};
+
 			~win !? {
 				if (~win.isClosed.not) {
 					~win.close
@@ -165,7 +171,7 @@
 					}.inEnvir),
 					~eview = EnvelopeView().setEnv(~envelope).action_({ |z|
 						//EnvelopeView edit updates levels and times. Curves are edited with number boxes
-						~levels.putEach(Array.series(4), z.value[1]);
+						~levels.putEach(Array.series(4), ~model.levels.spec.map(z.value[1]));
 						~times.putEach(Array.series(3), z.value[0].differentiate[1..]);
 						currentEnvironment.changed(\value, [\levels, \times]);
 					}.inEnvir).keepHorizontalOrder_(true),

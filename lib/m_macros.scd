@@ -12,16 +12,25 @@ Proto({
     //Parameter dictionary
 	//Source -> dest -> input
     ~params = ();
-	~sources.keysValuesDo { |src|
+	~sources.keysValuesDo { |src, sourceobj|
 		~params[src] = ();
 		~destinations.keysValuesDo { |key, dest|
+			var levels = [0, 0.33, 0.67, 1];
+			var times = [0.33, 0.34, 0.33];
+			var levelSpec = \unipolar;
+			var outputSpec = sourceobj.outputSpec.asSpec;
+			if ((outputSpec.clipHi.sign - outputSpec.clipLo.sign) == 2) {
+				levelSpec = \bipolar;
+				levels = [-1, 0.5, 0.5, 1];
+				times = [0.4, 0.2, 0.4];
+			};
 			~params[src][key] = ();
 			dest.inputs.do { |input|
 				~params[src][key][input] = (
 					active: OnOffControlValue(\off),
-					levels: NumericControlValue([0,0.5,0.5,1], \unipolar.asSpec),
-					times: NumericControlValue([0.4, 0.2, 0.4], \unipolar.asSpec),
-					curves: NumericControlValue([-4, 0, 4], ControlSpec(-16, 16, \lin)),
+					levels: NumericControlValue(levels, levelSpec.asSpec),
+					times: NumericControlValue(times, \unipolar.asSpec),
+					curves: NumericControlValue([0, 0, 0], ControlSpec(-16, 16, \lin)),
 					lagU: NumericControlValue(0, [0, 10, -4].asSpec),
 					lagD: NumericControlValue(0, [0, 10, -4].asSpec)
 				)
