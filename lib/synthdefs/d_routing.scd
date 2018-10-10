@@ -15,9 +15,8 @@ SynthDef("inputMapperBipolar", {
 	var sig = In.kr(\inbus.kr(0)),
 		fadetime = \fadetime.kr(1),
 		env = Env.asr(fadetime, 1, fadetime, \lin).kr(Done.freeSelf, \gate.kr(1));
-	/*
 	var	x = [0] ++ \times.kr([0.3, 0.4, 0.3]).max(1e-06).integrate,
-		y = \levels.kr([0, 0.3, 0.7, 1]),
+		y = \levels.kr([-1, -0.33, 0.33, 1]),
 		curves = \curves.kr([0, 0, 0]);
 
 	//"Envelope" with 4 points
@@ -25,7 +24,6 @@ SynthDef("inputMapperBipolar", {
 	sig = y[0] + 3.collect({ |i|
 		sig.lincurve(x[i], x[i+1], 0, y[i+1] - y[i], curves[i], \minmax);
 	}).sum.lagud(\lagU.kr(0), \lagD.kr(0));
-	*/
 
 	//Outbus = destination bus
 	Out.kr(\outbus.kr(0), sig * env);

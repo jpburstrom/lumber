@@ -54,7 +54,7 @@ wrap.('expression', {
 }, (label: "Expression"));
 
 wrap.(\lfo1, {
-	SinOsc.kr(\freq.kr(1)) * \depth.kr(0.01);
+	SinOsc.kr(\freq.kr(1));
 }, (
 	specs: (
 		\freq: [0.125, 20, \exp],
