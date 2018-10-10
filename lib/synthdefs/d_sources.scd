@@ -17,11 +17,12 @@ wrap.('activity', {
 	var sig;
 	if (isBela) {
 		sig = MPU.accelKr;
+		sig = GestureRT.kr(sig);
 	} {
 		sig = \MouseX.asClass.perform(\kr);
 	};
+	sig
 	// sig = Latch.kr(sig, Impulse.kr(10));
-	sig = GestureRT.kr(sig);
 	// sig.poll(1, \activity);
 }, (label: "Activity"));
 
@@ -29,11 +30,12 @@ wrap.('intensity', {
 	var sig;
 	if (isBela) {
 		sig = MPU.accelKr;
+		sig = GestureRT.kr(sig);
 	} {
 		sig = \MouseY.asClass.perform(\kr);
 	};
 	// sig = Latch.kr(sig, Impulse.kr(10));
-	sig = GestureRT.kr(sig);
+	sig
 	// sig.poll(1, \intensity);
 }, (label: "Intensity"));
 

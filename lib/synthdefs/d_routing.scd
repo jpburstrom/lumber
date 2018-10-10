@@ -39,7 +39,7 @@ SynthDef("inputMapper", {
 		fadetime = \fadetime.kr(1),
 		env = Env.asr(fadetime, 1, fadetime, \lin).kr(Done.freeSelf, \gate.kr(1)),
 		x = [0] ++ \times.kr([0.3, 0.4, 0.3]).max(1e-06).integrate,
-		y = \levels.kr([0, 0.3, 0.7, 1]) + 1,
+		y = \levels.kr([0, 0.3, 0.7, 1]),
 		curves = \curves.kr([0, 0, 0]);
 
 	//"Envelope" with 4 points
