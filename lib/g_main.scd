@@ -150,8 +150,16 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 			popup.("Storage",
 				"  Save", { q.storage.save },
 				"  Load", { q.storage.load },
-				"  Save as…", { "TODO".postln },
-				"  Load from…", { "TODO".postln }
+				"  Save as…", {
+					Dialog.savePanel({ |filename|
+						~storage.save(filename);
+					}.inEnvir, path: ~storage.storagePath)
+				}.inEnvir,
+				"  Load from…", {
+					Dialog.openPanel({|filename|
+						~storage.load(filename);
+					}.inEnvir, path: ~storage.storagePath)
+				}.inEnvir
 			),
 			oneShotBtn.("Reload script", { q.serverController.stop; mainScriptPath.load })
 

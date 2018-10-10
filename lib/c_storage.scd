@@ -22,53 +22,38 @@ Proto({
 	//Save object(s). Both key and path is optional.
 	//If key is not provided, save all keys
 	//If path is not provided, use default path
-    ~save = { |keys, path|
+    ~save = { |path, keys|
 		var obj, p;
 		keys = ~prCheckKeyArg.(keys);
+		p = path ?? { ~prMakeStoragePath.value; };
+		if (File.exists(p)) {
+			obj = ~prRead.(p);
+		} {
+			obj = ();
+		};
 		keys.do { |k|
-			p = path ?? { ~prMakeStoragePath.value(k) };
-			obj = ~objects[k].getParams(\storage);
-			~prWrite.(obj, p);
-		}
+			obj[k] = ~objects[k].getParams(\storage);
+		};
+		~prWrite.(obj, p);
 	};
 
 
 	//Load object(s). Both key and path is optional (see ~save)
-    ~load = { |keys, path|
+    ~load = { |path, keys|
         var obj, p;
 		keys = ~prCheckKeyArg.(keys);
-
-		keys.do { |k|
-			p = path ?? { ~prMakeStoragePath.value(k) };
-			if (File.exists(p)) {
-				obj = ~prRead.(p);
+		p = path ?? { ~prMakeStoragePath.value };
+		if (File.exists(p)) {
+			obj = ~prRead.(p);
+			keys.do { |k|
 				if (~objects[k].notNil) {
-					~objects[k].setParams(obj);
+					~objects[k].setParams(obj[k]);
 				}
-			} {
-				"Storage file doesn't exist at %".format(p).error;
 			}
-		};
-
-		~objects;
-
+		} {
+			"Storage file doesn't exist at %".format(p).error;
+		}
     };
-
-    /* Move these to a gui place
-    ~loadDialog = {
-        Dialog.openPanel({ |p|
-            ~load.value(p);
-            //TODO later think about how to load everything more smoothly
-            ~loadToGroup.(\snapshots, 0);
-            ~loadToGroup.(\presets, params.meta.target.value.asInt);
-
-        }.inEnvir);
-    };
-
-    ~saveDialog = {
-        Dialog.savePanel(~save.inEnvir);
-    };
-    */
 
     ~backup = { |keys|
         var dir = ~storagePath +/+ "backup";
@@ -90,8 +75,12 @@ Proto({
 		}
 	};
 
-	~prMakeStoragePath = { |key|
-		~storagePath +/+ "storage-%.zarchive".format(key);
+	~prMakeStoragePath = { |suffix|
+		if (suffix.isNil) {
+			~storagePath +/+ "storage.zarchive";
+		} {
+			~storagePath +/+ "storage-%.zarchive".format(suffix);
+		}
 	};
 
     ~prWrite = { |obj, path|
@@ -111,11 +100,3 @@ Proto({
 
 
 });
-
-/*
-x.register(\macros, q.macros)
-x.objects
-x.save("/tmp/asdasd")
-x.load
-x.backup
-*/
