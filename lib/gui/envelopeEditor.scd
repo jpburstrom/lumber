@@ -71,6 +71,7 @@
 					~levels.putEach(Array.series(new.size), new);
 					// ~envelope.curves.do {|val, i| ~envelope.curves[i] = val.neg };
 				},
+				"Normalize to…": ~normalizeDialog.inEnvir,
 				"Slider test": {
 					{
 						var dur = 2;
@@ -245,13 +246,43 @@
 
 			~win.view.keyDownAction_({ |view, char, mod, unicode, keycode, key|
 				//Close window with ESC
-				if (key == 16777216 or: { char == $w and: {mod.isCmd} }) {
-					view.close
+				case {key == 16777216 or: { char == $w and: {mod.isCmd} } }{
+					view.close;
+					true
 				}
-			});
+				//cmd + n
+				{ mod.isCmd and: { key == 78 } } {
+					~normalizeDialog.value;
+					true
+				};
+
+			}.inEnvir);
 
 			~win
-		}
-	}
+		};
 
+		~normalizeDialog = {
+			Window.new("Normalize to", Rect(0, 0, 200, 100).center_(~win.bounds.center))
+			.layout_(VLayout(
+				NumberBox().value_(1).clipLo_(0).clipHi_(1).action_({ |v|
+					//value can be nil if window is closed
+					v.value !? {
+						var spec = ~model.levels.spec;
+						var fact = (spec.clipHi / ~levels.abs.maxItem.max(0.01)) * v.value;
+						~levels.do { |val, i|
+							~levels[i] = ~levels[i] * fact;
+						};
+						currentEnvironment.changed(\value);
+						v.parent.close;
+					};
+				}.inEnvir);
+			)).front.view.keyDownAction_({ |view, char, mod, unic, keyc, key|
+				//Close window with ESC
+				if (key == 16777216) {
+					view.close
+				};
+				true
+			});
+		}
+	};
 }
