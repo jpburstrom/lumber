@@ -37,7 +37,7 @@ fxFactory.(\gainer, { |snd|
 
 fxFactory.(\destTest, {
 	SinOsc.ar(\testParam.kr.poll(1, "testParam")) * 0.1 * SinOsc.ar(\another.kr.poll(1, "another"));
-},(
+}, (
 	specs: (
 		testParam: \freq,
 		another: \amp

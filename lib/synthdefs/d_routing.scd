@@ -21,13 +21,13 @@ SynthDef(\lumberOut, {
 
 	Out.ar(\out.kr, snd);
 
-}).add;
+}).add(\lumber);
 
 
 
 SynthDef("inputMapperBipolar", {
 	//Inbus = source bus
-	var sig = In.kr(\inbus.kr(0)).poll,
+	var sig = In.kr(\inbus.kr(0)),
 		fadetime = \fadetime.kr(1),
 		env = Env.asr(fadetime, 1, fadetime, \lin).kr(Done.freeSelf, \gate.kr(1));
 	var	x = [0] ++ \times.kr([0.3, 0.4, 0.3]).max(1e-06).integrate,
