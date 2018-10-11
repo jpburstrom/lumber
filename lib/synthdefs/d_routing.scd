@@ -5,7 +5,7 @@ SynthDef(\lumberIn, {
 	if (Library.at(\lumber, \serverName) == \bela) {
 		snd = SoundIn.ar(\in.kr(0));
 	} {
-		snd = SinOsc.ar(146) * 0.1; //test tone
+		snd = SinOsc.ar(146); //test tone
 	};
 	//Do stuff;
 
