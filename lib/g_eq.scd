@@ -43,7 +43,7 @@ connections.add(paramList.signal(\value).connectTo({
 
 
 //Loop over source -> parameter label list
-Require("common").eqSemitones.asArray.sort.do { |midinote, i|
+Library.at(\lumber, \common, \eqSemitones).asArray.sort.do { |midinote, i|
 
 	var cv = params[midinote];
 	var background = Color.white, knobColor = Color.rand;
