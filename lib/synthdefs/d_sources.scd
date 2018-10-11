@@ -1,3 +1,4 @@
+var isBela = Library.at(\lumber, \isBelaServer);
 var wrap = { |key, func, meta|
 	meta ?? { meta = () };
 	SynthDef(key, {
@@ -9,9 +10,6 @@ var wrap = { |key, func, meta|
 	}, metadata: meta.put(\source, true)).add(\lumber);
 };
 
-
-// var isBela = Library.at(\lumber, \server).name == \bela;
-var isBela = false; //FIXME
 
 wrap.('activity', {
 	var sig;

@@ -61,3 +61,18 @@ Environment().know_(true).make({
 	Library.put(\lumber, \common, k, v);
 };
 
+//Check if we're running sclang on Bela
+Fdef(\ifBela, {
+	var isBela = (unixCmdGetStdOut("hostname").findRegexpAt("bela\\s").notNil);
+	{ |trueFunc, falseFunc|
+		isBela.if(trueFunc, falseFunc);
+	}
+}.value);
+
+
+//TODO: Change this when starting to test on bela
+Library.put(\lumber, \serverName, Fdef(\ifBela).value(\local, \local));
+
+Library.put(\lumber, \isBelaServer, Fdef(\ifBela).value(true, { Library.at(\lumber, \serverName) == \bela }))
+
+

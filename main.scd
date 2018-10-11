@@ -5,7 +5,7 @@ Require("lib/d_synthdefs", always:true);
 
 q.reject(_.isSymbol).do { |x| x.free };
 q.make {
-	~serverName = \local;
+	~serverName = Library.at(\lumber, \serverName);
 	//Macro parameters - mapping controllers to parameters
 	~macros = Require("lib/m_macros");
 	//Macro parameters - mapping controllers to parameters
@@ -30,9 +30,12 @@ q.make {
 	~serverController = Require("lib/c_server");
 	~serverController.connectToModels(\eq, ~eq, \macros, ~macros);
 
-	Platform.case(
-		//Load gui on osx
-		\osx, {
+	Fdef(\ifBela).value(
+		{
+			//Make it explicit
+			~serverController.server = Server.local;
+		},
+		{
 			//Show GUI
 			Require("lib/g_main");
 
@@ -45,12 +48,6 @@ q.make {
 					server
 				};
 			}
-		},
-		//Bela
-
-		\linux, {
-			//Make it explicit
-			~serverController.server = Server.local;
 		}
 	);
 
