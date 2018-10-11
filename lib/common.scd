@@ -3,6 +3,7 @@
 
 //--------SPECS------------
 
+
 //Gain. 0.5 input roughly equals 0 dB
 Spec.add(\gain, ControlSpec(-44.0, 12.0, \db, 0.0, 0, " dB"));
 
@@ -23,6 +24,13 @@ Spec.add(\eqfreq, ControlSpec(65.0, 247.0, \exp, 0.0, 65.0, " Hz"));
 
 //rq range for peak eq
 Spec.add(\peakrq, ControlSpec(0.03125, 0.25, \exp, 0.0, 0.0625));
+
+//phase for freqshift etc
+Spec.add(\phase, ControlSpec(0, 2pi, \lin));
+
+//
+Spec.add(\shortDelay, ControlSpec(0.0, 0.05, 8, 0, 0.0, " secs"));
+
 
 //Create synthDescLib. Put this here first to be able to use \synthDescAdded signal
 SynthDescLib.all[\lumber] ?? {

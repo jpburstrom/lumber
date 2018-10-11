@@ -12,6 +12,18 @@ var fxFactory = { |name, func, meta|
 
 };
 
+
+//EQ bands
+
+fxFactory.(\hiShelfBand, { |snd|
+	BHiShelf.ar(snd, \freq.kr(440), \rs.kr(1), \db.kr(0, 0.1)) ;
+});
+fxFactory.(\lowCutBand, { |snd|
+	BLowCut.ar(snd, \freq.kr(440), 2) ;
+});
+
+//Source effects
+
 fxFactory.(\peakEqBand, { |snd|
 	BPeakEQ.ar(snd, \freq.kr(440), \rq.kr(0.0625), \db.kr(0, 0.1)) ;
 },(
@@ -25,13 +37,6 @@ fxFactory.(\peakEqBand, { |snd|
 	inputs: #[freq, rq, db]
 ));
 
-fxFactory.(\hiShelfBand, { |snd|
-	BHiShelf.ar(snd, \freq.kr(440), \rs.kr(1), \db.kr(0, 0.1)) ;
-});
-fxFactory.(\lowCutBand, { |snd|
-	BLowCut.ar(snd, \freq.kr(440), 2) ;
-});
-
 fxFactory.(\gainer, { |snd|
 	snd * \gain.kr(0).dbamp;
 }, (
@@ -41,4 +46,29 @@ fxFactory.(\gainer, { |snd|
 	label: "Gain",
 	group: \fx,
 	inputs: #[gain]
+));
+
+
+fxFactory.(\freqshift, { |snd|
+	FreqShift.ar(snd, \freq.kr, \phase.kr);
+}, (
+	specs: (
+		freq: \detune,
+		phase: \phase
+	),
+	label: "Freqshift",
+	group: \fx,
+	inputs: #[freq, phase]
+));
+
+
+fxFactory.(\delay, { |snd|
+	DelayC.ar(snd, \shortDelay.asSpec.maxval, \time.kr(0));
+}, (
+	specs: (
+		time: \shortDelay,
+	),
+	label: "Delay",
+	group: \fx,
+	inputs: #[time]
 ));

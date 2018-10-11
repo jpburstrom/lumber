@@ -6,7 +6,7 @@ Proto({
 	//Update these after defining new synths
 	//They define order of sources/destinations in macro matrix
 	var sourceOrder = #[intensity, activity, orientation, expression, softpot_l, softpot_s];
-	var destOrder = #[boogie, lfo1, destTest]; //TODO
+	var destOrder = #[gainer, delay, freqshift, saturation, peakEqBand, freeze, lfo1, lfo2];
 
 	~model = model;
 	~width = 50;
