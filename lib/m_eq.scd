@@ -1,19 +1,16 @@
 p = Require("protos/paramDict").clone {
 
-	~dbSpec = ControlSpec(-24, 6, \db, default:0);
+	//Specs are defined in common
 
-	//We're using a dictionary instead of an array,
-	//to be able to change frequency range while making sense
-	//of old presets
 	Library.at(\lumber, \common, \eqSemitones).do { |k|
-		~params[k] = NumericControlValue(0, ~dbSpec);
+		~params[k] = NumericControlValue(0, \eqdb.asSpec);
 	};
 
 	~params[\lowCut] = (freq: NumericControlValue(60, ControlSpec(20, 200, \exp, 0, 60, " Hz")));
 	~params[\hiShelf] = (
 		freq: NumericControlValue(200, ControlSpec(100, 400, \exp, 0, 200, " Hz")),
 		rs: NumericControlValue(1, [0.1, 10, \exp, 0.0, 1].asSpec),
-		db: NumericControlValue(-24, ControlSpec(-48, 0, \db, 0.0, 0, " dB"))
+		db: NumericControlValue(-24, \eqcut.asSpec)
 	);
 	~params[\preamp] = (db: NumericControlValue(0, \gain.asSpec));
 

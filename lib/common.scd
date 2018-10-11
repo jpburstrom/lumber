@@ -6,6 +6,23 @@
 //Gain. 0.5 input roughly equals 0 dB
 Spec.add(\gain, ControlSpec(-44.0, 12.0, \db, 0.0, 0, " dB"));
 
+//dB range for eq
+Spec.add(\eqdb, ControlSpec(-24, 6, \db, 0.0, 0, " dB"));
+
+//cut range for eq
+//Used by hi shelf filter
+Spec.add(\eqcut, ControlSpec(-48, 0, \db, 0.0, 0, " dB"));
+
+//boost range for peak eq
+//TODO: test range
+Spec.add(\eqboost, ControlSpec(0, 12, \db, 0.0, 0, " dB"));
+
+//Freq range for peak eq
+//TODO: test range
+Spec.add(\eqfreq, ControlSpec(65.0, 247.0, \exp, 0.0, 65.0, " Hz"));
+
+//rq range for peak eq
+Spec.add(\peakrq, ControlSpec(0.03125, 0.25, \exp, 0.0, 0.0625));
 
 //Create synthDescLib. Put this here first to be able to use \synthDescAdded signal
 SynthDescLib.all[\lumber] ?? {

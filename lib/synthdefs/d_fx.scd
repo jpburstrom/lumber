@@ -14,7 +14,16 @@ var fxFactory = { |name, func, meta|
 
 fxFactory.(\peakEqBand, { |snd|
 	BPeakEQ.ar(snd, \freq.kr(440), \rq.kr(0.0625), \db.kr(0, 0.1)) ;
-});
+},(
+	specs: (
+		freq: \eqfreq,
+		rq: \peakrq,
+		db: \eqboost
+	),
+	label: "Peak EQ",
+	group: \fx,
+	inputs: #[freq, rq, db]
+));
 
 fxFactory.(\hiShelfBand, { |snd|
 	BHiShelf.ar(snd, \freq.kr(440), \rs.kr(1), \db.kr(0, 0.1)) ;
@@ -33,29 +42,3 @@ fxFactory.(\gainer, { |snd|
 	group: \fx,
 	inputs: #[gain]
 ));
-
-
-fxFactory.(\destTest, {
-	SinOsc.ar(\testParam.kr.poll(1, "testParam")) * 0.1 * SinOsc.ar(\another.kr.poll(1, "another"));
-}, (
-	specs: (
-		testParam: \freq,
-		another: \amp
-	),
-	label: "Test",
-	group: \fx,
-	inputs: #[testParam, another]
-)).add(\lumber);
-
-fxFactory.(\boogie, {
-	SinOsc.ar(\freq.kr.poll(1, "freq")) * \amp.kr(0.1);
-},(
-	specs: (
-		amp: \amp.asSpec.default_(0.1),
-		freq: \freq
-	),
-	label: "Boogie",
-	group: \fx,
-	inputs: #[amp, freq]
-)).add(\lumber);
-
