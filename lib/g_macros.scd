@@ -35,7 +35,7 @@ Proto({
 			// k.postln;
 			~destinations[k].inputs.collect { |input|
 				var txt = ~makeDestString.(k, input);
-				StaticText().maxWidth_(100).fixedHeight_(75).string_(txt).font_(Font.monospace.size_(10))
+				StaticText().maxWidth_(100).string_(txt).font_(Font.monospace.size_(10))
 			}
 		}).flatten;
 
