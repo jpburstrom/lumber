@@ -24,8 +24,16 @@ fxFactory.(\lowCutBand, { |snd|
 });
 
 fxFactory.(\gainer, { |snd|
-	snd * \db.kr(0).dbamp;
-});
+	snd * \gain.kr(0).dbamp;
+}, (
+	specs: (
+		gain: \gain
+	),
+	label: "Gain",
+	group: \fx,
+	inputs: #[gain]
+));
+
 
 fxFactory.(\destTest, {
 	SinOsc.ar(\testParam.kr.poll(1, "testParam")) * 0.1 * SinOsc.ar(\another.kr.poll(1, "another"));

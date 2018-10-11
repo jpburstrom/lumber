@@ -15,7 +15,7 @@ p = Require("protos/paramDict").clone {
 		rs: NumericControlValue(1, [0.1, 10, \exp, 0.0, 1].asSpec),
 		db: NumericControlValue(-24, ControlSpec(-48, 0, \db, 0.0, 0, " dB"))
 	);
-	~params[\preamp] = (db: NumericControlValue(0, ControlSpec(0, 24, \db, 0.0, 0, " dB")));
+	~params[\preamp] = (db: NumericControlValue(0, \gain.asSpec));
 
 	~setParams = { |obj, params|
 		params = params ?? { ~params };

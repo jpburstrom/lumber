@@ -1,6 +1,12 @@
 //Common data, eg labels, mappings
 //Things that needs to sync between eg synthDefs, buses and guis
 
+//--------SPECS------------
+
+//Gain. 0.5 input roughly equals 0 dB
+Spec.add(\gain, ControlSpec(-44.0, 12.0, \db, 0.0, 0, " dB"));
+
+
 //Create synthDescLib. Put this here first to be able to use \synthDescAdded signal
 SynthDescLib.all[\lumber] ?? {
 	var servers = [Server.default];

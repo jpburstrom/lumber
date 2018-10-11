@@ -43,7 +43,7 @@ Require("protos/serverPlayer", always:false).clone {
 					}
 				},
 				\preamp, {
-					if (val.gain != 0) {
+					if (val.db != 0) {
 						currentEnvironment[key] = Synth(\gainer,
 							[\gain, val.db, \out, buses.out],
 							parentGroup
