@@ -1,3 +1,18 @@
+SynthDef(\lumberIn, {
+
+	var snd;
+
+	if (Library.at(\lumber, \server).name == \bela) {
+		snd = SoundIn.ar(\in.kr(0));
+	} {
+		snd = SinOsc.ar(440) * 0.1; //test tone
+	};
+	//Do stuff;
+
+	Out.ar(\out.kr, snd);
+
+}).add(\lumber);
+
 SynthDef(\lumberOut, {
 
 	var snd = In.ar(\in.kr, 1);

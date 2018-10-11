@@ -70,11 +70,10 @@ Require("protos/serverPlayer", always:false).clone {
 		};
 
 		~synths = { |buses, groups, server|
+			//\in is for SoundIn, ie first input channel
+			~input = Synth(\lumberIn, [\in, 0, \out, buses.main], target: groups.input);
 			~output = Synth(\lumberOut, [\out, buses.out, \in, buses.main], target: groups.output);
 			~ping = Synth(\ping, [\release, 10, \out, buses.main], target: groups.input);
 		};
 	};
-
-
 };
-
