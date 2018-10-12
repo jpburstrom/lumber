@@ -93,7 +93,7 @@ Proto {
 					//Play hook -- override for custom behaviour
 					~onPlay.value;
 
-					~this.changed(\isPlaying, true);
+					currentEnvironment.changed(\isPlaying, true);
 				} {
 					"already playing".warn;
 				}
@@ -104,7 +104,6 @@ Proto {
 	~stop = {
 		//stop hook. We run it first so we can free stuff there before
 		~onStop.value;
-		~this.changed(\playState, \stopped);
 
 		//~parentGroupFreeMethod is set in ~makeParentGroup
 		~parentGroup.perform(~parentGroupFreeMethod);
@@ -112,7 +111,7 @@ Proto {
 		~prResetContainers.value;
 
 		~isPlaying = false;
-		~this.changed(\isPlaying, false);
+		currentEnvironment.changed(\isPlaying, false);
 
 	};
 
