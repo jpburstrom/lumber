@@ -19,7 +19,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 				[\activity, \intensity].do { |x|
 					GestureRT.loadPipeline(
 						Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
-						currentEnvironment[x], server);
+						currentEnvironment[x], server, SynthDescLib.all[\lumber][x].def);
 				};
 			}
 		};

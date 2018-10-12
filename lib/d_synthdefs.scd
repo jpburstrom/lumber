@@ -1,6 +1,8 @@
-var common = Require("common");
 var sources = Library.at(\lumber, \common, \macroSources);
 var destinations = Library.at(\lumber, \common, \macroDestinations);
+
+//Clear all synthDescs when rebuilding
+SynthDescLib.all[\lumber].synthDescs.clear;
 
 Require("synthdefs/*");
 

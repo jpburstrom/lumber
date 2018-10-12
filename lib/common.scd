@@ -32,12 +32,9 @@ Spec.add(\phase, ControlSpec(0, 2pi, \lin));
 Spec.add(\shortDelay, ControlSpec(0.0, 0.05, 8, 0, 0.0, " secs"));
 
 
-//Create synthDescLib. Put this here first to be able to use \synthDescAdded signal
-SynthDescLib.all[\lumber] ?? {
-	var servers = [Server.default];
-	Server.named[\bela] !? { |s| servers = servers.add(s) };
-	SynthDescLib(\lumber, servers);
-};
+
+
+
 
 Environment().know_(true).make({
 
@@ -79,8 +76,17 @@ Fdef(\ifBela, {
 
 
 //TODO: Change this when starting to test on bela
-Library.put(\lumber, \serverName, Fdef(\ifBela).value(\local, \local));
+Library.put(\lumber, \serverName, Fdef(\ifBela).value(\local, \bela));
 
-Library.put(\lumber, \isBelaServer, Fdef(\ifBela).value(true, { Library.at(\lumber, \serverName) == \bela }))
+Library.put(\lumber, \isBelaServer, Fdef(\ifBela).value(true, { Library.at(\lumber, \serverName) == \bela }));
+
+
+//Create synthDescLib. Put this here first to be able to use \synthDescAdded signal
+SynthDescLib.all[\lumber] ?? {
+	var servers = [Server.default];
+	Server.named[\bela] !? { |s| servers = servers.add(s) };
+	SynthDescLib(\lumber, servers);
+};
+
 
 

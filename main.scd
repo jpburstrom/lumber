@@ -47,6 +47,7 @@ q.make {
 						NetAddr(Library.at(\lumber, \common, \belaAddress), 57110));
 					server
 				};
+				SynthDescLib.all[\lumber].addServer(Server.named[\bela]);
 			}
 		}
 	);
