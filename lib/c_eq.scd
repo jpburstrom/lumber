@@ -77,7 +77,11 @@ Require("protos/serverPlayer", always:false).clone {
 				};
 			} {
 				if (~synths[param].isNil) {
-					~synths[param] = ~makeSynth.value(param.midicps, db);
+					if (param == \preamp) {
+						~synths[param] = Synth(\gainer, [\gain, db, \out, ~buses.out], ~parentGroup);
+					} {
+						~synths[param] = ~makeSynth.value(param.midicps, db);
+					}
 				} {
 					~synths[param].set(\gain, db);
 				}
