@@ -16,7 +16,7 @@ var fxFactory = { |name, func, meta|
 //EQ bands
 
 fxFactory.(\hiShelfBand, { |snd|
-	BHiShelf.ar(snd, \freq.kr(440), \rs.kr(1), \db.kr(0, 0.1)) ;
+	BHiShelf.ar(snd, \freq.kr(440), \rs.kr(1), \gain.kr(0, 0.1)) ;
 });
 fxFactory.(\lowCutBand, { |snd|
 	BLowCut.ar(snd, \freq.kr(440), 2) ;

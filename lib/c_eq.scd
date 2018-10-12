@@ -8,11 +8,11 @@ Require("protos/serverPlayer", always:false).clone {
 				if (cvOrDict.respondsTo(\keysValuesDo)) {
 					cvOrDict.keysValuesDo { |p, cv|
 						cv.signal(\value).connectTo(
-							currentEnvironment.methodSlot("setParam('%', '%', value)".format(key, p)), false)
+							currentEnvironment.methodSlot("setParam('%', '%', value)".format(key, p)))
 					}
 				} {
 					cvOrDict.signal(\value).connectTo(
-						currentEnvironment.methodSlot("setGain(%, value)".format(key)), false);
+						currentEnvironment.methodSlot("setGain(%, value)".format(key)));
 				}
 			}
 		}
@@ -37,7 +37,7 @@ Require("protos/serverPlayer", always:false).clone {
 				\hiShelf, {
 					if (val.db != 0) {
 						currentEnvironment[key] = Synth(\hiShelfBand,
-							[\freq, val.freq, \rs, val.rs, \db, val.db, \out, buses.out],
+							[\freq, val.freq, \rs, val.rs, \gain, val.db, \out, buses.out],
 							parentGroup
 						);
 					}
@@ -65,20 +65,22 @@ Require("protos/serverPlayer", always:false).clone {
 
 
 	~makeSynth = { |freq, db|
-		Synth(\peakEqBand, [\freq, freq, \db, db, \out, ~buses.out], ~parentGroup);
+		Synth(\peakEqBand, [\freq, freq, \gain, db, \out, ~buses.out], ~parentGroup);
 	};
 
 	~setGain = { |param, db|
-		if (db == 0) {
-			~synths[param] !? { |x|
-				x.release;
-				~synths[param] = nil;
-			};
-		} {
-			if (~synths[param].isNil) {
-				~synths[param] = ~makeSynth.value(param.midicps, db);
+		if (~isPlaying) {
+			if (db == 0) {
+				~synths[param] !? { |x|
+					x.release;
+					~synths[param] = nil;
+				};
 			} {
-				~synths[param].set(\db, db);
+				if (~synths[param].isNil) {
+					~synths[param] = ~makeSynth.value(param.midicps, db);
+				} {
+					~synths[param].set(\gain, db);
+				}
 			}
 		}
 	};
