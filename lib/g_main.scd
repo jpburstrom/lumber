@@ -8,6 +8,8 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 {
 	var window = Window.new("Lumber");
 	var sections = List();
+	var connections;
+	var playButton;
 	var presetBtns = {
 		var offset = 0;
 		{ |count, keys|
@@ -111,8 +113,13 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 
 	window.layout_(VLayout(
 		HLayout(
-			oneShotBtn.("Play", { q.serverController.play }),
-			oneShotBtn.("Stop", { q.serverController.stop }),
+			playButton = Button().states_([["Play", nil, window.background], ["Stop", nil, window.background]]).action_({ |b|
+				if (b.value == 1) {
+					~serverController.play;
+				} {
+					~serverController.stop;
+				}
+			}.inEnvir).font_(Font.default.size_(12)),
 			value {
 				var sshCommand = Library.at(\lumber, \common, \sshCommand);
 				popup.("Bela",
@@ -163,7 +170,7 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 					}.inEnvir, path: ~storage.storagePath)
 				}.inEnvir
 			),
-			oneShotBtn.("Reload script", { q.serverController.stop; mainScriptPath.load })
+			oneShotBtn.("Reload", { q.serverController.stop; mainScriptPath.load })
 
 		),
 		tabby.view
@@ -205,6 +212,15 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 	window.acceptsMouseOver_(true);
 
 	Library.put(\lumber, \mainWindow, window);
+
+	connections = ConnectionList.make {
+		~serverController.debug("SC").signal(\isPlaying).connectTo(playButton.valueSlot)
+		.transform({|o, w, v| v; [o, w, v.asInteger]});
+	};
+
+	window.onClose({
+		connections.free;
+	});
 
 	window.front;
 }.value

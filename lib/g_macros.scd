@@ -9,7 +9,7 @@ Proto({
 	var destOrder = #[gainer, delay, freqshift, saturation, peakEqBand, freeze, lfo1, lfo2];
 
 	~model = model;
-	~width = 50;
+	~width = 40;
 	~sources = Library.at(\lumber, \common, \macroSources).keys.asArray.sort { |x, y|
 		(sourceOrder.indexOf(x) ? inf) < (sourceOrder.indexOf(y) ? inf)
 	};
@@ -22,9 +22,24 @@ Proto({
 		"%:%".format(~destinations[dest].label, input);
 	};
 
-	~staticText = { |str|
-		StaticText().string_(str).font_(Font.monospace.size_(10))
+	~font = Font.monospace.size_(10);
+
+	~makeSourceHeader = { |label, height|
+		var font = ~font;
+		UserView().minHeight_(height).drawFunc_{ |v|
+			var extent = v.bounds.extent;
+			Pen.font = font;
+			Pen.translate(extent.x * 0.5, extent.y);
+			Pen.rotate(-0.5pi);
+			Pen.string(label);
+			Pen.stroke;
+		};
 	};
+
+	~staticText = { |str|
+		StaticText().string_(str).font_(~font)
+	};
+
 
 	~makeWindow = {
 
@@ -35,7 +50,7 @@ Proto({
 			// k.postln;
 			~destinations[k].inputs.collect { |input|
 				var txt = ~makeDestString.(k, input);
-				StaticText().maxWidth_(100).string_(txt).font_(Font.monospace.size_(10))
+				~staticText.(txt).maxWidth_(100)
 			}
 		}).flatten;
 
@@ -74,10 +89,9 @@ Proto({
 				[HLayout(
 					value {
 						var label = Library.at(\lumber, \common, \macroSources)[source].label ? source;
-						sourceHeader = StaticText().fixedWidth_(75).align_(\center)
-						.string_(label).toolTip_(source).font_(Font.monospace.size_(10))
+						sourceHeader = ~makeSourceHeader.(label, 70);
 					},
-					LevelIndicator().fixedWidth_(5).fixedHeight_(~width)
+					[LevelIndicator().fixedWidth_(5).fixedHeight_(70), a: \bottom]
 				)] ++ destWidgets ++ [nil]
 			}).add(
 				[nil] ++ ~destinationHeaders.collect { |h|
@@ -96,4 +110,4 @@ Proto({
 
 	};
 
-});
+})
