@@ -140,7 +140,7 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 				"  Meter",
 				{ Library.at(\lumber, \server).meter(2, 2) },
 				"  Tree",
-				{ Library.at(\lumber, \server).plotTree },
+				{ TreeSnapshotView().autoUpdate(true, Library.at(\lumber, \server)).front },
 				"  Free All", { Library.at(\lumber, \server).freeAll },
 				"  Reboot", { "TODO".postln },
 			),
