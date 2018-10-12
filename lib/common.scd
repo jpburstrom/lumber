@@ -7,6 +7,8 @@
 //Gain. 0.5 input roughly equals 0 dB
 Spec.add(\gain, ControlSpec(-44.0, 12.0, \db, 0.0, 0, " dB"));
 
+Spec.add(\preamp, ControlSpec(0.0, 32.0, \db, 0.0, 0, " dB"));
+
 //dB range for eq
 Spec.add(\eqdb, ControlSpec(-24, 6, \db, 0.0, 0, " dB"));
 
