@@ -53,15 +53,27 @@ wrap.('expression', {
 	DC.kr(0);
 }, (label: "Expression"));
 
-wrap.(\lfo1, {
+wrap.(\lfoSin, {
 	SinOsc.kr(\freq.kr(1));
 }, (
 	specs: (
 		\freq: [0.125, 20, \exp],
-		\depth: [0, 1, \lin, 0.01]
 	),
 	\outputSpec: \bipolar.asSpec,
-	label: "LFO 1",
+	label: "LFO Sin",
+	group: \lfo,
+	inputs: #[freq],
+	destination: true
+));
+
+wrap.(\lfoNoise, {
+	LFNoise2.kr(\freq.kr(1));
+}, (
+	specs: (
+		\freq: [0.125, 20, \exp],
+	),
+	\outputSpec: \bipolar.asSpec,
+	label: "LFO Noise",
 	group: \lfo,
 	inputs: #[freq],
 	destination: true
