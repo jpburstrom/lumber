@@ -45,7 +45,7 @@ Require("protos/serverPlayer", always:false).clone {
 					\preamp, {
 						if (val.db != 0) {
 							currentEnvironment[key] = Synth(\gainer,
-								[\gain, val.db, \out, buses.out],
+								[\gain, val.db, \out, buses.out, \doneAction, Done.freeSelf],
 								parentGroup
 							);
 						};
@@ -53,7 +53,7 @@ Require("protos/serverPlayer", always:false).clone {
 					//Default: midi note number, val is gain in dB
 					{
 						if (val != 0) {
-							currentEnvironment[key] = Synth(\peakEqBand, [\freq, key.midicps, \gain, val, \out, buses.out], parentGroup);
+							currentEnvironment[key] = Synth(\peakEqBand, [\doneAction, Done.freeSelf, \freq, key.midicps, \gain, val, \out, buses.out], parentGroup);
 						}
 					}
 				);
@@ -65,25 +65,30 @@ Require("protos/serverPlayer", always:false).clone {
 
 
 	~makeSynth = { |freq, db|
-		if (~buses.notNil) {
-			Synth(\peakEqBand, [\freq, freq, \gain, db, \out, ~buses.out], ~parentGroup);
-		}
+		Synth(\peakEqBand, [\doneAction, Done.freeSelf, \freq, freq, \gain, db, \out, ~buses.out], ~parentGroup);
 	};
 
 	~setGain = { |param, db|
+		[param, db].debug("setGain");
 		if (~isPlaying) {
 			if (db == 0) {
 				~synths[param] !? { |x|
-					x.release;
+					x.postln.release;
 					~synths[param] = nil;
 				};
 			} {
 				if (~synths[param].isNil) {
-					if (param == \preamp) {
-						~synths[param] = Synth(\gainer, [\gain, db, \out, ~buses.out], ~parentGroup);
-					} {
-						~synths[param] = ~makeSynth.value(param.midicps, db);
-					}
+					switch(param,
+						\preamp, {
+							~synths[param] = Synth(\gainer, [\gain, db, \out, ~buses.out, \doneAction, Done.freeSelf], ~parentGroup);
+						},
+						\hiShelf, {
+							~synths[param] = Synth(\hiShelfBand, [\gain, db, \out, ~buses.out], ~parentGroup);
+						},
+						{
+							~synths[param] = ~makeSynth.value(param.midicps, db);
+						}
+					);
 				} {
 					~synths[param].set(\gain, db);
 				}

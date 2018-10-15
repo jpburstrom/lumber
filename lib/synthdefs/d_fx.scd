@@ -1,4 +1,7 @@
-var fxFactory = { |name, func, meta|
+var fxFactory = { |name, func, meta, doneAction|
+
+	//Default is to free group, freeing all input mappers and stuff
+	doneAction ?? { doneAction = Done.freeGroup };
 
     SynthDef(name, {
 
@@ -6,7 +9,7 @@ var fxFactory = { |name, func, meta|
         snd = In.ar(\out.kr, 1);
         snd = func.(snd);
 		//FIXME: settable fadetime
-        XOut.ar(\out.kr, Env.asr(0.01, 1, 0.01).ar(Done.freeGroup, \gate.kr(1)), snd)
+		XOut.ar(\out.kr, Env.asr(0.01, 1, 0.01).ar(\doneAction.ir(doneAction), \gate.kr(1)), snd)
 
 	}, metadata: meta !? { meta.put(\destination, true) }).add(\lumber);
 
@@ -17,13 +20,12 @@ var fxFactory = { |name, func, meta|
 
 fxFactory.(\hiShelfBand, { |snd|
 	BHiShelf.ar(snd, \freq.kr(440), \rs.kr(1), \gain.kr(0, 0.1)) ;
-});
+}, nil, Done.freeSelf);
 fxFactory.(\lowCutBand, { |snd|
 	BLowCut.ar(snd, \freq.kr(440), 2) ;
-});
+}, nil, Done.freeSelf);
 
 //Source effects
-
 fxFactory.(\peakEqBand, { |snd|
 	BPeakEQ.ar(snd, \freq.kr(440), \rq.kr(0.0625), \db.kr(0, 0.1)) ;
 },(
