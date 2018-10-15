@@ -177,6 +177,9 @@ p = Require("protos/serverPlayer", always:false).clone {
 		var metadata = Library.at(\lumber, \common, \macroDestinations)[dest];
 		var grp = Group(~groups[metadata[\group] ? \fx]);
 		~groups[dest] = grp;
+		//XXX Warning this overrides source buses which is also destination (eg LFOs)
+		//Workaround: use ~buses.parent
+		//LATER rethink
 		~buses[dest] = ();
 		~synths[dest] = Synth(dest,
 			[\out, ~buses.out], grp).register(true).onFree({
@@ -244,7 +247,9 @@ p = Require("protos/serverPlayer", always:false).clone {
 			k == \active
 		}).collect(_.value).asPairs;
 
-		args = args ++ [\inbus, ~buses[src], \outbus, bus.main, \countbus, bus[\count]];
+		//XXX ~buses[src] is a dictionary, but ~buses.parent[src] is the bus from c_server
+		//
+		args = args ++ [\inbus, ~buses.parent[src], \outbus, bus.main, \countbus, bus[\count]];
 
 		//Play input mapping synth
 		//Check for bipolar specs
