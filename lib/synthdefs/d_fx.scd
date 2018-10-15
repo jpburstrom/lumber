@@ -95,16 +95,18 @@ fxFactory.(\freeze, { |snd|
 	inputs: #[wet]
 ));
 
-//Placeholder effect
-fxFactory.(\saturate, { |snd|
-	// fx = fx + AllpassC.ar(snd, 0.2, 0.05, 0.6);
-	XFade2.ar(snd, (snd * 4).tanh, \wet.kr(0).linlin(0, 1, -1, 1).poll);
-
+fxFactory.(\saturate, { |snd, preamp = 1, amount = 0.0, postamp = 1|
+	var wet;
+	wet = dry * preamp;
+	//https://ccrma.stanford.edu/software/snd/snd/sndclm.html#contrast-enhancement
+	wet = sin((wet * pi * 0.5) + ( amount * sin(wet * pi * 2))) * postamp;
+	//if amount < 0.1, start fading to dry signal
+	XFade2.ar(dry, wet, amount.linlin(0, 0.1, -1, 1));
 }, (
 	specs: (
-		\wet: \unipolar,
+		\amount: \unipolar,
 	),
 	label: "Saturate",
 	group: \fx,
-	inputs: #[wet]
+	inputs: #[amount]
 ));
