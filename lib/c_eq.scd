@@ -69,11 +69,10 @@ Require("protos/serverPlayer", always:false).clone {
 	};
 
 	~setGain = { |param, db|
-		[param, db].debug("setGain");
 		if (~isPlaying) {
 			if (db == 0) {
 				~synths[param] !? { |x|
-					x.postln.release;
+					x.release;
 					~synths[param] = nil;
 				};
 			} {
