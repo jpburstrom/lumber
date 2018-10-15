@@ -10,6 +10,22 @@ Proto({
 
 	var osc = ();
 
+	var levelIndicator = { |path, spec|
+		var ind = LevelIndicator().fixedWidth_(5).fixedHeight_(~width);
+		path = path.asSymbol;
+		spec = spec.asSpec;
+		ind.warningColor_(Color.green);
+		ind.criticalColor_(Color.red);
+		ind.meterColor_(Color.red);
+		ind.warning = 0.1;
+		ind.critical = 0.9;
+		osc[path] = OSCFunc({ |args|
+			{ ind.value = args[3].linlin(spec.minval, spec.maxval, 0.1, 0.9, \none)
+			}.defer;
+		}, path);
+		ind
+	};
+
 	~model = model;
 	~width = 40;
 	~sources = Library.at(\lumber, \common, \macroSources).keys.asArray.sort { |x, y|
@@ -48,14 +64,18 @@ Proto({
 		var cellFactory = Require("gui/envelopeCell");
 		var connections = ConnectionList();
 
-		~destinationHeaders = ~destinationKeys.collect({ |k|
+		~destinationHeaders = {
+			~destinationKeys.collect({ |k|
 			// k.postln;
-			~destinations[k].inputs.collect { |input|
-				var txt = ~makeDestString.(k, input);
-				~staticText.(txt).maxWidth_(100)
-			}
-		}).flatten;
-
+				~destinations[k].inputs.collect { |input|
+					var txt = ~makeDestString.(k, input);
+					HLayout(
+						levelIndicator.("/meter/%/%".format(k, input), ~destinations[k].specs[input]),
+						~staticText.(txt).maxWidth_(100).align_(\center);
+					)
+				}
+			}).flatten;
+		};
 
 		~view = View().layout_(GridLayout.columns(
 			//Top Headers
@@ -95,28 +115,11 @@ Proto({
 						sourceHeader = ~makeSourceHeader.(label, 70);
 					},
 					value {
-						var spec = conf[\outputSpec].asSpec;
-						var ind = LevelIndicator().fixedWidth_(5).fixedHeight_(70);
-						ind.warningColor_(Color.green);
-						ind.criticalColor_(Color.red);
-						ind.meterColor_(Color.red);
-						ind.warning = 0.1;
-						ind.critical = 0.9;
-						osc[source] = OSCFunc({ |args|
-							{ ind.value = args[3].linlin(spec.minval, spec.maxval, 0.1, 0.9, \none)
-							}.defer;
-						}, "/meter/%".format(source));
-						[ind, a: \bottom];
+						[levelIndicator.value("/meter/%".format(source, conf[\outputSpec])), a: \bottom];
 					}
 				)] ++ destWidgets ++ [nil]
 			}).add(
-				[nil] ++ ~destinationHeaders.collect { |h|
-					HLayout(
-
-						LevelIndicator().fixedHeight_(~width).fixedWidth_(5),
-						h.align_(\center),
-					)
-				}
+				[nil] ++ ~destinationHeaders.value;
 			)
 		));
 

@@ -23,7 +23,9 @@ p = Require("protos/serverPlayer", always:false).clone {
 						Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
 						currentEnvironment[x], server, SynthDescLib.all[\lumber][x].def);
 				};
-			} {
+			};
+
+			if (thisProcess.platform.name == \osx) {
 				Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
 					var name = "%_meter".format(src).asSymbol;
 					currentEnvironment[name] = SynthDef(name, {
@@ -218,6 +220,17 @@ p = Require("protos/serverPlayer", always:false).clone {
 					~mappingSynths[dest][\specMapping], \addBefore)
 			);
 			~synths[dest].map(input, bus[\main]);
+
+			//Metering synth
+			if (thisProcess.platform.name == \osx) {
+				var key = "%_%_meter".format(dest, input).asSymbol;
+
+				~mappingSynths[dest].put(key, SynthDef(key, {
+					SendReply.kr(Impulse.kr(30), "/meter/%/%".format(dest, input),
+						In.kr(bus[\main]));
+				}).play(~groups[\post]));
+
+			};
 			bus
 		};
 		//Go through all input params, exclude on/off and make synthdef args
