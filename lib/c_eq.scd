@@ -24,48 +24,50 @@ Require("protos/serverPlayer", always:false).clone {
 
 	~factory.make {
 
-		~synths = { |model, parentGroup, buses, synths, makeSynth|
+		~synths = { |model, parentGroup, buses, makeSynth|
 			model.getParams(\player).keysValuesDo { |key, val|
 
-			switch(key,
-				\lowCut, {
-					currentEnvironment[key] = Synth(\lowCutBand,
-						[\freq, val.freq, \out, buses.out],
-						parentGroup
-					);
-				},
-				\hiShelf, {
-					if (val.db != 0) {
-						currentEnvironment[key] = Synth(\hiShelfBand,
-							[\freq, val.freq, \rs, val.rs, \gain, val.db, \out, buses.out],
+				switch(key,
+					\lowCut, {
+						currentEnvironment[key] = Synth(\lowCutBand,
+							[\freq, val.freq, \out, buses.out],
 							parentGroup
 						);
+					},
+					\hiShelf, {
+						if (val.db != 0) {
+							currentEnvironment[key] = Synth(\hiShelfBand,
+								[\freq, val.freq, \rs, val.rs, \gain, val.db, \out, buses.out],
+								parentGroup
+							);
+						}
+					},
+					\preamp, {
+						if (val.db != 0) {
+							currentEnvironment[key] = Synth(\gainer,
+								[\gain, val.db, \out, buses.out],
+								parentGroup
+							);
+						};
+					},
+					//Default: midi note number, val is gain in dB
+					{
+						if (val != 0) {
+							currentEnvironment[key] = Synth(\peakEqBand, [\freq, key.midicps, \gain, val, \out, buses.out], parentGroup);
+						}
 					}
-				},
-				\preamp, {
-					if (val.db != 0) {
-						currentEnvironment[key] = Synth(\gainer,
-							[\gain, val.db, \out, buses.out],
-							parentGroup
-						);
-					};
-				},
-				//Default: midi note number, val is gain in dB
-				{
-					if (val != 0) {
-						synths[key] = makeSynth.value(key.midicps, val);
-					}
-				}
-			);
+				);
 
-		};
+			};
 		};
 
 	};
 
 
 	~makeSynth = { |freq, db|
-		Synth(\peakEqBand, [\freq, freq, \gain, db, \out, ~buses.out], ~parentGroup);
+		if (~buses.notNil) {
+			Synth(\peakEqBand, [\freq, freq, \gain, db, \out, ~buses.out], ~parentGroup);
+		}
 	};
 
 	~setGain = { |param, db|
