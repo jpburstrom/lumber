@@ -8,6 +8,8 @@ Proto({
 	var sourceOrder = #[intensity, activity, orientation, expression, softpot_l, softpot_s];
 	var destOrder = #[gainer, delay, freqshift, saturation, peakEqBand, freeze, lfo1, lfo2];
 
+	var osc = ();
+
 	~model = model;
 	~width = 40;
 	~sources = Library.at(\lumber, \common, \macroSources).keys.asArray.sort { |x, y|
@@ -59,6 +61,7 @@ Proto({
 			//Top Headers
 			//Sources are rows
 			* (~sources.collect { |source, sourceIndex|
+				var conf = Library.at(\lumber, \common, \macroSources)[source];
 				var sourceHeader;
 				var destWidgets = List();
 				//First column: source header
@@ -88,10 +91,23 @@ Proto({
 
 				[HLayout(
 					value {
-						var label = Library.at(\lumber, \common, \macroSources)[source].label ? source;
+						var label = conf.label ? source;
 						sourceHeader = ~makeSourceHeader.(label, 70);
 					},
-					[LevelIndicator().fixedWidth_(5).fixedHeight_(70), a: \bottom]
+					value {
+						var spec = conf[\outputSpec].asSpec;
+						var ind = LevelIndicator().fixedWidth_(5).fixedHeight_(70);
+						ind.warningColor_(Color.green);
+						ind.criticalColor_(Color.red);
+						ind.meterColor_(Color.red);
+						ind.warning = 0.1;
+						ind.critical = 0.9;
+						osc[source] = OSCFunc({ |args|
+							{ ind.value = args[3].linlin(spec.minval, spec.maxval, 0.1, 0.9, \none)
+							}.defer;
+						}, "/meter/%".format(source));
+						[ind, a: \bottom];
+					}
 				)] ++ destWidgets ++ [nil]
 			}).add(
 				[nil] ++ ~destinationHeaders.collect { |h|
@@ -104,7 +120,9 @@ Proto({
 			)
 		));
 
+
 		~view.onClose = {
+			osc.do { |x| x.free };
 			connections.free;
 		}.inEnvir;
 

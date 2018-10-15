@@ -22,6 +22,15 @@ p = Require("protos/serverPlayer", always:false).clone {
 						Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
 						currentEnvironment[x], server, SynthDescLib.all[\lumber][x].def);
 				};
+			} {
+				Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
+					var name = "%_meter".format(src).asSymbol;
+					currentEnvironment[name] = SynthDef(name, {
+						SendReply.kr(Impulse.kr(30), "/meter/%".format(src),
+							In.kr(buses.parent[src]));
+					}).play(groups[\post]);
+				}
+
 			}
 
 

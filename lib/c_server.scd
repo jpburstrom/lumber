@@ -60,6 +60,7 @@ Require("protos/serverPlayer", always:false).clone {
 		~groups = { |parentGroup|
 			~main = Group(parentGroup);
 			//Add to head means reverse order
+			~post       = Group(~main);
 			~output 	= Group(~main);
 			//TODO maybe some of these should be created by children
 			~fx 		= Group(~main);

@@ -59,7 +59,7 @@ wrap.(\lfoSin, {
 	specs: (
 		\freq: [0.125, 20, \exp],
 	),
-	\outputSpec: \bipolar.asSpec,
+	outputSpec: \bipolar.asSpec,
 	label: "LFO Sin",
 	group: \lfo,
 	inputs: #[freq],
@@ -72,7 +72,7 @@ wrap.(\lfoNoise, {
 	specs: (
 		\freq: [0.125, 20, \exp],
 	),
-	\outputSpec: \bipolar.asSpec,
+	outputSpec: \bipolar.asSpec,
 	label: "LFO Noise",
 	group: \lfo,
 	inputs: #[freq],
