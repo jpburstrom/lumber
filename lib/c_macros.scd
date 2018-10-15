@@ -1,5 +1,14 @@
 p = Require("protos/serverPlayer", always:false).clone {
 
+	var hasGUI = (thisProcess.platform.name == \osx);
+
+	var playMeterSynth = { |name, path, bus|
+		SynthDef(name, {
+			SendReply.kr(Impulse.kr(30), path,
+				In.kr(bus) * Env([1, -inf, -inf], [0, 0.1], \lin, 0).kr(Done.freeSelf, \gate.kr(1)));
+		}).play(~groups[\post]);
+	}.inEnvir;
+
 	~factory.make {
 		~synths = { |activeSources, activeDestinations, mappingSynths, buses, groups, server|
 			//TODO later maybe move these to c_macros
@@ -25,13 +34,11 @@ p = Require("protos/serverPlayer", always:false).clone {
 				};
 			};
 
-			if (thisProcess.platform.name == \osx) {
+			if (hasGUI) {
 				Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
 					var name = "%_meter".format(src).asSymbol;
-					currentEnvironment[name] = SynthDef(name, {
-						SendReply.kr(Impulse.kr(30), "/meter/%".format(src),
-							In.kr(buses.parent[src]));
-					}).play(groups[\post]);
+					currentEnvironment[name] = playMeterSynth.(name, "/meter/%".format(src),
+						buses.parent[src]);
 				}
 
 			}
@@ -172,7 +179,9 @@ p = Require("protos/serverPlayer", always:false).clone {
 		~groups[dest] = grp;
 		~buses[dest] = ();
 		~synths[dest] = Synth(dest,
-			[\out, ~buses.out], grp).register(true).onFree(~prResetDestination.inEnvir);
+			[\out, ~buses.out], grp).register(true).onFree({
+			~prResetDestination.value(dest)
+		}.inEnvir);
 		~mappingSynths[dest] = MultiLevelIdentityDictionary();
 		//Set all params to default value
 		metadata.inputs.do { |input|
@@ -222,14 +231,11 @@ p = Require("protos/serverPlayer", always:false).clone {
 			~synths[dest].map(input, bus[\main]);
 
 			//Metering synth
-			if (thisProcess.platform.name == \osx) {
+			if (hasGUI) {
 				var key = "%_%_meter".format(dest, input).asSymbol;
 
-				~mappingSynths[dest].put(key, SynthDef(key, {
-					SendReply.kr(Impulse.kr(30), "/meter/%/%".format(dest, input),
-						In.kr(bus[\main]));
-				}).play(~groups[\post]));
-
+				~mappingSynths[dest].put(\meter, input, playMeterSynth.(key,
+					"/meter/%/%".format(dest, input), bus[\main]))
 			};
 			bus
 		};
@@ -251,7 +257,25 @@ p = Require("protos/serverPlayer", always:false).clone {
 		};
 
 		synth.register(true).onFree({
-			~mappingSynths[dest] !? { |x| x.removeAt(src, input) };
+			//free input + meter synth
+			~mappingSynths[dest] !? { |x|
+				var last = true;
+				x.removeAt(src, input);
+
+				if (hasGUI) {
+					//if no other sources playing to input,
+					//stop mapping synth
+					//a bit clunky
+					x.leafDo { |path, val|
+						if (path[0] != \meter and: { path.includes(input) }) {
+							last = false;
+						}
+					};
+					if (last) {
+						x.removeAt(\meter, input) !? { |syn| syn.release}
+					};
+				}
+			};
 			~activeInputs.remove([src, dest, input]);
 		}.inEnvir);
 
