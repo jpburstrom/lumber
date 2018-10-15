@@ -95,13 +95,13 @@ fxFactory.(\freeze, { |snd|
 	inputs: #[wet]
 ));
 
-fxFactory.(\saturate, { |snd, preamp = 1, amount = 0.0, postamp = 1|
+fxFactory.(\saturate, { |snd|
 	var wet;
-	wet = dry * preamp;
+	wet = snd * \preamp.kr(1);
 	//https://ccrma.stanford.edu/software/snd/snd/sndclm.html#contrast-enhancement
-	wet = sin((wet * pi * 0.5) + ( amount * sin(wet * pi * 2))) * postamp;
+	wet = sin((wet * pi * 0.5) + ( amount * sin(wet * pi * 2))) * \postamp.kr(1);
 	//if amount < 0.1, start fading to dry signal
-	XFade2.ar(dry, wet, amount.linlin(0, 0.1, -1, 1));
+	XFade2.ar(snd, wet, \amount.kr(0.0).linlin(0, 0.1, -1, 1));
 }, (
 	specs: (
 		\amount: \unipolar,
