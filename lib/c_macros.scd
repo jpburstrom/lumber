@@ -4,8 +4,9 @@ p = Require("protos/serverPlayer", always:false).clone {
 		~synths = { |activeSources, activeDestinations, mappingSynths, buses, groups, server|
 			//TODO later maybe move these to c_macros
 			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src, conf|
+				var outbus = buses.parent[src]; //Need to look for parent bus
 				groups[src] = Group( groups[conf[\group] ? \sensors] );
-				currentEnvironment[src] = Synth(src, [\out, buses[src]], groups[src]);
+				currentEnvironment[src] = Synth(src, [\out, outbus], groups[src]);
 				activeSources.add(src);
 				if (conf.destination == true) {
 					buses[src] = ();
@@ -279,7 +280,7 @@ p = Require("protos/serverPlayer", always:false).clone {
 	//Called from ~synths[dest].onFree
 	~prResetDestination = { |dest|
 		~buses[dest].free;
-		~buses[dest] = nil;
+		~buses[dest].clear;
 		~groups[dest] = nil;
 		~synths[dest] = nil;
 		//Empty counters to be sure
