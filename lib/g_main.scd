@@ -218,7 +218,8 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 		.transform({|o, w, v| v; [o, w, v.asInteger]});
 	};
 
-	window.onClose({
+
+	window.onClose = ({
 		connections.free;
 	});
 
