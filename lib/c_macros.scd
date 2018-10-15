@@ -15,13 +15,16 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 			};
 			server.sync;
-			if (server.name == \bela) {
+
+			if (Library.at(\lumber, \isBelaServer)) {
 				[\activity, \intensity].do { |x|
 					GestureRT.loadPipeline(
 						Library.at(\lumber, \common, \belaRoot) +/+ "data/grt/%.grt".format(x),
 						currentEnvironment[x], server, SynthDescLib.all[\lumber][x].def);
 				};
 			}
+
+
 		};
 	};
 
