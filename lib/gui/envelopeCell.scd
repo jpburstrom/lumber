@@ -20,10 +20,14 @@ var editorFactory = Require("envelopeEditor"); //A proto.
 	envEditor.spec = dest[\specs][inputKey].asSpec;
 
 	container = View().fixedSize_(~width).background_(Color.gray(0.9))
-	.mouseDownAction_({ |view, x, y, mod|
-		if (mod.isShift) {
+	.mouseDownAction_({ |view, x, y, mod, num|
+		//Regular mouse press activates
+		if (mod.isShift.not and: { num == 0 }) {
 			cellModel.active.toggle;
+
 		} {
+			//If shift or right-click
+
 			var connectionString = "% ▷ %".format(source, ~makeDestString.(destKey, inputKey));
 			var win = envEditor.makeWindow;
 			win.name = connectionString;
