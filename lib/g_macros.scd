@@ -10,8 +10,13 @@ Proto({
 
 	var osc = ();
 
-	var levelIndicator = { |path, spec|
-		var ind = LevelIndicator().fixedWidth_(5).fixedHeight_(~width);
+	var levelIndicator = { |path, spec, height|
+		var width = 20, view, ind, num;
+		var offset = 9;
+		height = height ? ~width;
+		view = View().fixedHeight_(height).fixedWidth_(width);
+		ind = LevelIndicator(view, Rect((width - 5) * 0.5, 0, 5, height - offset));
+		num = StaticText(view, Rect(0, height - offset + 1, width, 10)).string_(0.0).font_(Font.monospace.size_(7)).align_(\center).fixedSize_(Size(width, 8));
 		path = path.asSymbol;
 		spec = spec.asSpec;
 		ind.warningColor_(Color.green);
@@ -20,10 +25,12 @@ Proto({
 		ind.warning = 0.1;
 		ind.critical = 0.9;
 		osc[path] = OSCFunc({ |args|
-			{ ind.value = args[3].linlin(spec.minval, spec.maxval, 0.1, 0.9, \none)
+			{
+				ind.value = args[3].linlin(spec.minval, spec.maxval, 0.1, 0.9, \none);
+				num.string = args[3].asStringPrec(2);
 			}.defer;
 		}, path);
-		ind
+		view
 	};
 
 	~model = model;
@@ -47,7 +54,7 @@ Proto({
 		UserView().minHeight_(height).drawFunc_{ |v|
 			var extent = v.bounds.extent;
 			Pen.font = font;
-			Pen.translate(extent.x * 0.5, extent.y);
+			Pen.translate((extent.x * 0.5) - 6, extent.y);
 			Pen.rotate(-0.5pi);
 			Pen.string(label);
 			Pen.stroke;
@@ -72,7 +79,7 @@ Proto({
 					HLayout(
 						levelIndicator.("/meter/%/%".format(k, input), ~destinations[k].specs[input]),
 						~staticText.(txt).maxWidth_(100).align_(\center);
-					)
+					).spacing_(0);
 				}
 			}).flatten;
 		};
@@ -115,7 +122,7 @@ Proto({
 						sourceHeader = ~makeSourceHeader.(label, 70);
 					},
 					value {
-						[levelIndicator.value("/meter/%".format(source, conf[\outputSpec])), a: \bottom];
+						[levelIndicator.value("/meter/%".format(source, conf[\outputSpec]), nil, 70), a: \bottom];
 					}
 				)] ++ destWidgets ++ [nil]
 			}).add(
