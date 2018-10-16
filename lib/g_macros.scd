@@ -122,7 +122,7 @@ Proto({
 						sourceHeader = ~makeSourceHeader.(label, 70);
 					},
 					value {
-						[levelIndicator.value("/meter/%".format(source, conf[\outputSpec]), nil, 70), a: \bottom];
+						[levelIndicator.value("/meter/%".format(source), conf[\outputSpec], 70), a: \bottom];
 					}
 				)] ++ destWidgets ++ [nil]
 			}).add(
