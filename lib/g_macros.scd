@@ -26,8 +26,9 @@ Proto({
 		ind.critical = 0.9;
 		osc[path] = OSCFunc({ |args|
 			{
-				ind.value = args[3].linlin(spec.minval, spec.maxval, 0.1, 0.9, \none);
-				num.string = args[3].asStringPrec(2);
+				var val = args[3];
+				ind.value = val.linlin(spec.minval, spec.maxval, 0.1, 0.9, \none);
+				num.string = if (val.isNaN) { "0.0" } { val.asStringPrec(2) };
 			}.defer;
 		}, path);
 		view
