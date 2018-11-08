@@ -17,7 +17,6 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 			var view = View().layout_(HLayout(
 				textField = TextField().font_(Font.default.size_(10)).fixedWidth_(120),
 				*{ |i|
-				//TODO: preset activeIndex controls button state
 					var curOffset = offset;
 					var label = (i+offset+1).asString;
 					Button().fixedWidth_(20).states_([
@@ -191,23 +190,6 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 
 
 	{ tabby.refresh }.defer(0.2);
-
-	/*
-	window.view.keyDownAction = { |view, char, modifiers, unicode, keycode, key|
-		switch(key,
-			//1
-			49, {
-				//TODO: Let section views become protos or similar
-				//and add a .focus method which focuses as necessary
-				//alt. use tabbedview
-				sections[0].children[1].children[1].focus;
-			},
-			50, {
-				sections[1].children[0].children[0].focus;
-			}
-		);
-	};
-	*/
 
 	window.acceptsMouseOver_(true);
 

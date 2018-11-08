@@ -11,7 +11,6 @@ p = Require("protos/serverPlayer", always:false).clone {
 
 	~factory.make {
 		~synths = { |activeSources, activeDestinations, mappingSynths, buses, groups, server|
-			//TODO later maybe move these to c_macros
 			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src, conf|
 				var outbus = buses.parent[src]; //Need to look for parent bus
 				groups[src] = Group( groups[conf[\group] ? \sensors] );

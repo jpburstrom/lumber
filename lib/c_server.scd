@@ -51,7 +51,6 @@ Require("protos/serverPlayer", always:false).clone {
 			~main = Bus.audio(server, 1);
 			~out = Bus(\audio, 0, 1, server);
 
-			//TODO Later move to ~macros
 			Library.at(\lumber, \common, \macroSources).keysValuesDo { |src|
 				currentEnvironment[src] = Bus.control(server);
 			}
@@ -62,7 +61,6 @@ Require("protos/serverPlayer", always:false).clone {
 			//Add to head means reverse order
 			~post       = Group(~main);
 			~output 	= Group(~main);
-			//TODO maybe some of these should be created by children
 			~fx 		= Group(~main);
 			~eq 		= Group(~main);
 			~lfo 		= Group(~main);

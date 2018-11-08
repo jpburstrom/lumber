@@ -1,4 +1,3 @@
-//TODO: use curve
 var model = ~macros ? q.macros; //assuming we're in the same environment, otherwise fallback to global (hack)
 
 Proto({
@@ -104,8 +103,6 @@ Proto({
 					var dest = ~destinations[destKey];
 
 					dest.inputs.do { |inputKey|
-						//TODO: These values should be collected from CVs somewhere
-
 						destWidgets.add([cellFactory.(
 							model: model,
 							source: source,

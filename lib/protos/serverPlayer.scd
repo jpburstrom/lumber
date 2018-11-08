@@ -66,14 +66,6 @@ Proto {
 	};
 
 
-	//target
-	//--parentGroup
-	//----group1
-	//------synth1
-	//----group2
-	//------synth2
-	//Play
-	//TODO: use bus arg
 	~play = { |bus, target, addAction=\addToHead|
 
 		{

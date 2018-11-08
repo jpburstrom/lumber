@@ -17,11 +17,9 @@ Spec.add(\eqdb, ControlSpec(-24, 6, \db, 0.0, 0, " dB"));
 Spec.add(\eqcut, ControlSpec(-48, 0, \db, 0.0, 0, " dB"));
 
 //boost range for peak eq
-//TODO: test range
 Spec.add(\eqboost, ControlSpec(0, 12, \db, 0.0, 0, " dB"));
 
 //Freq range for peak eq
-//TODO: test range
 Spec.add(\eqfreq, ControlSpec(65.0, 247.0, \exp, 0.0, 65.0, " Hz"));
 
 //rq range for peak eq
@@ -77,7 +75,6 @@ Fdef(\ifBela, {
 }.value);
 
 
-//TODO: Change this when starting to test on bela
 Library.put(\lumber, \serverName, Fdef(\ifBela).value(\local, \bela));
 
 Library.put(\lumber, \isBelaServer, Fdef(\ifBela).value(true, { Library.at(\lumber, \serverName) == \bela }));

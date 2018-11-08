@@ -8,7 +8,6 @@ var fxFactory = { |name, func, meta, doneAction|
         var snd;
         snd = In.ar(\out.kr, 1);
         snd = func.(snd);
-		//FIXME: settable fadetime
 		XOut.ar(\out.kr, Env.asr(0.01, 1, 0.01).ar(\doneAction.ir(doneAction), \gate.kr(1)), snd)
 
 	}, metadata: meta !? { meta.put(\destination, true) }).add(\lumber);
@@ -76,7 +75,6 @@ fxFactory.(\delay, { |snd|
 ));
 
 
-//TODO: fine-tune
 fxFactory.(\freeze, { |snd|
 	var chain, fx;
 	var fftsize = 8192;
