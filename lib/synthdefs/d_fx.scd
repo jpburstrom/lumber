@@ -26,16 +26,16 @@ fxFactory.(\lowCutBand, { |snd|
 
 //Source effects
 fxFactory.(\peakEqBand, { |snd|
-	BPeakEQ.ar(snd, \freq.kr(440), \rq.kr(0.0625), \db.kr(0, 0.1)) ;
+	BPeakEQ.ar(snd, \freq.kr(440), \rq.kr(0.0625), \gain.kr(0, 0.1)) ;
 },(
 	specs: (
 		freq: \eqfreq,
 		rq: \peakrq,
-		db: \eqboost
+		gain: \eqboost
 	),
 	label: "Peak EQ",
 	group: \fx,
-	inputs: #[freq, rq, db]
+	inputs: #[freq, rq, gain]
 ));
 
 fxFactory.(\gainer, { |snd|
