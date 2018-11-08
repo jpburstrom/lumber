@@ -17,7 +17,7 @@ SynthDef(\lumberOut, {
 
 	var snd = In.ar(\in.kr, 1);
 
-	//Do stuff;
+	snd = Compander.ar(snd, snd, 0.99, 1.0, 0, 1e-04, 0.25);
 
 	Out.ar(\out.kr, snd);
 
