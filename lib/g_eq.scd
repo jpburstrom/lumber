@@ -21,8 +21,8 @@ var fact = (
 			),
 			sl = Slider().orientation_(\horizontal)
 		);
-		connections.add(sl.signal(\value).connectTo(cv.inputSlot));
-		connections.add(cv.signal(\input).connectTo(sl.valueSlot));
+		connections.add(sl.valueToInput(cv));
+		connections.add(cv.inputToValue(sl));
 		connections.add(cv.signal(\value).connectTo(
 			lbl.methodSlot("string_(\"%" ++ cv.spec.units ++ "\".format(value.round(0.1)))")));
 		out;
@@ -65,8 +65,8 @@ Library.at(\lumber, \common, \eqSemitones).asArray.sort.do { |midinote, i|
 		).fixedWidth_(sliderWidth);
 	);
 
-	connections.add(sl.signal(\value).connectTo(cv.inputSlot));
-	connections.add(cv.signal(\input).connectTo(sl.valueSlot));
+	connections.add(sl.valueToInput(cv));
+	connections.add(cv.inputToValue(sl));
 
 
 	oldval = cv.value;
@@ -153,7 +153,8 @@ view.layout.children[2].add(View().layout_(HLayout(
 
 
 view.onClose_({
-    connections.do(_.free)
+    connections.do(_.free);
+	paramList.do(_.free);
 }.inEnvir);
 
 
