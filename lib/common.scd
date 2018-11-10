@@ -40,7 +40,8 @@ Environment().know_(true).make({
 
 	~belaAddress = "192.168.7.2";
 	~belaRoot = "/root/lumber";
-	~sshCommand = "ssh root@%".format(~belaAddress);
+	//-f makes ssh go to background just before command execution.
+	~sshCommand = "ssh -f root@%".format(~belaAddress);
 	~calibrationPath = ~belaRoot +/+ "data/calibration.bin";
 
 	//Macro sources
