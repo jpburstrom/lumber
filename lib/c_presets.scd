@@ -45,16 +45,19 @@ Require("../lib/protos/paramList").clone({
 		if (name.notNil) {
 			obj[\_presetName] = name
 		};
-		~params[index].value = obj;
+		~set.(index, obj);
 	};
 
 	~load = { |index=0, keys|
 		var obj = ~params[index].value;
-		keys = ~prCheckKeyArg.(keys);
-		keys.do { |k|
-			~objects[k].setParams(obj[k]);
+		if (obj.size > 0) {
+			keys = ~prCheckKeyArg.(keys);
+			keys.do { |k|
+				obj[k] !? { |dict| ~objects[k].setParams(dict) };
+			};
+			currentEnvironment.changed(\activePreset, index, obj[\_presetName]);
 		};
-		//Return preset name
+		//Return preset name or nil
 		obj[\_presetName];
 	};
 

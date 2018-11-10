@@ -9,6 +9,7 @@ Proto({
 		~params.do { |v, i|
 			obj[i] !? { |newVal|
 				~params[i].value = newVal;
+				currentEnvironment.changed(\index, i, newVal);
 			}
 		}
 	};
@@ -27,6 +28,7 @@ Proto({
 
 	~set = { |index, value|
 		~params[index].value = value;
+		currentEnvironment.changed(\index, index, value);
 	};
 
 	~setInput = { |index, input|
