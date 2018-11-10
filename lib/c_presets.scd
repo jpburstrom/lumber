@@ -61,6 +61,11 @@ Require("../lib/protos/paramList").clone({
 		obj[\_presetName];
 	};
 
+	~clearIndex = { |index=0|
+		var val = ~params[index].value.clear;
+		currentEnvironment.changed(\index, index, val);
+	};
+
 	~setSpecs = { |params|
 		~specs = recursiveDo.(params, (_.spec));
 	};
