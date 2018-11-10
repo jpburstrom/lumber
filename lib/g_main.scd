@@ -89,9 +89,22 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 
 	};
 
+	//TODO: Refactor this, maybe all that's needed is inside Server/ServerStatusWatcher
+	var serverCheck = false;
 	var serverStatusTask = SkipJack({
 		Library.at(\lumber, \server) !? { |server|
-			serverStatusLed.setActive(server.hasBooted)
+			//If server wasn't running, make sure we get notifications
+			//(otherwise we won't get those after rebooting server)
+			if (server.serverRunning and: { serverCheck.not }) {
+				// FIXME Qt primitive failed (Server window)
+				//{ server.notify = true }.fork(AppClock);
+				//serverCheck = true;
+			};
+			serverStatusLed.setActive(server.serverRunning);
+			if (server.unresponsive) {
+				serverStatusLed.setColor(\yellow);
+				//serverCheck = false;
+			};
 		}
 	}, 1, { window.isClosed });
 
