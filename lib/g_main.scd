@@ -110,6 +110,17 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 
 	var tabby = TabbedView2(window);
 
+	//Run a command on the bela
+	var sshCommand = { |cmd|
+		{
+			(
+				Library.at(\lumber, \common, \sshCommand) + cmd.quote + "&& sleep 3"
+
+			).runInTerminal
+		}.fork(SystemClock);
+	};
+
+
 	window.view.minHeight_(800);
 
 	checkBelaStatus.value;
@@ -128,20 +139,18 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 					~serverController.stop;
 				}
 			}.inEnvir).font_(Font.default.size_(12)),
-			value {
-				var sshCommand = Library.at(\lumber, \common, \sshCommand);
-				popup.("Bela",
+			popup.("Bela",
 					"  Reboot", {
 						"Reboot".postln;
 						{
-							(sshCommand + "reboot").runInTerminal;
+							sshCommand.("reboot");
 							5.wait;
 							checkBelaStatus.value;
 						}.fork(AppClock);
 
 					},
-					"  Halt", { (sshCommand + "halt").runInTerminal }
-			)},
+					"  Halt", { sshCommand.("halt") }
+			),
 			statusLed.makeGUI.mouseDownAction_(checkBelaStatus),
 			popup.("Server",
 				"  Window", { Library.at(\lumber, \server).makeWindow },
@@ -150,7 +159,9 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 				"  Tree",
 				{ TreeSnapshotView().autoUpdate(true, Library.at(\lumber, \server)).front },
 				"  Free All", { Library.at(\lumber, \server).freeAll },
-				"  Reboot", { "TODO".postln },
+				"  Reboot", {
+					sshCommand.("/usr/bin/make -C /root/Bela PROJECT=lumber runscreen");
+				},
 			),
 			serverStatusLed.makeGUI,
 			nil,
