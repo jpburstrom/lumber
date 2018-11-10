@@ -8,29 +8,63 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 {
 	var window = Window.new("Lumber");
 	var sections = List();
-	var connections;
+	var connections = ConnectionList();
 	var playButton;
 	var presetBtns = { |offset, count, keys|
 		var textField;
 		var view = View().layout_(HLayout(
 			textField = TextField().string_("---").font_(Font.default.size_(10)).fixedWidth_(120),
 			*{ |i|
-				var curOffset = offset;
-				var label = (i+offset+1).asString;
-				Button().fixedWidth_(20).states_([
+				var index = i + offset;
+				var label = (index+1).asString;
+				var inactiveState = 0;
+				var btn = Button().fixedWidth_(20).states_([
 					[label, Color.black, Color.white],
+					[label, Color.black, Color.gray(0.6)],
 					[label, Color.white, Color.black]
 				]).mouseDownAction_({ |btn, a, b, mod|
-					btn.parent.children(Button).reject(_==btn).do(_.value = 0);
-					btn.value = 0;
-					if (mod.isShift) {
-						~presets.save(i+curOffset, keys, textField.string);
-					} {
-						textField.string = ~presets.load(i+curOffset, keys) ? "";
-
+					case
+					{ mod.isShift } {
+						~presets.save(index, keys, textField.string);
 					}
+					//Clear preset
+					{ mod.isAlt } {
+						~presets.clearIndex(index);
+					}
+					{
+						~presets.load(index, keys) ? "";
+					};
+					true
 				}.inEnvir)
-				.toolTip_("Click to load, Shift+click to save");
+				.toolTip_("Click to load, Shift+click to save, Alt+click to clear");
+
+				connections.add(
+					//Watch for active preset and set button accordingly
+					//TODO maybe smarter to have one connection watching all buttons
+					~presets.signal(\activePreset).connectTo({ |obj, what, pindex, name|
+						if (index == pindex) {
+							btn.value = 2;
+							textField.string = name;
+						} {
+							btn.value = inactiveState;
+						}
+					})
+				);
+
+				connections.add(
+					//Watch if preset slot is filled with something,
+					//and set button inactive state to 1 (gray)
+					~presets.signal(\index).connectTo({ |obj, what, pindex, value|
+						if (pindex == index) {
+							//If value (preset dict) isn't empty, set "inactive" state to 1
+							value.size.postln;
+							inactiveState = value.size.min(1);
+							btn.value = inactiveState;
+						}
+					})
+				);
+
+				btn
 
 		}.dup(count)).margins_(0).spacing_(0)).fixedSize_(Size((count * 20) + 120, 16));
 		view
@@ -215,10 +249,10 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 
 	Library.put(\lumber, \mainWindow, window);
 
-	connections = ConnectionList.make {
-		~serverController.debug("SC").signal(\isPlaying).connectTo(playButton.valueSlot)
+	connections.add(
+		~serverController.signal(\isPlaying).connectTo(playButton.valueSlot)
 		.transform({|o, w, v| v; [o, w, v.asInteger]});
-	};
+	);
 
 
 	window.onClose = ({
