@@ -10,35 +10,31 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 	var sections = List();
 	var connections;
 	var playButton;
-	var presetBtns = {
-		var offset = 0;
-		{ |count, keys|
-			var textField;
-			var view = View().layout_(HLayout(
-				textField = TextField().font_(Font.default.size_(10)).fixedWidth_(120),
-				*{ |i|
-					var curOffset = offset;
-					var label = (i+offset+1).asString;
-					Button().fixedWidth_(20).states_([
-						[label, Color.black, Color.white],
-						[label, Color.white, Color.black]
-					]).mouseDownAction_({ |btn, a, b, mod|
-						btn.parent.children(Button).reject(_==btn).do(_.value = 0);
-						btn.value = 0;
-						if (mod.isShift) {
-							~presets.save(i+curOffset, keys, textField.string);
-						} {
-							textField.string = ~presets.load(i+curOffset, keys) ? "";
+	var presetBtns = { |offset, count, keys|
+		var textField;
+		var view = View().layout_(HLayout(
+			textField = TextField().string_("---").font_(Font.default.size_(10)).fixedWidth_(120),
+			*{ |i|
+				var curOffset = offset;
+				var label = (i+offset+1).asString;
+				Button().fixedWidth_(20).states_([
+					[label, Color.black, Color.white],
+					[label, Color.white, Color.black]
+				]).mouseDownAction_({ |btn, a, b, mod|
+					btn.parent.children(Button).reject(_==btn).do(_.value = 0);
+					btn.value = 0;
+					if (mod.isShift) {
+						~presets.save(i+curOffset, keys, textField.string);
+					} {
+						textField.string = ~presets.load(i+curOffset, keys) ? "";
 
-						}
-					}.inEnvir)
-					.toolTip_("Click to load, Shift+click to save");
+					}
+				}.inEnvir)
+				.toolTip_("Click to load, Shift+click to save");
 
-			}.dup(count)).margins_(0).spacing_(0)).fixedSize_(Size((count * 20) + 120, 16));
-			offset = offset + count;
-			view
-		}
-	}.value;
+		}.dup(count)).margins_(0).spacing_(0)).fixedSize_(Size((count * 20) + 120, 16));
+		view
+	};
 
 
 	var header = { |string|
@@ -178,13 +174,13 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 	tabby.add("Macros", scroll:true);
 	tabby.add("EQ", scroll:false);
 	tabby.tabViews[0].layout_(VLayout(
-		HLayout(nil, presetBtns.value(6, \macros)),
+		HLayout(nil, presetBtns.value(0, 6, \macros)),
 		Require("g_macros").makeWindow,
 		nil
 	));
 
 	tabby.tabViews[1].layout_(VLayout(
-		HLayout(nil, presetBtns.value(4, \eq)),
+		HLayout(nil, presetBtns.value(6, 4, \eq)),
 		Require("g_eq")
 	));
 
