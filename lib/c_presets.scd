@@ -13,7 +13,7 @@ Require("../lib/protos/paramList").clone({
 		out
 	};
 
-	~activeIndex = 0;
+	~activeIndex = nil;
 
 	//Preset holder with 10 slots
 	~params = 10.collect { `() };
@@ -42,6 +42,13 @@ Require("../lib/protos/paramList").clone({
 		keys.do { |k|
 			obj[k] = ~objects[k].getParams(\preset);
 		};
+		name ?? {
+			if (~activeIndex == index) {
+				name = ~currentName.value;
+			} {
+				name = ~currentName.value !? (_ + "copy");
+			}
+		};
 		if (name.notNil) {
 			obj[\_presetName] = name
 		};
@@ -51,6 +58,7 @@ Require("../lib/protos/paramList").clone({
 	~load = { |index=0, keys|
 		var obj = ~params[index].value;
 		if (obj.size > 0) {
+			~activeIndex = index;
 			keys = ~prCheckKeyArg.(keys);
 			keys.do { |k|
 				obj[k] !? { |dict| ~objects[k].setParams(dict) };
@@ -63,7 +71,22 @@ Require("../lib/protos/paramList").clone({
 
 	~clearIndex = { |index=0|
 		var val = ~params[index].value.clear;
+		if (~activeIndex == index) {
+			~activeIndex = nil;
+		};
 		currentEnvironment.changed(\index, index, val);
+	};
+
+	~current = {
+		~activeIndex !? {
+			~params[~activeIndex];
+		};
+	};
+
+	~currentName = {
+		~current.value !? { |p|
+			p[\_presetName]
+		};
 	};
 
 	~setSpecs = { |params|

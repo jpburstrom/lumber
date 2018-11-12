@@ -48,7 +48,7 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 						} {
 							btn.value = inactiveState;
 						}
-					})
+					}).defer;
 				);
 
 				connections.add(
@@ -61,7 +61,7 @@ Library.at(\lumber, \mainWindow) !? (_.close);
 							inactiveState = value.size.min(1);
 							btn.value = inactiveState;
 						}
-					})
+					}).defer;
 				);
 
 				btn
