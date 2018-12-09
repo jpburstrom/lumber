@@ -16,6 +16,7 @@ wrap.('activity', {
 	if (isBela) {
 		sig = MPU.accelKr;
 		sig = GestureRT.kr(sig);
+		sig = LPF.kr(sig, 0.5);
 	} {
 		sig = \MouseX.asClass.perform(\kr);
 	};
@@ -29,6 +30,7 @@ wrap.('intensity', {
 	if (isBela) {
 		sig = MPU.accelKr;
 		sig = GestureRT.kr(sig);
+		sig = LPF.kr(sig, 0.5);
 	} {
 		sig = \MouseY.asClass.perform(\kr);
 	};
