@@ -61,8 +61,8 @@ Require("protos/serverPlayer", always:false).clone {
 			//Add to head means reverse order
 			~post       = Group(~main);
 			~output 	= Group(~main);
-			~fx 		= Group(~main);
 			~eq 		= Group(~main);
+			~fx 		= Group(~main);
 			~lfo 		= Group(~main);
 			~sensors 	= Group(~main);
 			~input 		= Group(~main);
