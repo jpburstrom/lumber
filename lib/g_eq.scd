@@ -1,5 +1,5 @@
 var layout, view, connections = ConnectionList();
-var rows = 2;
+var rows = 3;
 var sliderWidth = 35;
 //assuming we're in the same environment, otherwise fallback to global (it's a hack)
 var params = (~eq ? q.eq).params;
@@ -131,7 +131,7 @@ Library.at(\lumber, \common, \eqSemitones).asArray.sort.do { |midinote, i|
 
 };
 
-view.layout.children[2].add(View().layout_(HLayout(
+view.layout.children[rows].add(View().layout_(HLayout(
 	View().layout_(VLayout(
 		StaticText().string_("Low cut").align_(\center),
 		fact.paramSlider("Freq", params[\lowCut][\freq])
