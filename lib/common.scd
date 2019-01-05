@@ -39,7 +39,7 @@ Spec.add(\shortDelay, ControlSpec(0.0, 0.05, 8, 0, 0.0, " secs"));
 Environment().know_(true).make({
 
 	~belaAddress = "192.168.7.2";
-	~belaRoot = "/root/lumber";
+	~belaRoot = "/root/Bela/projects/lumber";
 	//-f makes ssh go to background just before command execution.
 	~sshCommand = "ssh -f root@%".format(~belaAddress);
 	~calibrationPath = ~belaRoot +/+ "data/calibration.bin";
