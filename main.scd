@@ -39,6 +39,8 @@ q.make {
 			//Show GUI
 			Require("lib/g_main");
 
+			Require("lib/c_midi");
+
 			if (~serverName == \local) {
 				~serverController.server = Server.local
 			} {
