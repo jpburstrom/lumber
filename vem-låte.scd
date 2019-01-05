@@ -1,8 +1,8 @@
 //VEM LÅTE
 //2019-01-05
 
-(
 var amps = "data/amps-190105-1.scd".loadRelative[0];
+
 Ndef(\vem, {
 	//var freq = XLine.kr(~frequencies.first, ~frequencies.last, 10, doneAction:2);
 	var in = SoundIn.ar(0);
@@ -23,12 +23,3 @@ Ndef(\vem, {
 	Limiter.ar(snd);
 
 }).play
-)
-
-(
-Ndef(\impulse, {
-
-	Decay.ar(Impulse.ar(1), 0.01);
-
-}).end;
-)
